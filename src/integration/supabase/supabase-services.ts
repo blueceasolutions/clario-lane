@@ -43,6 +43,9 @@ class SupabaseService {
   public async signInWithGoogle() {
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/auth/callback",
+      },
     });
 
     if (error) {
