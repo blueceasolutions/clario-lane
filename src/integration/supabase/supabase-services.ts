@@ -1,5 +1,11 @@
 import { clientEnv } from "@/config/env";
-import { useOnboardingStore } from "@/store";
+import { logServerError } from "@/lib";
+import {
+  initialUserProfile,
+  useOnboardingStore,
+  useUserProfileStore,
+  type UserProfileType,
+} from "@/store";
 import { createClient } from "@supabase/supabase-js";
 
 class SupabaseService {
@@ -50,100 +56,92 @@ class SupabaseService {
   public async signInWithGoogle() {
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth`,
+      },
     });
 
     if (error) {
       throw new Error(error.message);
     }
     return data;
-  }
-
-  public async getUserOnboardingStatus(): Promise<boolean> {
-    const { data, error } = await this.supabase
-      .from("users")
-      .select("onboardingComplete")
-      .single();
-
-    const res = await this.supabase.from("users").select("*");
-
-    console.log({ res });
-
-    if (error) {
-      return false;
-    }
-    return data.onboardingComplete as boolean;
   }
 
   public async getSession() {
-    const { data, error } = await this.supabase.auth.getSession();
-    if (error) {
-      return null;
-      // throw new Error(error.message);
+    try {
+      const { data, error } = await this.supabase.auth.getSession();
+      if (error) {
+        throw error;
+      }
+      return data.session;
+    } catch (error) {
+      return logServerError(error);
     }
-    return data.session;
   }
 
   public async getUser() {
-    const { error, data } = await this.supabase
-      .from("users")
-      .select("*")
-      .single();
-    if (error) {
-      throw new Error(error.message);
+    try {
+      const { error, data } = await this.supabase
+        .from("users")
+        .select("*")
+        .single();
+
+      if (error) {
+        throw error;
+      }
+      useUserProfileStore.setState(data as UserProfileType);
+      return data;
+    } catch (error) {
+      useUserProfileStore.setState(initialUserProfile);
+      return logServerError(error);
     }
-    return data;
   }
 
   public async insertUser() {
-    const {
-      email,
-      dateOfBirth,
-      achievements,
-      baseLineWPM,
-      badges,
-      goals,
-      contentTypes,
-      challenges,
-      currentComprehensionScore,
-      focusScore,
-      dailyReminder,
-      weeklyProgress,
-      streakDays,
-      xpEarned,
-      currentWPM,
-      level,
-      baselineComprehension,
-      currentComprehension,
-      onboardingComplete,
-    } = useOnboardingStore.getState();
+    try {
+      const store = useOnboardingStore.getState();
+      const { error } = await this.supabase.from("users").insert({
+        name: store.name,
+        email: store.email,
+        dateOfBirth: store.dateOfBirth,
+        achievements: store.achievements,
+        baseLineWPM: store.baseLineWPM,
+        badges: store.badges,
+        goals: store.goals,
+        contentTypes: store.contentTypes,
+        challenges: store.challenges,
+        currentComprehensionScore: store.currentComprehensionScore,
+        focusScore: store.focusScore,
+        dailyReminder: store.dailyReminder,
+        weeklyProgress: store.weeklyProgress,
+        streakDays: store.streakDays,
+        xpEarned: store.xpEarned,
+        currentWPM: store.currentWPM,
+        level: store.level,
+        baselineComprehension: store.baselineComprehension,
+        currentComprehension: store.currentComprehension,
+        onboardingComplete: store.onboardingComplete,
+      });
 
-    const { error, data } = await this.supabase.from("users").insert({
-      email,
-      dateOfBirth,
-      achievements,
-      baseLineWPM,
-      badges,
-      goals,
-      contentTypes,
-      challenges,
-      currentComprehensionScore,
-      focusScore,
-      dailyReminder,
-      weeklyProgress,
-      streakDays,
-      xpEarned,
-      currentWPM,
-      level,
-      baselineComprehension,
-      currentComprehension,
-      onboardingComplete,
-    });
+      if (error) {
+        throw error;
+      }
 
-    if (error) {
-      console.log({ error });
-      throw new Error(error.message);
+      const res = await this.getUser();
+      if (res) {
+        useOnboardingStore.setState({
+          currentStep: 0,
+          isSubmitting: false,
+        });
+        useUserProfileStore.setState({
+          onboardingComplete: store.onboardingComplete,
+        });
+      }
+
+      return;
+    } catch (error) {
+      return logServerError(error);
     }
-    return data;
   }
 }
 

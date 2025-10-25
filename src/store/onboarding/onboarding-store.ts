@@ -19,4 +19,5 @@ export const useOnboardingStore = create<
   dailyReminder: true,
   weeklyProgress: true,
   achievements: true,
+  isSubmitting: false,
 }));

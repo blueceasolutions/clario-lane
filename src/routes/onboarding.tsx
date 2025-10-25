@@ -13,20 +13,23 @@ import {
 } from "@/components";
 import { Card } from "@/components/ui/card";
 
-import { useOnboardingStore } from "@/store";
+import { useOnboardingStore, useUserProfileStore } from "@/store";
 import { supabaseService } from "@/integration";
 
 export const Route = createFileRoute("/onboarding")({
   component: RouteComponent,
   pendingComponent: PendingPage,
-  beforeLoad: async ({ context }) => {
-    if (!context.session) {
+  beforeLoad: async ({ context: { session } }) => {
+    if (!session) {
       throw redirect({ to: "/auth" });
     }
-    const serverData = await supabaseService.getUserOnboardingStatus();
-    const storeData = useOnboardingStore.getState().onboardingComplete;
 
-    const onboardingComplete = serverData || storeData;
+    const user_metadata = session?.user.user_metadata;
+    const name = user_metadata.displayName || user_metadata.full_name;
+    const email = session?.user.email;
+
+    useOnboardingStore.setState({ email, name });
+    const { onboardingComplete } = useUserProfileStore.getState();
 
     if (onboardingComplete) {
       throw redirect({ to: "/dashboard" });
@@ -36,8 +39,7 @@ export const Route = createFileRoute("/onboarding")({
 
 function RouteComponent() {
   const totalSteps = 4;
-  const { currentStep, name, updateProfile, ...onboarding } =
-    useOnboardingStore();
+  const { currentStep, updateProfile, ...onboarding } = useOnboardingStore();
   const progress = ((currentStep + 1) / totalSteps) * 100;
   const route = useRouter();
 
@@ -53,12 +55,14 @@ function RouteComponent() {
     updateProfile({
       streakDays: 1,
       onboardingComplete: true,
-      currentStep: 0,
+      isSubmitting: true,
     });
 
     await supabaseService.insertUser();
 
-    route.navigate({ to: "/dashboard" });
+    if (!onboarding.isSubmitting) {
+      route.navigate({ to: "/dashboard" });
+    }
   };
 
   const handleNext = () => {
@@ -102,7 +106,7 @@ function RouteComponent() {
         {/* Welcome Message */}
         {currentStep === 0 && (
           <div className="mb-6 text-center">
-            <h2 className="mb-2">Welcome, {name}! 👋</h2>
+            <h2 className="mb-2">Welcome, {onboarding.name}! 👋</h2>
             <p className="text-muted-foreground">
               Let's personalize your learning journey
             </p>

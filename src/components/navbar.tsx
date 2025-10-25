@@ -36,15 +36,18 @@ const Navbar = () => {
           <BookOpen className="size-6" />
           ClarioLane
         </AnimateLink>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center font-semibold">
           {!session ? (
             <Button asChild>
               <AnimateLink to="/auth">Sign in</AnimateLink>
             </Button>
           ) : (
-            <Button variant="destructive" onClick={logout}>
-              Sign out
-            </Button>
+            <div className="flex items-center gap-4">
+              <Link to="/dashboard">Profile</Link>
+              <button className="py-0.5 px-5 text-red-500" onClick={logout}>
+                Sign out
+              </button>
+            </div>
           )}
           <Select
             onValueChange={(value: UserTheme) => setTheme(value)}

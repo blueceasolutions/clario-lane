@@ -19,6 +19,7 @@ export type OnboardingType = {
   baselineComprehension?: number;
   currentComprehension?: number;
   onboardingComplete: boolean;
+  isSubmitting: boolean;
 
   currentStep: number;
   readingTestStage: "intro" | "reading" | "questions" | "results";

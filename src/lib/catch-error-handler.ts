@@ -8,3 +8,8 @@ export const catchError = (error: unknown) => {
     toast.error("An unexpected error occurred");
   }
 };
+
+export const logServerError = (error: unknown) => {
+  console.error(error);
+  return null;
+};
