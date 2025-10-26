@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -18,6 +20,13 @@ import { Route as DashboardDashboardLayoutProgressRouteImport } from './routes/d
 import { Route as DashboardDashboardLayoutPracticeRouteImport } from './routes/dashboard/_dashboardLayout/practice'
 import { Route as DashboardDashboardLayoutChallengesRouteImport } from './routes/dashboard/_dashboardLayout/challenges'
 
+const DashboardRouteImport = createFileRoute('/dashboard')()
+
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -77,16 +86,17 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
+  '/dashboard': typeof DashboardDashboardLayoutIndexRoute
   '/dashboard/challenges': typeof DashboardDashboardLayoutChallengesRoute
   '/dashboard/practice': typeof DashboardDashboardLayoutPracticeRoute
   '/dashboard/progress': typeof DashboardDashboardLayoutProgressRoute
-  '/dashboard': typeof DashboardDashboardLayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/onboarding': typeof OnboardingRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/dashboard/_dashboardLayout': typeof DashboardDashboardLayoutRouteWithChildren
   '/dashboard/_dashboardLayout/challenges': typeof DashboardDashboardLayoutChallengesRoute
   '/dashboard/_dashboardLayout/practice': typeof DashboardDashboardLayoutPracticeRoute
@@ -109,15 +119,16 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/onboarding'
+    | '/dashboard'
     | '/dashboard/challenges'
     | '/dashboard/practice'
     | '/dashboard/progress'
-    | '/dashboard'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/onboarding'
+    | '/dashboard'
     | '/dashboard/_dashboardLayout'
     | '/dashboard/_dashboardLayout/challenges'
     | '/dashboard/_dashboardLayout/practice'
@@ -129,10 +140,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   OnboardingRoute: typeof OnboardingRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -156,7 +175,7 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/_dashboardLayout': {
       id: '/dashboard/_dashboardLayout'
-      path: ''
+      path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardDashboardLayoutRouteImport
       parentRoute: typeof DashboardRoute
@@ -192,10 +211,46 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardDashboardLayoutRouteChildren {
+  DashboardDashboardLayoutChallengesRoute: typeof DashboardDashboardLayoutChallengesRoute
+  DashboardDashboardLayoutPracticeRoute: typeof DashboardDashboardLayoutPracticeRoute
+  DashboardDashboardLayoutProgressRoute: typeof DashboardDashboardLayoutProgressRoute
+  DashboardDashboardLayoutIndexRoute: typeof DashboardDashboardLayoutIndexRoute
+}
+
+const DashboardDashboardLayoutRouteChildren: DashboardDashboardLayoutRouteChildren =
+  {
+    DashboardDashboardLayoutChallengesRoute:
+      DashboardDashboardLayoutChallengesRoute,
+    DashboardDashboardLayoutPracticeRoute:
+      DashboardDashboardLayoutPracticeRoute,
+    DashboardDashboardLayoutProgressRoute:
+      DashboardDashboardLayoutProgressRoute,
+    DashboardDashboardLayoutIndexRoute: DashboardDashboardLayoutIndexRoute,
+  }
+
+const DashboardDashboardLayoutRouteWithChildren =
+  DashboardDashboardLayoutRoute._addFileChildren(
+    DashboardDashboardLayoutRouteChildren,
+  )
+
+interface DashboardRouteChildren {
+  DashboardDashboardLayoutRoute: typeof DashboardDashboardLayoutRouteWithChildren
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardDashboardLayoutRoute: DashboardDashboardLayoutRouteWithChildren,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   OnboardingRoute: OnboardingRoute,
+  DashboardRoute: DashboardRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
