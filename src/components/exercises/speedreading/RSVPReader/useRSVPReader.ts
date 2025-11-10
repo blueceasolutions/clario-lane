@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useSpeedReadingStore } from "../use-speed-reading-store";
 import { ExerciseStep } from "@/lib";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPassage } from "@/integration";
 
 export type RSVPReaderProps = {
   onPause?: () => void;
@@ -16,8 +18,10 @@ export const useRSVPReader = ({ onPause }: RSVPReaderProps) => {
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { passage, setWpm, wpm, setStep, setCompleted, loading } =
+  const { setWpm, wpm, setStep, setCompleted, passage } =
     useSpeedReadingStore();
+
+  const { isLoading, refetch } = useQuery(fetchPassage);
 
   useEffect(() => {
     // Split text into words
@@ -80,10 +84,12 @@ export const useRSVPReader = ({ onPause }: RSVPReaderProps) => {
 
     const duration = startTime ? (Date.now() - startTime) / 1000 : elapsedTime;
     // Use the actual word count if completed, otherwise use current index
-    const wordsRead =
-      currentIndex >= words.length ? words.length : Math.max(currentIndex, 1);
-    const actualWpm =
-      duration > 0 ? Math.round((wordsRead / duration) * 60) : wpm;
+    const wordsRead = currentIndex >= words.length
+      ? words.length
+      : Math.max(currentIndex, 1);
+    const actualWpm = duration > 0
+      ? Math.round((wordsRead / duration) * 60)
+      : wpm;
 
     console.log("Reading complete:", {
       duration,
@@ -112,6 +118,7 @@ export const useRSVPReader = ({ onPause }: RSVPReaderProps) => {
     }
 
     setStep(ExerciseStep.Quiz);
+    refetch();
   };
 
   const handleReset = () => {
@@ -140,7 +147,7 @@ export const useRSVPReader = ({ onPause }: RSVPReaderProps) => {
     currentIndex,
     isPlaying,
     wpm,
-    loading,
+    loading: isLoading,
     setWpm,
     formatTime,
     elapsedTime,

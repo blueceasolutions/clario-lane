@@ -1,0 +1,58 @@
+-- insert into passages (passage) values (`"{
+--   "tags": ["fiction", "mystery", "supernatural"],
+--   "text": "The rain hadn’t stopped for three days, and the sound of it on the rusted tin roof echoed through the empty station. Verran used to be alive once—before the mines closed, before the trains stopped running. Now, only one train came through each month, and no one ever seemed to board it.\n\nEli waited anyway. He sat on the same cracked wooden bench, clutching his leather satchel like it held the last of his soul. Inside was a letter—yellowed, creased, and never sent. It was addressed to someone who’d been gone twenty years: Clara.\n\nThe clock on the wall had stopped at 11:47 a long time ago, but when the faint whistle sounded in the distance, it flickered once, then began to tick again. The rails trembled. A dim light appeared through the fog, slicing through the night like a blade.\n\nWhen the train finally screeched to a stop, its metal body shone wet and silver, untouched by rust or time. Eli stood, heart pounding, and stepped toward it. The doors slid open with a sigh. Inside, rows of passengers sat silently, faces pale as moonlight.\n\nHe recognized her instantly—Clara, sitting by the window, looking just as she did before she left for the city, before the letters stopped. She smiled faintly, patting the seat beside her.\n\nEli hesitated, the rain soaking through his coat. Then he stepped aboard.\n\nThe doors closed behind him, and the whistle blew once more.\n\nBy morning, Verran Station was empty again. The rain had stopped. The clock still ticked at 11:47, and on the bench lay Eli’s satchel—empty, save for a small note:\n\n“I finally caught the train.”",
+--   "title": "The Last Train from Verran Station",
+--   "difficulty": "Medium",
+--   "questions": [
+--     {
+--       "question": "Why was Eli waiting at Verran Station?",
+--       "options": [
+--         "To send a letter to Clara",
+--         "To board the last remaining train",
+--         "To meet someone arriving from the city",
+--         "To escape the rain"
+--       ],
+--       "correctIndex": 1
+--     },
+--     {
+--       "question": "What significant event caused Verran Station to become deserted?",
+--       "options": [
+--         "A storm destroyed the station",
+--         "The mines closed and trains stopped running",
+--         "The townspeople moved to the city",
+--         "A fire burned down the nearby village"
+--       ],
+--       "correctIndex": 1
+--     },
+--     {
+--       "question": "What was inside Eli’s leather satchel?",
+--       "options": [
+--         "A photograph of Clara",
+--         "Money and train tickets",
+--         "A letter addressed to Clara",
+--         "A journal of his memories"
+--       ],
+--       "correctIndex": 2
+--     },
+--     {
+--       "question": "What unusual thing happened when the train whistle sounded?",
+--       "options": [
+--         "The rain stopped suddenly",
+--         "The clock started ticking again",
+--         "The lights in the station went out",
+--         "Eli woke up from a dream"
+--       ],
+--       "correctIndex": 1
+--     },
+--     {
+--       "question": "What was found on the bench after the train departed?",
+--       "options": [
+--         "Eli’s umbrella",
+--         "A torn photograph",
+--         "Eli’s empty satchel with a note",
+--         "A rusted train ticket"
+--       ],
+--       "correctIndex": 2
+--     }
+--   ]
+-- }"`::jsonb)

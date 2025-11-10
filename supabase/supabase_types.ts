@@ -132,44 +132,24 @@ export type Database = {
       }
       passages: {
         Row: {
-          content_type_id: string | null
           created_at: string | null
-          difficulty: number | null
           id: string
-          passage: string
-          questions: string | null
-          title: string
+          passage: Json
           updated_at: string | null
         }
         Insert: {
-          content_type_id?: string | null
           created_at?: string | null
-          difficulty?: number | null
           id?: string
-          passage: string
-          questions?: string | null
-          title: string
+          passage?: Json
           updated_at?: string | null
         }
         Update: {
-          content_type_id?: string | null
           created_at?: string | null
-          difficulty?: number | null
           id?: string
-          passage?: string
-          questions?: string | null
-          title?: string
+          passage?: Json
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "passages_content_type_id_fkey"
-            columns: ["content_type_id"]
-            isOneToOne: false
-            referencedRelation: "content_types"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       practice_sessions: {
         Row: {

@@ -1,3 +1,3 @@
 export * from "./queries";
-export * from "./api-instance";
+export * from "./apiInstance";
 export * from "./mutations";

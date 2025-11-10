@@ -1,11 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
 
-export const userCountryRequestKey = "userCountry";
+export const fetchUserCountryKey = "userCountry";
 export const countryNameKey = "userCountryName";
 export const countryCodeKey = "userCountryCode";
 
-export const userCountryRequest = queryOptions({
-  queryKey: [userCountryRequestKey],
+export const fetchUserCountry = queryOptions({
+  queryKey: [fetchUserCountryKey],
   queryFn: async () => {
     const userCountryCode = localStorage.getItem(countryCodeKey);
     const userCountryName = localStorage.getItem(countryNameKey);

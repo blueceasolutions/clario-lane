@@ -19,10 +19,10 @@ import { useOnboardingFlow, useOnboardingStore } from '@/store'
 import Billing from '@/components/onboarding/billing'
 import type { Preferences, UserTable } from '@/types'
 import {
-  challengeRequest,
-  contentTypeRequest,
-  goalsRequest,
-  plansRequest,
+  fetchChallenges,
+  fetchContentType,
+  fetchGoals,
+  fetchPlans,
 } from '@/integration/queries'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useCreateUserMutation, useInitSubscription } from '@/integration'
@@ -55,10 +55,10 @@ function RouteComponent() {
   const { current_step, total_steps, update } = useOnboardingFlow()
   const progress = ((current_step + 1) / total_steps) * 100
 
-  const { data: goals } = useQuery(goalsRequest)
-  const { data: challenges } = useQuery(challengeRequest)
-  const { data: contentType } = useQuery(contentTypeRequest)
-  const { data: plans } = useQuery(plansRequest)
+  const { data: goals } = useQuery(fetchGoals)
+  const { data: challenges } = useQuery(fetchChallenges)
+  const { data: contentType } = useQuery(fetchContentType)
+  const { data: plans } = useQuery(fetchPlans)
   const [user, setUser] = useState<UserTable>()
 
   const { mutateAsync: createMutateAsync } = useMutation(useCreateUserMutation)
