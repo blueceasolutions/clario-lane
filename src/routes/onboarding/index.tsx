@@ -29,7 +29,7 @@ import { userMutation, subscriptionMutation } from '@/integration'
 import { useCallback, useEffect } from 'react'
 import { supabaseService } from '~supabase/clientServices'
 
-export const Route = createFileRoute('/onboarding/_onboardingLayout/')({
+export const Route = createFileRoute('/onboarding/')({
   component: RouteComponent,
   pendingComponent: PendingPage,
   beforeLoad: ({ context }) => {

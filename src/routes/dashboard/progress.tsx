@@ -34,7 +34,7 @@ import {
   isWithinInterval,
 } from 'date-fns'
 
-export const Route = createFileRoute('/dashboard/_dashboardLayout/progress')({
+export const Route = createFileRoute('/dashboard/progress')({
   component: RouteComponent,
 })
 

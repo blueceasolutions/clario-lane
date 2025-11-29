@@ -5,7 +5,7 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { supabaseService } from '~supabase/clientServices'
 
-export const Route = createFileRoute('/onboarding/_onboardingLayout')({
+export const Route = createFileRoute('/onboarding')({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
     const user = await supabaseService.getUser()

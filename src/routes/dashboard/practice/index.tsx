@@ -5,9 +5,7 @@ import type { Practice } from '@/lib'
 import { createFileRoute } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 
-export const Route = createFileRoute(
-  '/dashboard/_dashboardLayout/practice/_practice-layout/'
-)({
+export const Route = createFileRoute('/dashboard/practice/')({
   component: RouteComponent,
   loader: async ({ context }) => {
     const practices = (await context.queryClient.fetchQuery(

@@ -3,7 +3,7 @@ import { fetchPassage } from '@/integration'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
-  '/dashboard/_dashboardLayout/practice/_practice-layout/speedreading/$practiceId'
+  '/dashboard/practice/speedreading/$practiceId'
 )({
   component: RouteComponent,
   loader: async ({ context }) => {

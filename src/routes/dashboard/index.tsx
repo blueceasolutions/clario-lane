@@ -15,7 +15,7 @@ import {
 import { motion } from 'motion/react'
 import { supabaseService } from '~supabase/clientServices'
 
-export const Route = createFileRoute('/dashboard/_dashboardLayout/')({
+export const Route = createFileRoute('/dashboard/')({
   component: RouteComponent,
   pendingComponent: OverviewPending,
 })

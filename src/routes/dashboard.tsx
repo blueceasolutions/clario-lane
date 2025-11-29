@@ -11,7 +11,7 @@ import { BookOpen, Target, TrendingUp, Trophy } from 'lucide-react'
 import { AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 
-export const Route = createFileRoute('/dashboard/_dashboardLayout')({
+export const Route = createFileRoute('/dashboard')({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
     const { session, user } = context
@@ -65,7 +65,7 @@ function RouteComponent() {
     }
   }, [activePathname, currentPath, pathsArray])
 
-  const pathLength = dashboardPrimaryPaths.length
+  const pathLength = `grid-cols-${dashboardPrimaryPaths.length}`
 
   return (
     <div className='min-h-fit '>
@@ -73,8 +73,7 @@ function RouteComponent() {
         <div className='flex items-center pb-8'>
           <BackButton />
           <Tabs value={activePathname} className='w-fit mx-auto '>
-            <TabsList
-              className={`grid w-full max-w-2xl mx-auto grid-cols-${pathLength}`}>
+            <TabsList className={`grid w-full max-w-2xl mx-auto ${pathLength}`}>
               {dashboardPrimaryPaths.map((path) => {
                 const Icon = Icons[path]
                 return (

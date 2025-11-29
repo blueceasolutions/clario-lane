@@ -16,7 +16,7 @@ import { motion } from 'motion/react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchChallenges } from '@/integration/queries/fetchChallenges'
 
-export const Route = createFileRoute('/dashboard/_dashboardLayout/challenges')({
+export const Route = createFileRoute('/dashboard/challenges')({
   component: RouteComponent,
 })
 
