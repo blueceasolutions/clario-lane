@@ -49,7 +49,7 @@ export function ProfileMenu(props: Props) {
             <Link to='/dashboard'>Billing</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to='/dashboard'>Settings</Link>
+            <Link to='/dashboard/settings'>Settings</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

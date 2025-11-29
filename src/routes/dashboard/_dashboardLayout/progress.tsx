@@ -23,6 +23,16 @@ import {
 } from 'recharts'
 import { useUserProfileStore } from '@/store'
 import { motion } from 'motion/react'
+import { useQuery } from '@tanstack/react-query'
+import { supabaseService } from '~supabase/clientServices'
+import {
+  format,
+  subDays,
+  startOfWeek,
+  endOfWeek,
+  isSameDay,
+  isWithinInterval,
+} from 'date-fns'
 
 export const Route = createFileRoute('/dashboard/_dashboardLayout/progress')({
   component: RouteComponent,
@@ -31,69 +41,105 @@ export const Route = createFileRoute('/dashboard/_dashboardLayout/progress')({
 export function RouteComponent() {
   const userProfile = useUserProfileStore()
 
-  // Mock data for charts
-  const weeklyProgress = [
-    { day: 'Mon', wpm: userProfile.baseline_wpm! + 5, comprehension: 75 },
-    { day: 'Tue', wpm: userProfile.baseline_wpm! + 12, comprehension: 78 },
-    { day: 'Wed', wpm: userProfile.baseline_wpm! + 18, comprehension: 82 },
-    { day: 'Thu', wpm: userProfile.baseline_wpm! + 25, comprehension: 80 },
-    { day: 'Fri', wpm: userProfile.baseline_wpm! + 32, comprehension: 85 },
-    { day: 'Sat', wpm: userProfile.baseline_wpm! + 38, comprehension: 83 },
-    {
-      day: 'Sun',
-      wpm: userProfile.current_wpm!,
-      comprehension: userProfile.current_comprehension_score!,
-    },
-  ]
+  const { data: sessions } = useQuery({
+    queryKey: ['practice_sessions', userProfile.id],
+    queryFn: () => supabaseService.getPracticedSessions(userProfile.id),
+    enabled: !!userProfile.id,
+  })
 
-  const sessionData = [
-    { week: 'Week 1', sessions: 5, avgWPM: userProfile.baseline_wpm! + 10 },
-    { week: 'Week 2', sessions: 6, avgWPM: userProfile.baseline_wpm! + 25 },
-    { week: 'Week 3', sessions: 7, avgWPM: userProfile.baseline_wpm! + 35 },
-    { week: 'This Week', sessions: 4, avgWPM: userProfile.current_wpm! },
-  ]
+  // Transform sessions for Weekly Progress Chart (Last 7 days)
+  const weeklyProgress = Array.from({ length: 7 }).map((_, i) => {
+    const date = subDays(new Date(), 6 - i)
+    const daySessions =
+      sessions?.filter((s) => isSameDay(new Date(s.created_at!), date)) || []
+
+    // Calculate average for the day
+    const avgWpm = daySessions.length
+      ? Math.round(
+          daySessions.reduce((acc, s) => acc + s.wpm, 0) / daySessions.length
+        )
+      : null
+
+    const avgComp = daySessions.length
+      ? Math.round(
+          daySessions.reduce((acc, s) => acc + s.comprehension, 0) /
+            daySessions.length
+        )
+      : null
+
+    return {
+      day: format(date, 'EEE'),
+      wpm: avgWpm,
+      comprehension: avgComp,
+      fullDate: date,
+    }
+  })
+
+  // Transform for Session Activity (Last 4 weeks)
+  const sessionData = Array.from({ length: 4 }).map((_, i) => {
+    const date = subDays(new Date(), (3 - i) * 7)
+    const start = startOfWeek(date)
+    const end = endOfWeek(date)
+
+    const weekSessions =
+      sessions?.filter((s) =>
+        isWithinInterval(new Date(s.created_at!), { start, end })
+      ) || []
+
+    const avgWPM = weekSessions.length
+      ? Math.round(
+          weekSessions.reduce((acc, s) => acc + s.wpm, 0) / weekSessions.length
+        )
+      : 0
+
+    return {
+      week: i === 3 ? 'This Week' : `Week ${i + 1}`,
+      sessions: weekSessions.length,
+      avgWPM,
+    }
+  })
 
   const badges = [
     {
       id: 'first_drill',
       name: 'First Steps',
       icon: '🎯',
-      earned: true,
+      earned: (sessions?.length || 0) > 0,
       description: 'Completed your first drill',
     },
     {
       id: 'week_streak',
       name: 'Week Warrior',
       icon: '🔥',
-      earned: true,
+      earned: (userProfile.streak_days || 0) >= 7,
       description: '7-day practice streak',
     },
     {
       id: 'speed_demon',
       name: 'Speed Demon',
       icon: '⚡',
-      earned: false,
+      earned: (userProfile.current_wpm || 0) >= 400,
       description: 'Reach 400 WPM',
     },
     {
       id: 'comprehension_master',
       name: 'Comprehension Master',
       icon: '🧠',
-      earned: false,
+      earned: (userProfile.current_comprehension_score || 0) >= 90,
       description: '90%+ comprehension rate',
     },
     {
       id: 'dedicated',
       name: 'Dedicated Reader',
       icon: '📚',
-      earned: false,
+      earned: (userProfile.streak_days || 0) >= 30,
       description: '30-day practice streak',
     },
     {
       id: 'milestone_500',
       name: '500 Club',
       icon: '🏆',
-      earned: false,
+      earned: (userProfile.current_wpm || 0) >= 500,
       description: 'Reach 500 WPM',
     },
   ]
@@ -102,22 +148,35 @@ export function RouteComponent() {
     {
       id: 1,
       title: 'Completed Baseline Test',
-      date: '6 days ago',
-      completed: true,
+      date: userProfile.created_at
+        ? format(new Date(userProfile.created_at), 'MMM d, yyyy')
+        : 'N/A',
+      completed: !!userProfile.baseline_wpm,
     },
     {
       id: 2,
       title: 'First 100 XP Earned',
-      date: '5 days ago',
-      completed: true,
+      date: (userProfile.xp_earned || 0) >= 100 ? 'Completed' : 'In Progress',
+      completed: (userProfile.xp_earned || 0) >= 100,
     },
-    { id: 3, title: '7-Day Streak', date: 'Today', completed: true },
-    { id: 4, title: 'Reach 300 WPM', date: 'In progress', completed: false },
+    {
+      id: 3,
+      title: '7-Day Streak',
+      date: (userProfile.streak_days || 0) >= 7 ? 'Completed' : 'In Progress',
+      completed: (userProfile.streak_days || 0) >= 7,
+    },
+    {
+      id: 4,
+      title: 'Reach 300 WPM',
+      date: (userProfile.current_wpm || 0) >= 300 ? 'Completed' : 'In Progress',
+      completed: (userProfile.current_wpm || 0) >= 300,
+    },
     {
       id: 5,
       title: 'Complete 30 Sessions',
-      date: 'Upcoming',
-      completed: false,
+      date:
+        (userProfile.total_sessions || 0) >= 30 ? 'Completed' : 'In Progress',
+      completed: (userProfile.total_sessions || 0) >= 30,
     },
   ]
 
@@ -138,11 +197,13 @@ export function RouteComponent() {
             </div>
             <div className='text-2xl text-primary'>
               +
-              {Math.round(
-                ((userProfile.current_wpm! - userProfile.baseline_wpm!) /
-                  userProfile.baseline_wpm!) *
-                  100
-              )}
+              {userProfile.baseline_wpm
+                ? Math.round(
+                    ((userProfile.current_wpm! - userProfile.baseline_wpm!) /
+                      userProfile.baseline_wpm!) *
+                      100
+                  )
+                : 0}
               %
             </div>
             <p className='text-sm mt-1'>from baseline</p>
@@ -215,6 +276,7 @@ export function RouteComponent() {
                     stroke='#4f46e5'
                     strokeWidth={2}
                     dot={{ fill: '#4f46e5', r: 4 }}
+                    connectNulls
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -246,6 +308,7 @@ export function RouteComponent() {
                     stroke='#10b981'
                     strokeWidth={2}
                     dot={{ fill: '#10b981', r: 4 }}
+                    connectNulls
                   />
                 </LineChart>
               </ResponsiveContainer>

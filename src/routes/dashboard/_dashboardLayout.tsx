@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from '@/components'
+import { BackButton, Tabs, TabsList, TabsTrigger } from '@/components'
 import { useOnboardingFlow } from '@/store'
 import {
   createFileRoute,
@@ -33,8 +33,8 @@ export const Route = createFileRoute('/dashboard/_dashboardLayout')({
 const dashboardPrimaryPaths = [
   'dashboard',
   'practice',
-  // 'progress',
-  // 'challenges',
+  'progress',
+  'challenges',
 ]
 
 const PrimaryPaths = [...dashboardPrimaryPaths] as const
@@ -65,33 +65,39 @@ function RouteComponent() {
     }
   }, [activePathname, currentPath, pathsArray])
 
+  const pathLength = dashboardPrimaryPaths.length
+
   return (
     <div className='min-h-fit '>
       <div className='max-w-7xl mx-auto px-6 py-8'>
-        <Tabs value={activePathname} className='w-fit mx-auto '>
-          <TabsList
-            className={`grid w-full max-w-2xl mx-auto grid-cols-${dashboardPrimaryPaths.length} mb-8`}>
-            {dashboardPrimaryPaths.map((path) => {
-              const Icon = Icons[path]
-              return (
-                <TabsTrigger
-                  key={path}
-                  asChild
-                  value={path}
-                  className='flex items-center gap-2'>
-                  <Link
-                    to={
-                      '/dashboard' + (path === 'dashboard' ? '' : `/${path}`)
-                    }>
-                    <Icon className='w-4 h-4' />
-                    <span className='hidden sm:inline capitalize'>{path}</span>
-                  </Link>
-                </TabsTrigger>
-              )
-            })}
-          </TabsList>
-        </Tabs>
-
+        <div className='flex items-center pb-8'>
+          <BackButton />
+          <Tabs value={activePathname} className='w-fit mx-auto '>
+            <TabsList
+              className={`grid w-full max-w-2xl mx-auto grid-cols-${pathLength}`}>
+              {dashboardPrimaryPaths.map((path) => {
+                const Icon = Icons[path]
+                return (
+                  <TabsTrigger
+                    key={path}
+                    asChild
+                    value={path}
+                    className='flex items-center gap-2'>
+                    <Link
+                      to={
+                        '/dashboard' + (path === 'dashboard' ? '' : `/${path}`)
+                      }>
+                      <Icon className='w-4 h-4' />
+                      <span className='hidden sm:inline capitalize'>
+                        {path}
+                      </span>
+                    </Link>
+                  </TabsTrigger>
+                )
+              })}
+            </TabsList>
+          </Tabs>
+        </div>
         <AnimatePresence mode='wait'>
           <Outlet />
         </AnimatePresence>

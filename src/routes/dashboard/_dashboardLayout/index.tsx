@@ -1,8 +1,8 @@
 import {
   OverviewStats,
   ProgressChart,
-  // GoalTrackerCard,
-  // DailyPracticeCard,
+  GoalTrackerCard,
+  DailyPracticeCard,
   OverviewPending,
 } from '@/components'
 import { useQuery } from '@tanstack/react-query'
@@ -41,24 +41,24 @@ export function RouteComponent() {
       }))
     : []
 
-  // const goalWPM = Math.round(userProfile.baseline_wpm! * 1.5)
-  // const progressPercent = Math.round(
-  //   ((userProfile.current_wpm! - userProfile.baseline_wpm!) /
-  //     (goalWPM - userProfile.baseline_wpm!)) *
-  //     100
-  // )
+  const goalWPM = Math.round(userProfile.baseline_wpm! * 1.5)
+  const progressPercent = Math.round(
+    ((userProfile.current_wpm! - userProfile.baseline_wpm!) /
+      (goalWPM - userProfile.baseline_wpm!)) *
+      100
+  )
   const improvement = userProfile.current_wpm! - userProfile.baseline_wpm!
 
-  // const todaysTasks = [
-  //   {
-  //     id: 1,
-  //     title: 'Complete daily reading exercise',
-  //     completed: false,
-  //     xp: 25,
-  //   },
-  //   { id: 2, title: 'Practice word chunking drill', completed: true, xp: 20 },
-  //   { id: 3, title: 'Take comprehension quiz', completed: false, xp: 30 },
-  // ]
+  const todaysTasks = [
+    {
+      id: 1,
+      title: 'Complete daily reading exercise',
+      completed: false,
+      xp: 25,
+    },
+    { id: 2, title: 'Practice word chunking drill', completed: true, xp: 20 },
+    { id: 3, title: 'Take comprehension quiz', completed: false, xp: 30 },
+  ]
 
   return (
     <motion.div
@@ -96,12 +96,12 @@ export function RouteComponent() {
 
       <div className='grid md:grid-cols-2 gap-6'>
         {/* Today's Tasks */}
-        {/* {todaysTasks.length ? (
+        {todaysTasks.length ? (
           <DailyPracticeCard todaysTasks={todaysTasks} />
-        ) : null} */}
+        ) : null}
 
         {/* Goal Tracker */}
-        {/* <GoalTrackerCard
+        <GoalTrackerCard
           current_wpm={userProfile.current_wpm || 0}
           goalWPM={goalWPM}
           progressPercent={progressPercent}
@@ -110,7 +110,7 @@ export function RouteComponent() {
           level={userProfile.level || 0}
           streak_days={userProfile.streak_days || 0}
           total_sessions={userProfile.total_sessions || 0}
-        /> */}
+        />
       </div>
     </motion.div>
   )

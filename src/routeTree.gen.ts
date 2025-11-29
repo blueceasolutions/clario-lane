@@ -17,6 +17,7 @@ import { Route as OnboardingOnboardingLayoutRouteImport } from './routes/onboard
 import { Route as DashboardDashboardLayoutRouteImport } from './routes/dashboard/_dashboardLayout'
 import { Route as OnboardingOnboardingLayoutIndexRouteImport } from './routes/onboarding/_onboardingLayout/index'
 import { Route as DashboardDashboardLayoutIndexRouteImport } from './routes/dashboard/_dashboardLayout/index'
+import { Route as DashboardDashboardLayoutSettingsRouteImport } from './routes/dashboard/_dashboardLayout/settings'
 import { Route as DashboardDashboardLayoutProgressRouteImport } from './routes/dashboard/_dashboardLayout/progress'
 import { Route as DashboardDashboardLayoutChallengesRouteImport } from './routes/dashboard/_dashboardLayout/challenges'
 import { Route as DashboardDashboardLayoutPracticePracticeLayoutRouteImport } from './routes/dashboard/_dashboardLayout/practice/_practice-layout'
@@ -77,6 +78,12 @@ const DashboardDashboardLayoutIndexRoute =
     path: '/',
     getParentRoute: () => DashboardDashboardLayoutRoute,
   } as any)
+const DashboardDashboardLayoutSettingsRoute =
+  DashboardDashboardLayoutSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => DashboardDashboardLayoutRoute,
+  } as any)
 const DashboardDashboardLayoutProgressRoute =
   DashboardDashboardLayoutProgressRouteImport.update({
     id: '/progress',
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingOnboardingLayoutRouteWithChildren
   '/dashboard/challenges': typeof DashboardDashboardLayoutChallengesRoute
   '/dashboard/progress': typeof DashboardDashboardLayoutProgressRoute
+  '/dashboard/settings': typeof DashboardDashboardLayoutSettingsRoute
   '/dashboard/': typeof DashboardDashboardLayoutIndexRoute
   '/onboarding/': typeof OnboardingOnboardingLayoutIndexRoute
   '/dashboard/practice': typeof DashboardDashboardLayoutPracticePracticeLayoutRouteWithChildren
@@ -129,6 +137,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingOnboardingLayoutIndexRoute
   '/dashboard/challenges': typeof DashboardDashboardLayoutChallengesRoute
   '/dashboard/progress': typeof DashboardDashboardLayoutProgressRoute
+  '/dashboard/settings': typeof DashboardDashboardLayoutSettingsRoute
   '/dashboard/practice': typeof DashboardDashboardLayoutPracticePracticeLayoutIndexRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardDashboardLayoutPracticePracticeLayoutSpeedreadingPracticeIdRoute
 }
@@ -142,6 +151,7 @@ export interface FileRoutesById {
   '/onboarding/_onboardingLayout': typeof OnboardingOnboardingLayoutRouteWithChildren
   '/dashboard/_dashboardLayout/challenges': typeof DashboardDashboardLayoutChallengesRoute
   '/dashboard/_dashboardLayout/progress': typeof DashboardDashboardLayoutProgressRoute
+  '/dashboard/_dashboardLayout/settings': typeof DashboardDashboardLayoutSettingsRoute
   '/dashboard/_dashboardLayout/': typeof DashboardDashboardLayoutIndexRoute
   '/onboarding/_onboardingLayout/': typeof OnboardingOnboardingLayoutIndexRoute
   '/dashboard/_dashboardLayout/practice': typeof DashboardDashboardLayoutPracticeRouteWithChildren
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/dashboard/challenges'
     | '/dashboard/progress'
+    | '/dashboard/settings'
     | '/dashboard/'
     | '/onboarding/'
     | '/dashboard/practice'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/dashboard/challenges'
     | '/dashboard/progress'
+    | '/dashboard/settings'
     | '/dashboard/practice'
     | '/dashboard/practice/speedreading/$practiceId'
   id:
@@ -183,6 +195,7 @@ export interface FileRouteTypes {
     | '/onboarding/_onboardingLayout'
     | '/dashboard/_dashboardLayout/challenges'
     | '/dashboard/_dashboardLayout/progress'
+    | '/dashboard/_dashboardLayout/settings'
     | '/dashboard/_dashboardLayout/'
     | '/onboarding/_onboardingLayout/'
     | '/dashboard/_dashboardLayout/practice'
@@ -263,6 +276,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDashboardLayoutIndexRouteImport
       parentRoute: typeof DashboardDashboardLayoutRoute
     }
+    '/dashboard/_dashboardLayout/settings': {
+      id: '/dashboard/_dashboardLayout/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardDashboardLayoutSettingsRouteImport
+      parentRoute: typeof DashboardDashboardLayoutRoute
+    }
     '/dashboard/_dashboardLayout/progress': {
       id: '/dashboard/_dashboardLayout/progress'
       path: '/progress'
@@ -337,6 +357,7 @@ const DashboardDashboardLayoutPracticeRouteWithChildren =
 interface DashboardDashboardLayoutRouteChildren {
   DashboardDashboardLayoutChallengesRoute: typeof DashboardDashboardLayoutChallengesRoute
   DashboardDashboardLayoutProgressRoute: typeof DashboardDashboardLayoutProgressRoute
+  DashboardDashboardLayoutSettingsRoute: typeof DashboardDashboardLayoutSettingsRoute
   DashboardDashboardLayoutIndexRoute: typeof DashboardDashboardLayoutIndexRoute
   DashboardDashboardLayoutPracticeRoute: typeof DashboardDashboardLayoutPracticeRouteWithChildren
 }
@@ -347,6 +368,8 @@ const DashboardDashboardLayoutRouteChildren: DashboardDashboardLayoutRouteChildr
       DashboardDashboardLayoutChallengesRoute,
     DashboardDashboardLayoutProgressRoute:
       DashboardDashboardLayoutProgressRoute,
+    DashboardDashboardLayoutSettingsRoute:
+      DashboardDashboardLayoutSettingsRoute,
     DashboardDashboardLayoutIndexRoute: DashboardDashboardLayoutIndexRoute,
     DashboardDashboardLayoutPracticeRoute:
       DashboardDashboardLayoutPracticeRouteWithChildren,

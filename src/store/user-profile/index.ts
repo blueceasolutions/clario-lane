@@ -21,6 +21,8 @@ export type UserProfileType = {
   xp_earned?: number;
   level?: number;
   total_sessions?: number;
+  id?: string;
+  created_at?: string;
 };
 
 export type UserProfileStoreActions = {
@@ -48,6 +50,8 @@ export const initialUserProfile: UserProfileType = {
   baseline_comprehension: 0,
   onboarding_completed: false,
   total_sessions: 0,
+  id: "",
+  created_at: "",
 };
 
 export const useUserProfileStore = create<

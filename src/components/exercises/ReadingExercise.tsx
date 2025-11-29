@@ -7,50 +7,24 @@ import {
   Card,
   CardContent,
 } from '@/components'
-import { X, Timer, CheckCircle2, TrendingUp, ArrowRight } from 'lucide-react'
+import {
+  X,
+  Timer,
+  CheckCircle2,
+  TrendingUp,
+  ArrowRight,
+  Loader2,
+} from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useOnboardingStore } from '@/store'
+import { useOnboardingStore, usePracticeStore } from '@/store'
+import { useMutation } from '@tanstack/react-query'
+import { sessionMutation } from '@/integration'
 
 interface ReadingExerciseProps {
-  exerciseId: string
-  onComplete: () => void
+  exerciseId?: string
+  onComplete?: () => void
   onExit: () => void
 }
-
-const SAMPLE_PASSAGE = `Neuroplasticity, the brain's ability to reorganize itself by forming new neural connections throughout life, has revolutionized our understanding of learning and cognitive development. This remarkable feature allows the brain to compensate for injury, adapt to new situations, and adjust to environmental changes. Scientists have discovered that engaging in challenging mental activities, learning new skills, and maintaining social connections can significantly enhance neuroplasticity at any age. Regular practice and repetition strengthen neural pathways, making tasks easier over time. This understanding has profound implications for education, rehabilitation, and personal development, suggesting that our brains remain malleable and capable of growth well into old age.`
-
-const QUESTIONS = [
-  {
-    question: 'What is neuroplasticity?',
-    options: [
-      'A type of brain surgery',
-      "The brain's ability to form new neural connections",
-      'A learning disability',
-      'A meditation technique',
-    ],
-    correct: 1,
-  },
-  {
-    question: 'According to the passage, what enhances neuroplasticity?',
-    options: [
-      'Avoiding new experiences',
-      'Staying in isolation',
-      'Engaging in challenging mental activities',
-      'Taking frequent breaks from thinking',
-    ],
-    correct: 2,
-  },
-  {
-    question: 'When does neuroplasticity occur?',
-    options: [
-      'Only in childhood',
-      'Only in young adults',
-      'Throughout life',
-      'Only after brain injury',
-    ],
-    correct: 2,
-  },
-]
 
 export function ReadingExercise({
   // exerciseId,
@@ -58,6 +32,7 @@ export function ReadingExercise({
   onExit,
 }: ReadingExerciseProps) {
   const { updateProfile, ...userProfile } = useOnboardingStore()
+  const { passage } = usePracticeStore()
   const [stage, setStage] = useState<'reading' | 'questions' | 'results'>(
     'reading'
   )
@@ -66,15 +41,28 @@ export function ReadingExercise({
   const [answers, setAnswers] = useState<number[]>([])
   const setElapsedTime = useState(0)[1]
 
+  const { mutate: saveSession, isPending: isSaving } =
+    useMutation(sessionMutation)
+
   useEffect(() => {
-    setStartTime(Date.now())
+    if (passage) {
+      setStartTime(Date.now())
+    }
 
     const timer = setInterval(() => {
       setElapsedTime(Math.floor((Date.now() - Date.now()) / 1000))
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [passage])
+
+  if (!passage) {
+    return (
+      <div className='flex items-center justify-center min-h-[50vh]'>
+        <Loader2 className='w-8 h-8 animate-spin text-indigo-600' />
+      </div>
+    )
+  }
 
   const handleFinishReading = () => {
     setEndTime(Date.now())
@@ -89,14 +77,14 @@ export function ReadingExercise({
 
   const handleSubmit = () => {
     const timeInMinutes = (endTime - startTime) / 1000 / 60
-    const wordCount = SAMPLE_PASSAGE.split(' ').length
+    const wordCount = passage.text.split(' ').length
     const wpm = Math.round(wordCount / timeInMinutes)
 
     const correctAnswers = answers.filter(
-      (answer, idx) => answer === QUESTIONS[idx].correct
+      (answer, idx) => answer === passage.questions[idx].correctIndex
     ).length
     const currentComprehensionScore = Math.round(
-      (correctAnswers / QUESTIONS.length) * 100
+      (correctAnswers / passage.questions.length) * 100
     )
 
     const xpEarned =
@@ -104,11 +92,26 @@ export function ReadingExercise({
       (currentComprehensionScore >= 80 ? 20 : 0) +
       (wpm > userProfile.current_wpm! ? 30 : 0)
 
+    // Update local profile
     updateProfile({
       current_wpm: Math.max(userProfile.current_wpm!, wpm),
       current_comprehension_score: currentComprehensionScore,
       xp_earned: userProfile.xp_earned! + xpEarned,
       total_sessions: userProfile.total_sessions! + 1,
+    })
+
+    // Persist to backend
+    saveSession({
+      passage_id: passage.id,
+      exercise_id: 'speed_reading', // TODO: Get real exercise ID
+      wpm,
+      comprehension: currentComprehensionScore,
+      duration: Math.round((endTime - startTime) / 1000),
+      total_words: wordCount,
+      correct_answers: correctAnswers,
+      total_questions: passage.questions.length,
+      start_time: startTime,
+      elapsed_time: Math.round((endTime - startTime) / 1000),
     })
 
     setStage('results')
@@ -143,7 +146,7 @@ export function ReadingExercise({
           </div>
 
           <div className='prose prose-lg max-w-none leading-relaxed text-gray-800 p-6'>
-            {SAMPLE_PASSAGE}
+            {passage.text}
           </div>
         </CardContent>
       </Card>
@@ -177,16 +180,16 @@ export function ReadingExercise({
 
       <div className='mb-4'>
         <Progress
-          value={(answers.length / QUESTIONS.length) * 100}
+          value={(answers.length / passage.questions.length) * 100}
           className='h-2'
         />
         <p className='text-sm text-gray-600 text-center mt-2'>
-          {answers.length} of {QUESTIONS.length} answered
+          {answers.length} of {passage.questions.length} answered
         </p>
       </div>
 
       <div className='space-y-6'>
-        {QUESTIONS.map((q, qIdx) => (
+        {passage.questions.map((q, qIdx) => (
           <Card key={qIdx}>
             <CardContent className='pt-6'>
               <h3 className='mb-4'>Question {qIdx + 1}</h3>
@@ -226,9 +229,16 @@ export function ReadingExercise({
         </Button>
         <Button
           onClick={handleSubmit}
-          disabled={answers.length !== QUESTIONS.length}
+          disabled={answers.length !== passage.questions.length || isSaving}
           className='flex-1'>
-          Submit Answers
+          {isSaving ? (
+            <>
+              <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+              Saving...
+            </>
+          ) : (
+            'Submit Answers'
+          )}
         </Button>
       </div>
     </motion.div>
@@ -236,12 +246,14 @@ export function ReadingExercise({
 
   const renderResults = () => {
     const timeInMinutes = (endTime - startTime) / 1000 / 60
-    const wordCount = SAMPLE_PASSAGE.split(' ').length
+    const wordCount = passage.text.split(' ').length
     const wpm = Math.round(wordCount / timeInMinutes)
     const correctAnswers = answers.filter(
-      (answer, idx) => answer === QUESTIONS[idx].correct
+      (answer, idx) => answer === passage.questions[idx].correctIndex
     ).length
-    const comprehension = Math.round((correctAnswers / QUESTIONS.length) * 100)
+    const comprehension = Math.round(
+      (correctAnswers / passage.questions.length) * 100
+    )
     const improvement = wpm - userProfile.baseline_wpm!
 
     return (
@@ -276,7 +288,7 @@ export function ReadingExercise({
               </div>
               <div className='text-gray-600 mb-2'>Comprehension</div>
               <div className='text-sm text-gray-600'>
-                {correctAnswers}/{QUESTIONS.length} correct
+                {correctAnswers}/{passage.questions.length} correct
               </div>
             </CardContent>
           </Card>
