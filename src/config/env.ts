@@ -7,6 +7,7 @@ const clientEnvSchema = z.object({
   VITE_SUPABASE_ANON_KEY: z.string(),
   VITE_PROJECT_ID: z.string(),
   VITE_PROJECT_ANON_KEY: z.string(),
+  VITE_PAYSTACK_PUBLIC_KEY: z.string(),
 });
 
 // Validate client environment

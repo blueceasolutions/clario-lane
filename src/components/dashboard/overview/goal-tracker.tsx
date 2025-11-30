@@ -36,19 +36,19 @@ export const GoalTrackerCard = (props: Props) => {
             <div>
               <div className='flex justify-between mb-2'>
                 <span className='text-sm '>Starting Point</span>
-                <span className='text-sm text-gray-900'>
+                <span className='text-sm text-gray-900 dark:text-gray-300'>
                   {props.baseline_wpm} WPM
                 </span>
               </div>
               <div className='flex justify-between mb-2'>
                 <span className='text-sm '>Current Speed</span>
-                <span className='text-sm text-indigo-600'>
+                <span className='text-sm text-primary'>
                   {props.current_wpm} WPM
                 </span>
               </div>
               <div className='flex justify-between mb-4'>
                 <span className='text-sm '>30-Day Goal</span>
-                <span className='text-sm text-gray-900'>
+                <span className='text-sm text-gray-900 dark:text-gray-300'>
                   {props.goalWPM} WPM
                 </span>
               </div>
@@ -58,29 +58,33 @@ export const GoalTrackerCard = (props: Props) => {
               </p>
             </div>
 
-            <div className='bg-indigo-50 p-4 rounded-lg'>
-              <h3 className='mb-2 text-primary'>On Track!</h3>
-              <p className='text-sm text-gray-700'>
+            <div className='bg-indigo-50 dark:bg-indigo-900 p-4 rounded-lg'>
+              <h3 className='mb-2 text-primary dark:text-indigo-300'>
+                On Track!
+              </h3>
+              <p className='text-sm text-gray-700 dark:text-gray-300'>
                 You're making great progress. At this rate, you'll hit your goal
                 in {Math.round(30 * (1 - props.progressPercent / 100))} days.
               </p>
             </div>
 
             <div className='grid grid-cols-3 gap-3 text-center'>
-              <div className='bg-white p-3 rounded-lg border'>
-                <div className='text-lg text-indigo-600'>
+              <div className='bg-background p-3 rounded-lg border'>
+                <div className='text-lg text-primary dark:text-indigo-400'>
                   {props.streak_days}
                 </div>
                 <div className='text-xs '>Day Streak</div>
               </div>
-              <div className='bg-white p-3 rounded-lg border'>
-                <div className='text-lg text-indigo-600'>
+              <div className='bg-background p-3 rounded-lg border'>
+                <div className='text-lg text-primary dark:text-indigo-400'>
                   {props.badges?.length || 0}
                 </div>
                 <div className='text-xs '>Badges</div>
               </div>
-              <div className='bg-white p-3 rounded-lg border'>
-                <div className='text-lg text-indigo-600'>{props.level}</div>
+              <div className='bg-background p-3 rounded-lg border'>
+                <div className='text-lg text-primary dark:text-indigo-400'>
+                  {props.level}
+                </div>
                 <div className='text-xs '>Level</div>
               </div>
             </div>

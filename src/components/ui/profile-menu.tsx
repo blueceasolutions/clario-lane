@@ -40,13 +40,15 @@ export function ProfileMenu(props: Props) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='start'>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel className='font-semibold'>
+          {name || 'My Account'}
+        </DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link to='/dashboard'>Dashboard</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to='/dashboard'>Billing</Link>
+            <Link to='/dashboard/settings'>Billing</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Link to='/dashboard/settings'>Settings</Link>

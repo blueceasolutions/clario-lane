@@ -14,3 +14,18 @@ export const subscriptionMutation = mutationOptions({
     return data;
   },
 });
+
+export const cancelSubscriptionKey = "cancel-subscription";
+
+export const cancelSubscriptionMutation = mutationOptions({
+  mutationKey: [cancelSubscriptionKey],
+  mutationFn: async () => {
+    const { data, error } = await supabaseService.sp.functions.invoke(
+      "subscription/cancel",
+      { method: "POST" },
+    );
+
+    if (error) throw error;
+    return data;
+  },
+});

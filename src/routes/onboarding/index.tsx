@@ -25,9 +25,10 @@ import {
   fetchPlans,
 } from '@/integration/queries'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { userMutation, subscriptionMutation } from '@/integration'
+import { userMutation } from '@/integration'
 import { useCallback, useEffect } from 'react'
 import { supabaseService } from '~supabase/clientServices'
+import { clientEnv } from '@/config/env'
 
 export const Route = createFileRoute('/onboarding/')({
   component: RouteComponent,
@@ -62,8 +63,6 @@ function RouteComponent() {
 
   const { mutateAsync: createMutateAsync } = useMutation(userMutation)
 
-  const { mutateAsync: subscriptionMutate } = useMutation(subscriptionMutation)
-
   const toggleSelection = (category: keyof Preferences, value: string) => {
     updateProfile({
       [category]: onboarding[category].includes(value)
@@ -74,13 +73,14 @@ function RouteComponent() {
 
   const onSubscribe = useCallback(
     (amount: number, plan: string) => {
-      subscriptionMutate({
+      paystackPop.newTransaction({
+        key: clientEnv.VITE_PAYSTACK_PUBLIC_KEY,
         email: onboarding.email,
         amount,
-        plan,
-      }).then((data) => paystackPop.resumeTransaction(data.data.access_code))
+        planCode: plan,
+      })
     },
-    [onboarding.email, subscriptionMutate]
+    [onboarding.email]
   )
 
   const handleSubmission = async () => {

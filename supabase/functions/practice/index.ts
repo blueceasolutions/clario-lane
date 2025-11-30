@@ -5,9 +5,9 @@ import { Database } from "../../supabase_types.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabase_anon_key = Deno.env.get("SUPABASE_ANON_KEY")!;
-const supabase_service_key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-const supabaseAdmin = createClient<Database>(supabaseUrl, supabase_service_key);
+// const supabase_service_key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+// const supabaseAdmin = createClient<Database>(supabaseUrl, supabase_service_key);
 
 const sessionSchema = z.object({
   passage_id: z.string(),
@@ -172,7 +172,7 @@ async function handleCreateSession(
     if (res.error) throw res.error;
 
     // Update average scores
-    const { data, error: avgError } = await client.rpc(
+    const { error: avgError } = await client.rpc(
       "update_avg_scores",
       {
         uid: userId,

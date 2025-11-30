@@ -65,15 +65,13 @@ function RouteComponent() {
     }
   }, [activePathname, currentPath, pathsArray])
 
-  const pathLength = `grid-cols-${dashboardPrimaryPaths.length}`
-
   return (
     <div className='min-h-fit '>
       <div className='max-w-7xl mx-auto px-6 py-8'>
         <div className='flex items-center pb-8'>
           <BackButton />
           <Tabs value={activePathname} className='w-fit mx-auto '>
-            <TabsList className={`grid w-full max-w-2xl mx-auto ${pathLength}`}>
+            <TabsList className={`grid w-full max-w-2xl mx-auto grid-cols-4`}>
               {dashboardPrimaryPaths.map((path) => {
                 const Icon = Icons[path]
                 return (

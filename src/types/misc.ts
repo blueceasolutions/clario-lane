@@ -61,6 +61,7 @@ export const SubscriptionRequestSchema = z.object({
   email: z.email(),
   amount: z.number(),
   plan: z.string(),
+  name: z.string(),
 });
 
 export type SubscriptionRequest = z.infer<typeof SubscriptionRequestSchema>;
