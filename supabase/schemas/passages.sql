@@ -18,5 +18,5 @@ with check (true);
 
 create policy "Authenticated users can select passages"
 on passages for select
-to authenticated
+to anon, authenticated
 using (true);

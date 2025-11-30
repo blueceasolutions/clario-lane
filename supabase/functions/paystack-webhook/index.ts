@@ -1,6 +1,4 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { Hono } from "jsr:@hono/hono";
-import { cors } from "jsr:@hono/hono/cors";
 import crypto from "node:crypto";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import type { Database } from "../../supabase_types.ts";
@@ -11,44 +9,86 @@ const secret = Deno.env.get("PAYSTACK_SECRET_KEY")!;
 
 const supabaseAdmin = createClient<Database>(supabaseUrl, supabase_service_key);
 
-const app = new Hono();
-app.use("*", cors());
-
-app.post("/paystack-webhook", async (c) => {
-  const payload = await c.req.json();
-  const signature = c.req.header("x-paystack-signature");
-
-  const hash = crypto.createHmac("sha512", secret).update(
-    JSON.stringify(payload),
-  ).digest("hex");
-  if (hash !== signature) {
-    c.json({ success: false, message: "Not authorized" }, 401);
-  }
-
-  const { data: customer, error: customerError } = await supabaseAdmin
-    .from("users")
-    .select("id").eq("email", payload.data.customer.email)
-    .single();
-
-  if (customerError || !customer) {
-    return new Response("user not found", { status: 400 });
-  }
-
-  const is_subscribed = payload.event === "charge.success";
-
-  await supabaseAdmin.from("paystack_payloads").insert([
-    {
-      payload,
-      user_id: customer.id,
+function jsonResponse(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
     },
-  ]);
+  });
+}
 
-  await supabaseAdmin.from("users").update({ is_subscribed }).eq(
-    "id",
-    customer.id,
-  );
+async function handlePaystackWebhook(req: Request) {
+  try {
+    const payload = await req.json();
+    const signature = req.headers.get("x-paystack-signature");
 
-  return new Response("got it", { status: 200 });
+    // Verify webhook signature
+    const hash = crypto.createHmac("sha512", secret)
+      .update(JSON.stringify(payload))
+      .digest("hex");
+
+    if (hash !== signature) {
+      return jsonResponse({ success: false, message: "Not authorized" }, 401);
+    }
+
+    // Find user by email
+    const { data: customer, error: customerError } = await supabaseAdmin
+      .from("users")
+      .select("id")
+      .eq("email", payload.data.customer.email)
+      .single();
+
+    if (customerError || !customer) {
+      return new Response("user not found", { status: 400 });
+    }
+
+    const is_subscribed = payload.event === "charge.success";
+
+    // Store webhook payload
+    await supabaseAdmin.from("paystack_payloads").insert([
+      {
+        payload,
+        user_id: customer.id,
+      },
+    ]);
+
+    // Update user subscription status
+    await supabaseAdmin.from("users").update({ is_subscribed }).eq(
+      "id",
+      customer.id,
+    );
+
+    return new Response("got it", { status: 200 });
+  } catch (error) {
+    console.error("Webhook error:", error);
+    return new Response("Internal server error", { status: 500 });
+  }
+}
+
+Deno.serve(async (req) => {
+  const url = new URL(req.url);
+  const path = url.pathname;
+  const method = req.method;
+
+  // Handle CORS preflight
+  if (method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, x-paystack-signature",
+      },
+    });
+  }
+
+  // Route matching
+  if (path === "/paystack-webhook" && method === "POST") {
+    return handlePaystackWebhook(req);
+  }
+
+  // 404 Not Found
+  return jsonResponse({ success: false, message: "Not found" }, 404);
 });
-
-Deno.serve(app.fetch);

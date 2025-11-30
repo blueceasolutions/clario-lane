@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
-import { apiInstance } from "../apiInstance";
 import type { PassageResponse } from "@/types";
 import { usePracticeStore } from "@/store";
+import { supabaseService } from "~supabase/clientServices";
 
 export const fetchPassageKey = "passage";
 
@@ -12,9 +12,17 @@ export const fetchPassage = queryOptions({
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
   queryFn: async () => {
-    const { data } = await apiInstance.get("practice/passage");
-    if (data.data) {
-      usePracticeStore.setState({ passage: data?.data?.passage });
+    const { data } = await supabaseService.sp.functions.invoke(
+      "/practice/passage",
+      {
+        method: "GET",
+      },
+    );
+
+    console.log({ data });
+
+    if (data) {
+      usePracticeStore.setState({ passage: data.data.passage });
     }
     return data.data as PassageResponse;
   },

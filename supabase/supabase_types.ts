@@ -369,7 +369,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_avg_scores: { Args: { uid: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never

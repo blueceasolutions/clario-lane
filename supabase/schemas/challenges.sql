@@ -19,5 +19,5 @@ with check (true);
 
 create policy "Authenticated users can select challenges"
 on challenges for select
-to authenticated
+to anon, authenticated
 using (true);

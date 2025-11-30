@@ -22,5 +22,5 @@ with check (true);
 
 create policy "Authenticated users can select exercises"
 on exercises for select
-to authenticated
+to anon, authenticated
 using (true);

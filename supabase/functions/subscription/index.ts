@@ -1,24 +1,18 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { Hono } from "jsr:@hono/hono";
-
-// import { createClient } from "npm:@supabase/supabase-js@2";
 
 const paystackSecretKey = Deno.env.get("PAYSTACK_SECRET_KEY")!;
-// const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-// const supabase_anon_key = Deno.env.get("SUPABASE_ANON_KEY")!;
-// const supabase_service_key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
-// For user-facing operations (respects RLS)
-// const supabase = createClient(supabaseUrl, supabase_anon_key);
-// For admin operations (bypasses RLS)
-// const supabaseAdmin = createClient(supabaseUrl, supabase_service_key);
 
 const planUrl = "https://api.paystack.co/plan";
 const initateTransactionUrl = "https://api.paystack.co/transaction/initialize";
 
-const app = new Hono();
+function jsonResponse(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
 
-app.get("/subscription/plans", async () => {
+async function handleGetPlans() {
   try {
     const response = await fetch(planUrl, {
       method: "GET",
@@ -40,28 +34,65 @@ app.get("/subscription/plans", async () => {
       description: plan.description,
       currency: plan.currency,
     }));
-    return Response.json(plans);
+
+    return jsonResponse(plans);
   } catch (error) {
     console.log(error);
-    return Response.json([]);
+    return jsonResponse([]);
   }
+}
+
+async function handleInitializeSubscription(req: Request) {
+  try {
+    const { email, amount, plan } = await req.json();
+
+    const response = await fetch(initateTransactionUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${paystackSecretKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, amount: amount * 100, plan }),
+    });
+
+    const data = await response.json();
+
+    return jsonResponse(data);
+  } catch (error) {
+    console.error("Error initializing subscription:", error);
+    return jsonResponse(
+      { success: false, message: "Failed to initialize subscription" },
+      500,
+    );
+  }
+}
+
+Deno.serve(async (req) => {
+  const url = new URL(req.url);
+  const path = url.pathname;
+  const method = req.method;
+
+  // Handle CORS preflight
+  if (method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
+  }
+
+  // Route matching
+  if (path === "/subscription/plans" && method === "GET") {
+    return handleGetPlans();
+  }
+
+  if (path === "/subscription/initialize" && method === "POST") {
+    return handleInitializeSubscription(req);
+  }
+
+  // 404 Not Found
+  return jsonResponse({ success: false, message: "Not found" }, 404);
 });
-
-app.post("/subscription/initialize", async (c) => {
-  const { email, amount, plan } = await c.req.json();
-
-  const response = await fetch(initateTransactionUrl, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${paystackSecretKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, amount: amount * 100, plan }),
-  });
-
-  const data = await response.json();
-
-  return Response.json(data);
-});
-
-Deno.serve(app.fetch);
