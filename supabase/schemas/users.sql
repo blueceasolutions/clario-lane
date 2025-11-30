@@ -25,10 +25,11 @@ create table if not exists users (
     focus_score numeric default 0,
     is_subscribed boolean default false,
     date_of_birth date,
-
+    display_settings JSONB DEFAULT '{"fontFamily": "Inter", "fontSize": 48}',
     created_at timestamptz default now(),
     updated_at timestamptz default now()
 );
+
 
 -- Enable RLS
 alter table users enable row level security;

@@ -287,6 +287,7 @@ export type Database = {
           current_wpm: number | null
           daily_reminder: boolean | null
           date_of_birth: string | null
+          display_settings: Json | null
           email: string
           focus_score: number | null
           goals: string | null
@@ -316,6 +317,7 @@ export type Database = {
           current_wpm?: number | null
           daily_reminder?: boolean | null
           date_of_birth?: string | null
+          display_settings?: Json | null
           email: string
           focus_score?: number | null
           goals?: string | null
@@ -345,6 +347,7 @@ export type Database = {
           current_wpm?: number | null
           daily_reminder?: boolean | null
           date_of_birth?: string | null
+          display_settings?: Json | null
           email?: string
           focus_score?: number | null
           goals?: string | null

@@ -2,8 +2,14 @@ import { Play, Pause, RotateCcw } from 'lucide-react'
 import { Button, Slider } from '@/components'
 import { SpeedReadingPending } from '../speed-reading-pending'
 import { useRSVPReader, type RSVPReaderProps } from './useRSVPReader'
+import {
+  DisplayText,
+  DisplaySettings,
+  useSyncDisplaySettings,
+} from '../../shared'
 
 export function RSVPReader({ onPause }: RSVPReaderProps) {
+  useSyncDisplaySettings()
   const {
     progress,
     handleComplete,
@@ -24,16 +30,20 @@ export function RSVPReader({ onPause }: RSVPReaderProps) {
   }
 
   return (
-    <div className='w-full max-w-3xl mx-auto space-y-6'>
+    <div className='w-full mx-auto space-y-6'>
       {/* Word Display */}
-      <div className='bg-card border border-border rounded-lg p-12 min-h-[240px] flex items-center justify-center'>
+      <div className='bg-card border border-border rounded-lg p-12 min-h-[240px] h-[45svh] flex items-center justify-center'>
         <div className='text-center'>
           {words.length > 0 && currentIndex < words.length ? (
-            <span className='text-5xl'>{words[currentIndex]}</span>
+            <DisplayText>{words[currentIndex]}</DisplayText>
           ) : words.length > 0 ? (
-            <span className='text-3xl text-muted-foreground'>Complete!</span>
+            <DisplayText className='text-muted-foreground'>
+              Complete!
+            </DisplayText>
           ) : (
-            <span className='text-2xl text-muted-foreground'>Loading...</span>
+            <DisplayText className='text-muted-foreground'>
+              Loading...
+            </DisplayText>
           )}
         </div>
       </div>
@@ -101,7 +111,10 @@ export function RSVPReader({ onPause }: RSVPReaderProps) {
       <div className='space-y-2'>
         <div className='flex justify-between items-center'>
           <label className='text-sm'>Reading Speed</label>
-          <span className='text-sm tabular-nums'>{wpm} WPM</span>
+          <div className='flex items-center gap-2'>
+            <span className='text-sm tabular-nums'>{wpm} WPM</span>
+            <DisplaySettings />
+          </div>
         </div>
         <Slider
           value={[wpm]}
