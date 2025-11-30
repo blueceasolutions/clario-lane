@@ -1,80 +1,79 @@
-import { Link } from "@tanstack/react-router";
-import { BookOpen } from "lucide-react";
+import { Link } from '@tanstack/react-router'
+import { BookOpen } from 'lucide-react'
+import { Copyright } from './copyright'
 
 export const Footer = () => {
   return (
-    <footer className="bg-card border-t py-12 px-4">
-      <div className="container mx-auto max-w-6xl">
-        <div className="grid md:grid-cols-4 gap-8">
+    <footer className='bg-card border-t py-12 px-4'>
+      <div className='container mx-auto max-w-6xl'>
+        <div className='grid md:grid-cols-4 gap-8'>
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <BookOpen className="size-6 text-primary" />
-              <span className="text-xl">ClarioLane</span>
+            <div className='flex items-center gap-2 mb-4'>
+              <BookOpen className='size-6 text-primary' />
+              <span className='text-xl'>ClarioLane</span>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               The clear path to reading mastery.
             </p>
           </div>
           <div>
-            <h3 className="mb-4">Product</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h3 className='mb-4'>Product</h3>
+            <ul className='space-y-2 text-sm text-muted-foreground'>
               <li>
-                <Link to="/" className="hover:text-foreground">
+                <Link to='/' className='hover:text-foreground'>
                   Features
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-foreground">
+                <Link to='/' className='hover:text-foreground'>
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-foreground">
+                <Link to='/' className='hover:text-foreground'>
                   FAQ
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="mb-4">Company</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h3 className='mb-4'>Company</h3>
+            <ul className='space-y-2 text-sm text-muted-foreground'>
               <li>
-                <Link to="/" className="hover:text-foreground">
+                <Link to='/' className='hover:text-foreground'>
                   About
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-foreground">
+                <Link to='/' className='hover:text-foreground'>
                   Contact
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-foreground">
+                <Link to='/' className='hover:text-foreground'>
                   Blog
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="mb-4">Legal</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h3 className='mb-4'>Legal</h3>
+            <ul className='space-y-2 text-sm text-muted-foreground'>
               <li>
-                <Link to="/" className="hover:text-foreground">
+                <Link to='/' className='hover:text-foreground'>
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-foreground">
+                <Link to='/' className='hover:text-foreground'>
                   Terms of Service
                 </Link>
               </li>
             </ul>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          © 2025 ClarioLane. All rights reserved.
-        </div>
+        <Copyright />
       </div>
     </footer>
-  );
-};
+  )
+}

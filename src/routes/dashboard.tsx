@@ -1,4 +1,10 @@
-import { BackButton, Tabs, TabsList, TabsTrigger } from '@/components'
+import {
+  BackButton,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  Copyright,
+} from '@/components'
 import { useOnboardingFlow } from '@/store'
 import {
   createFileRoute,
@@ -66,8 +72,8 @@ function RouteComponent() {
   }, [activePathname, currentPath, pathsArray])
 
   return (
-    <div className='min-h-fit '>
-      <div className='max-w-7xl mx-auto px-6 py-8'>
+    <div className='min-h-[calc(100vh-6rem)] w-full flex flex-col'>
+      <div className='max-w-7xl flex-1 w-full mx-auto px-6 py-8'>
         <div className='flex items-center pb-8'>
           <BackButton />
           <Tabs value={activePathname} className='w-fit mx-auto '>
@@ -99,6 +105,7 @@ function RouteComponent() {
           <Outlet />
         </AnimatePresence>
       </div>
+      <Copyright />
     </div>
   )
 }

@@ -1,5 +1,9 @@
 import * as React from 'react'
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import {
+  Outlet,
+  createRootRouteWithContext,
+  useLocation,
+} from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
@@ -44,12 +48,14 @@ export const Route = createRootRouteWithContext<RootRouteContext>()({
 })
 
 function RootComponent() {
+  const location = useLocation()
+  console.log(location.pathname)
   return (
     <React.Fragment>
       <SettingsProvider>
         <Navbar />
         <Outlet />
-        <Footer />
+        {!location.pathname.startsWith('/dashboard') && <Footer />}
         <Toaster position='top-center' />
         <TanStackRouterDevtools position='bottom-left' />
         <ReactQueryDevtools position='bottom' initialIsOpen={false} />

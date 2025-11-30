@@ -4,6 +4,7 @@ export * from "./ui";
 export * from "./theme";
 export * from "./navbar";
 export * from "./footer";
+export * from "./copyright";
 export * from "./onboarding";
 export * from "./default-catch-boundary";
 export * from "./dashboard";
