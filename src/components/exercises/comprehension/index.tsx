@@ -1,16 +1,16 @@
 import { usePracticeStore } from '../../../store/practice/practiceStore'
-import { RSVPReader } from './RSVPReader'
+import { ComprehensionReader } from './ComprehensionReader'
 import { ComprehensionQuiz, Results } from '../shared'
 import { PracticeStep } from '@/lib'
 import type { ReactNode } from 'react'
 
 const steps: Record<PracticeStep, ReactNode> = {
-  Reading: <RSVPReader />,
+  Reading: <ComprehensionReader />,
   Quiz: <ComprehensionQuiz />,
   Results: <Results />,
 }
 
-export const SpeedReadingTraining = () => {
+export const ComprehensionTraining = () => {
   const { currentStep } = usePracticeStore()
 
   return <div>{steps[currentStep]}</div>

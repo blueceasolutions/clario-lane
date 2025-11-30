@@ -21,6 +21,7 @@ import { Route as DashboardPracticeRouteImport } from './routes/dashboard/practi
 import { Route as DashboardChallengesRouteImport } from './routes/dashboard/challenges'
 import { Route as DashboardPracticeIndexRouteImport } from './routes/dashboard/practice/index'
 import { Route as DashboardPracticeSpeedreadingPracticeIdRouteImport } from './routes/dashboard/practice/speedreading/$practiceId'
+import { Route as DashboardPracticeComprehensionPracticeIdRouteImport } from './routes/dashboard/practice/comprehension/$practiceId'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -83,6 +84,12 @@ const DashboardPracticeSpeedreadingPracticeIdRoute =
     path: '/speedreading/$practiceId',
     getParentRoute: () => DashboardPracticeRoute,
   } as any)
+const DashboardPracticeComprehensionPracticeIdRoute =
+  DashboardPracticeComprehensionPracticeIdRouteImport.update({
+    id: '/comprehension/$practiceId',
+    path: '/comprehension/$practiceId',
+    getParentRoute: () => DashboardPracticeRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/dashboard/practice/': typeof DashboardPracticeIndexRoute
+  '/dashboard/practice/comprehension/$practiceId': typeof DashboardPracticeComprehensionPracticeIdRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
 }
 export interface FileRoutesByTo {
@@ -107,6 +115,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/onboarding': typeof OnboardingIndexRoute
   '/dashboard/practice': typeof DashboardPracticeIndexRoute
+  '/dashboard/practice/comprehension/$practiceId': typeof DashboardPracticeComprehensionPracticeIdRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
 }
 export interface FileRoutesById {
@@ -122,6 +131,7 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/dashboard/practice/': typeof DashboardPracticeIndexRoute
+  '/dashboard/practice/comprehension/$practiceId': typeof DashboardPracticeComprehensionPracticeIdRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
 }
 export interface FileRouteTypes {
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/onboarding/'
     | '/dashboard/practice/'
+    | '/dashboard/practice/comprehension/$practiceId'
     | '/dashboard/practice/speedreading/$practiceId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/onboarding'
     | '/dashboard/practice'
+    | '/dashboard/practice/comprehension/$practiceId'
     | '/dashboard/practice/speedreading/$practiceId'
   id:
     | '__root__'
@@ -163,6 +175,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/onboarding/'
     | '/dashboard/practice/'
+    | '/dashboard/practice/comprehension/$practiceId'
     | '/dashboard/practice/speedreading/$practiceId'
   fileRoutesById: FileRoutesById
 }
@@ -259,16 +272,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPracticeSpeedreadingPracticeIdRouteImport
       parentRoute: typeof DashboardPracticeRoute
     }
+    '/dashboard/practice/comprehension/$practiceId': {
+      id: '/dashboard/practice/comprehension/$practiceId'
+      path: '/comprehension/$practiceId'
+      fullPath: '/dashboard/practice/comprehension/$practiceId'
+      preLoaderRoute: typeof DashboardPracticeComprehensionPracticeIdRouteImport
+      parentRoute: typeof DashboardPracticeRoute
+    }
   }
 }
 
 interface DashboardPracticeRouteChildren {
   DashboardPracticeIndexRoute: typeof DashboardPracticeIndexRoute
+  DashboardPracticeComprehensionPracticeIdRoute: typeof DashboardPracticeComprehensionPracticeIdRoute
   DashboardPracticeSpeedreadingPracticeIdRoute: typeof DashboardPracticeSpeedreadingPracticeIdRoute
 }
 
 const DashboardPracticeRouteChildren: DashboardPracticeRouteChildren = {
   DashboardPracticeIndexRoute: DashboardPracticeIndexRoute,
+  DashboardPracticeComprehensionPracticeIdRoute:
+    DashboardPracticeComprehensionPracticeIdRoute,
   DashboardPracticeSpeedreadingPracticeIdRoute:
     DashboardPracticeSpeedreadingPracticeIdRoute,
 }
