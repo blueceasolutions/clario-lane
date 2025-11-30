@@ -5,6 +5,7 @@ import {
   DailyPracticeCard,
   OverviewPending,
 } from '@/components'
+import { getBadges } from '@/lib'
 import { useQuery } from '@tanstack/react-query'
 
 import {
@@ -33,7 +34,8 @@ export function RouteComponent() {
     throw redirect({ to: '/auth' })
   }
 
-  const badges = JSON.parse(userProfile.badges || '[]')
+  const badges = getBadges(userProfile, data)
+  const earnedBadgesCount = badges.filter((b) => b.earned).length
 
   const readingSpeedData = data?.length
     ? data?.map((practiced_session, index) => ({
@@ -107,7 +109,7 @@ export function RouteComponent() {
           current_wpm={userProfile.current_wpm || 0}
           goalWPM={goalWPM}
           progressPercent={progressPercent}
-          badges={badges}
+          earnedBadges={earnedBadgesCount}
           baseline_wpm={userProfile.baseline_wpm || 0}
           level={userProfile.level || 0}
           streak_days={userProfile.streak_days || 0}

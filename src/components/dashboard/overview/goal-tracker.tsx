@@ -14,11 +14,10 @@ type Props = Pick<
 > & {
   progressPercent: number
   goalWPM: number
-  badges: string[]
+  earnedBadges: number
 }
 
 export const GoalTrackerCard = (props: Props) => {
-  console.log(props)
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -74,7 +73,7 @@ export const GoalTrackerCard = (props: Props) => {
               </div>
               <div className='bg-background p-3 rounded-lg border'>
                 <div className='text-lg text-primary dark:text-indigo-400'>
-                  {props.badges?.length || 0}
+                  {props.earnedBadges}
                 </div>
                 <div className='text-xs '>Badges</div>
               </div>

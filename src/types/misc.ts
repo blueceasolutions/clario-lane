@@ -77,6 +77,7 @@ export const AuthValidationSchema = z.object({
 export type AuthValidationSchema = z.infer<typeof AuthValidationSchema>;
 
 export type UserTable = Database["public"]["Tables"]["users"]["Row"];
+export type UserProfileType = UserTable;
 
 export type Question = {
   id: string;

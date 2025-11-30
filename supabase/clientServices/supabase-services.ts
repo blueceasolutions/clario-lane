@@ -89,10 +89,10 @@ class SupabaseService {
     return session;
   }
 
-  async getPracticedSessions(userId?: string) {
+  async getPracticedSessions(userId?: string, limit: number = 6) {
     const { data, error } = await this.sp.from("practice_sessions").select("*")
       .eq("user_id", userId || "").order("created_at", { ascending: false })
-      .limit(6);
+      .limit(limit);
     if (error) {
       logServerError(error);
     }
