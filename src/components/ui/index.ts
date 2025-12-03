@@ -27,3 +27,4 @@ export * from "./dropdown-menu";
 export * from "./theme-toggle";
 export * from "./back-button";
 export * from "./dialog";
+export * from "./textarea";

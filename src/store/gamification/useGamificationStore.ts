@@ -25,6 +25,7 @@ interface GamificationState {
       currentLevel: number;
       currentXP: number;
       isLevelUp: boolean;
+      newAchievements?: { achievement_id: string; title?: string }[];
     } | null;
   };
   levelUpModal: {

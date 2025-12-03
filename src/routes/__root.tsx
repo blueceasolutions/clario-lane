@@ -11,7 +11,12 @@ import { QueryClient } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import Navbar from '@/components/navbar'
 
-import { Footer, PendingPage, SettingsProvider } from '@/components'
+import {
+  Footer,
+  PendingPage,
+  SettingsProvider,
+  FloatingActionButton,
+} from '@/components'
 import type { Session } from '@supabase/supabase-js'
 import { supabaseService } from '~supabase/clientServices'
 import type { UserTable } from '@/types'
@@ -55,8 +60,9 @@ function RootComponent() {
       <SettingsProvider>
         <Navbar />
         <Outlet />
+        <FloatingActionButton />
         {!location.pathname.startsWith('/dashboard') && <Footer />}
-        <Toaster position='top-center' />
+        <Toaster position='top-center' richColors />
         <TanStackRouterDevtools position='bottom-left' />
         <ReactQueryDevtools position='bottom' initialIsOpen={false} />
       </SettingsProvider>

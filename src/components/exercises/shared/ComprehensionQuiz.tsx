@@ -72,10 +72,26 @@ export function ComprehensionQuiz() {
           passage_id: passageResponse?.id,
         },
         {
-          onSuccess: async () => {
+          onSuccess: async (response: any) => {
             // Fetch updated stats to calculate XP gained and check for level up
             const newStats = await queryClient.fetchQuery(
               fetchUserStats(currentStats?.user_id)
+            )
+
+            const newAchievementsData = response?.data?.new_achievements || []
+            const { achievements: allAchievements } =
+              useGamificationStore.getState()
+
+            const newAchievementsWithTitles = newAchievementsData.map(
+              (na: any) => {
+                const ach = allAchievements.find(
+                  (a) => a.id === na.achievement_id
+                )
+                return {
+                  achievement_id: na.achievement_id,
+                  title: ach?.title || na.achievement_id,
+                }
+              }
             )
 
             if (newStats && currentStats) {
@@ -89,6 +105,7 @@ export function ComprehensionQuiz() {
                 currentLevel: newStats.level,
                 currentXP: newStats.xp,
                 isLevelUp,
+                newAchievements: newAchievementsWithTitles,
               })
 
               if (isLevelUp) {

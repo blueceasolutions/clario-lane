@@ -29,6 +29,7 @@ import { userMutation } from '@/integration'
 import { useCallback, useEffect } from 'react'
 import { supabaseService } from '~supabase/clientServices'
 import { clientEnv } from '@/config/env'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/onboarding/')({
   component: RouteComponent,
@@ -88,7 +89,11 @@ function RouteComponent() {
       ...onboarding,
       onboarding_completed: true,
       streak_days: 1,
-    }).then(() => handleNext())
+    })
+      .then(() => {
+        handleNext()
+      })
+      .catch((error) => toast.error(error.message))
   }
 
   const handleNext = () => {

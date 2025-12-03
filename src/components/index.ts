@@ -10,3 +10,4 @@ export * from "./default-catch-boundary";
 export * from "./dashboard";
 export * from "./exercises";
 export * from "./gamification";
+export * from "./feedback";
