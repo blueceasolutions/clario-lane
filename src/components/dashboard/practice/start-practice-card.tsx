@@ -57,7 +57,7 @@ export const StartPracticeCard = ({
               size='sm'
               variant='outline'
               className={`w-full font-semibold `}>
-              <Link to={`${route}/${practice.id}`}>Start</Link>
+              <Link to={`${route}/${practice.id}` as any}>Start</Link>
             </Button>
           </div>
         </div>

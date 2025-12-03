@@ -2,7 +2,7 @@ import { Link, useRouteContext } from '@tanstack/react-router'
 import { BookOpen } from 'lucide-react'
 import { motion } from 'motion/react'
 
-import { Button, ProfileMenu, ThemeToggle } from './ui'
+import { Button, ProfileMenu } from './ui'
 
 const AnimateLink = motion.create(Link)
 

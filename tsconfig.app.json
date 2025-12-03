@@ -30,5 +30,6 @@
       "~supabase/*": ["./supabase/*"]
     }
   },
-  "include": ["src", "supabase"]
+  "include": ["src", "supabase"],
+  "exclude": ["supabase/functions"]
 }
