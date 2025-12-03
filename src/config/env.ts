@@ -3,10 +3,7 @@ import { z } from "zod";
 
 const clientEnvSchema = z.object({
   VITE_SUPABASE_URL: z.url(),
-  VITE_APP_NAME: z.string(),
   VITE_SUPABASE_ANON_KEY: z.string(),
-  VITE_PROJECT_ID: z.string(),
-  VITE_PROJECT_ANON_KEY: z.string(),
   VITE_PAYSTACK_PUBLIC_KEY: z.string(),
 });
 
