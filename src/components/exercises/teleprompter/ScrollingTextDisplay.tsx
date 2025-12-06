@@ -12,6 +12,7 @@ export function ScrollingTextDisplay() {
 
   // Handle auto-scrolling based on progress
   useEffect(() => {
+    console.log({ progress })
     if (scrollContainerRef.current && contentRef.current) {
       const containerHeight = scrollContainerRef.current.clientHeight
       const contentHeight = contentRef.current.clientHeight

@@ -1,18 +1,14 @@
 import { useState } from 'react'
-import {
-  MessageCircle,
-  // HelpCircle,
-  Settings as SettingsIcon,
-  X,
-} from 'lucide-react'
+import { MessageCircle, Settings as SettingsIcon, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { FeedbackModal } from './FeedbackModal'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouteContext } from '@tanstack/react-router'
 import { motion, AnimatePresence } from 'motion/react'
 
 export function FloatingActionButton() {
   const [isOpen, setIsOpen] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
+  const userSession = useRouteContext({ from: '__root__' }).session
 
   const menuItems = [
     {
@@ -20,17 +16,16 @@ export function FloatingActionButton() {
       label: 'Feedback',
       onClick: () => setShowFeedback(true),
     },
-    // {
-    //   icon: HelpCircle,
-    //   label: 'Help',
-    //   href: '/help', // Update with your actual help route
-    // },
     {
       icon: SettingsIcon,
       label: 'Settings',
       href: '/dashboard/settings',
     },
   ]
+
+  if (!userSession) {
+    menuItems.pop()
+  }
 
   return (
     <>

@@ -42,7 +42,7 @@ const dashboardPrimaryPaths = [
   'dashboard',
   'practice',
   'progress',
-  'challenges',
+  // 'challenges',
 ]
 
 const PrimaryPaths = [...dashboardPrimaryPaths] as const
@@ -84,7 +84,7 @@ function RouteComponent() {
             <BackButton />
           </div>
           <Tabs value={activePathname} className='w-fit mx-auto '>
-            <TabsList className={`grid w-full max-w-2xl mx-auto grid-cols-4`}>
+            <TabsList className={`grid w-full max-w-2xl mx-auto grid-cols-3`}>
               {dashboardPrimaryPaths.map((path) => {
                 const Icon = Icons[path]
                 return (
