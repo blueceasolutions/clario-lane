@@ -136,7 +136,7 @@ export function RouteComponent() {
           total_sessions={userProfile.total_sessions || 0}
         />
 
-        <div className='flex justify-center items-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-md p-2'>
+        <div className='flex justify-center items-center bg-linear-to-r from-primary/10 to-secondary/10 rounded-md p-2'>
           <Button size={'lg'} asChild>
             <Link to='/dashboard/practice'>Start reading</Link>
           </Button>
