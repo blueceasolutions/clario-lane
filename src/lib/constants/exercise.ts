@@ -11,6 +11,7 @@ export const PRACTICES = z.enum([
 export type PRACTICES = z.infer<typeof PRACTICES>;
 
 export const PracticeStep = z.enum([
+  "Intro",
   "Reading",
   "Quiz",
   "Results",

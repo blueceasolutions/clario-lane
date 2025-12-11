@@ -4,3 +4,4 @@ export { DisplayText } from "./DisplayText";
 export { DisplaySettings } from "./DisplaySettings";
 export { useSyncDisplaySettings } from "./useSyncDisplaySettings";
 export { ReaderControls } from "./ReaderControls";
+export { IntroStep } from "./IntroStep";

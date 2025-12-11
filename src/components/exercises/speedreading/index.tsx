@@ -1,17 +1,27 @@
 import { usePracticeStore } from '../../../store/practice/practiceStore'
 import { RSVPReader } from './RSVPReader'
-import { ComprehensionQuiz, Results } from '../shared'
+import { ComprehensionQuiz, IntroStep, Results } from '../shared'
 import { PracticeStep } from '@/lib'
 import type { ReactNode } from 'react'
 
-const steps: Record<PracticeStep, ReactNode> = {
-  Reading: <RSVPReader />,
-  Quiz: <ComprehensionQuiz />,
-  Results: <Results />,
-}
-
 export const SpeedReadingTraining = () => {
-  const { currentStep } = usePracticeStore()
+  const { currentStep, setStep } = usePracticeStore()
+
+  const steps: Record<PracticeStep, ReactNode> = {
+    Intro: (
+      <IntroStep
+        title='Speed Reading Training'
+        onContinue={() => setStep(PracticeStep.enum.Reading)}>
+        <p>
+          Focus on the center of the screen. Words will appear one at a time.
+          Try to minimize subvocalization.
+        </p>
+      </IntroStep>
+    ),
+    Reading: <RSVPReader />,
+    Quiz: <ComprehensionQuiz />,
+    Results: <Results />,
+  }
 
   return <div>{steps[currentStep]}</div>
 }

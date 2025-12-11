@@ -1,14 +1,12 @@
 import { SpeedReadingTraining } from '@/components'
-import { fetchPassage } from '@/integration'
+import { usePracticeStore } from '@/store'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
   '/dashboard/practice/speedreading/$practiceId'
 )({
   component: RouteComponent,
-  loader: async ({ context }) => {
-    context.queryClient.fetchQuery(fetchPassage)
-  },
+  onLeave: () => usePracticeStore.getState().reset(),
 })
 
 function RouteComponent() {

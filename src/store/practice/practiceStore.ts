@@ -54,7 +54,7 @@ type PracticeStoreActions = {
 
 const initialState: PracticeStore = {
   wpm: 200,
-  currentStep: PracticeStep.enum.Reading,
+  currentStep: PracticeStep.enum.Intro,
   correctAnswers: 0,
   totalQuestions: 0,
   comprehension: 0,

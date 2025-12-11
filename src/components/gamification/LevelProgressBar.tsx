@@ -13,8 +13,8 @@ export function LevelProgressBar({ currentXP, level }: LevelProgressBarProps) {
   // So: Total XP needed for level N = N^2 * 100
   const xpForCurrentLevel = level * level * 100
   const xpForNextLevel = (level + 1) * (level + 1) * 100
-  const xpIntoCurrentLevel = xpForCurrentLevel - currentXP
   const xpNeededForNextLevel = xpForNextLevel - xpForCurrentLevel
+  const xpIntoCurrentLevel = xpNeededForNextLevel - currentXP
   const progressPercent = Math.min(
     (currentXP / xpNeededForNextLevel) * 100,
     100
@@ -44,7 +44,7 @@ export function LevelProgressBar({ currentXP, level }: LevelProgressBarProps) {
         <p className='text-xs text-gray-500 mt-2 text-center dark:text-zinc-500'>
           {progressPercent >= 100
             ? 'Ready to level up! 🎉'
-            : `${Math.round(xpNeededForNextLevel - xpIntoCurrentLevel).toLocaleString()} XP to level ${level + 1}`}
+            : `${Math.round(xpIntoCurrentLevel).toLocaleString()} XP to level ${level + 1}`}
         </p>
       </CardContent>
     </Card>

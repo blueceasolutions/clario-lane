@@ -1,17 +1,27 @@
 import { usePracticeStore } from '../../../store/practice/practiceStore'
 import { TeleprompterReader } from './TeleprompterReader'
-import { ComprehensionQuiz, Results } from '../shared'
+import { ComprehensionQuiz, IntroStep, Results } from '../shared'
 import { PracticeStep } from '@/lib'
 import type { ReactNode } from 'react'
 
-const steps: Record<PracticeStep, ReactNode> = {
-  Reading: <TeleprompterReader />,
-  Quiz: <ComprehensionQuiz />,
-  Results: <Results />,
-}
-
 export const TeleprompterTraining = () => {
-  const { currentStep } = usePracticeStore()
+  const { currentStep, setStep } = usePracticeStore()
+
+  const steps: Record<PracticeStep, ReactNode> = {
+    Intro: (
+      <IntroStep
+        title='Teleprompter Training'
+        onContinue={() => setStep(PracticeStep.enum.Reading)}>
+        <p>
+          Read the text as it scrolls up the screen. Adjust the speed to match
+          your reading pace.
+        </p>
+      </IntroStep>
+    ),
+    Reading: <TeleprompterReader />,
+    Quiz: <ComprehensionQuiz />,
+    Results: <Results />,
+  }
 
   return <div>{steps[currentStep]}</div>
 }
