@@ -18,11 +18,16 @@ import { AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { VictoryModal, LevelUpModal } from '@/components/gamification'
 import { useGamificationStore } from '@/store/gamification/useGamificationStore'
+import { fetchNextSubscriptionDate } from '@/integration'
 
 export const Route = createFileRoute('/dashboard')({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
-    const { session, user } = context
+    const { session, user, queryClient } = context
+
+    const response = await queryClient.fetchQuery(fetchNextSubscriptionDate)
+
+    const isSubscriptionExpired = new Date(response) < new Date()
 
     if (!session) {
       throw redirect({ to: '/auth' })
@@ -31,7 +36,7 @@ export const Route = createFileRoute('/dashboard')({
     if (!user || !user?.onboarding_completed)
       throw redirect({ to: '/onboarding' })
 
-    if (!user?.is_subscribed) {
+    if (isSubscriptionExpired) {
       useOnboardingFlow.setState({ current_step: 7 })
       throw redirect({ to: '/onboarding' })
     }

@@ -18,7 +18,7 @@ const supabaseAdmin = createClient<Database>(supabaseUrl, supabase_service_key);
 
 const planUrl = "https://api.paystack.co/plan";
 const initateTransactionUrl = "https://api.paystack.co/transaction/initialize";
-const disableSubscriptionUrl = "https://api.paystack.co/subscription/disable";
+const subscriptionUrl = "https://api.paystack.co/subscription/";
 
 // GET /subscription/plans - Get all plans
 app.get("/subscription/plans", async (c) => {
@@ -70,7 +70,6 @@ app.post("/subscription/initialize", async (c) => {
     });
 
     const data = await response.json();
-    console.log(data);
     return c.json(data);
   } catch (error) {
     console.error("Error initializing subscription:", error);
@@ -81,8 +80,120 @@ app.post("/subscription/initialize", async (c) => {
   }
 });
 
-// POST /subscription/cancel - Cancel subscription
-app.post("/subscription/cancel", async (c) => {
+// POST /subscription/toggle - Toggle subscription
+app.post("/subscription/toggle", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    const { status } = await c.req.json(); // enable or disable
+    if (!authHeader) {
+      return c.json({ success: false, message: "Unauthorized" }, 401);
+    }
+
+    const supabaseClient = createClient<Database>(
+      supabaseUrl,
+      supabase_anon_key,
+      {
+        global: {
+          headers: { Authorization: authHeader },
+        },
+      },
+    );
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseClient.auth.getUser();
+
+    if (authError || !user) {
+      return c.json({ success: false, message: "Unauthorized" }, 401);
+    }
+
+    // Get the latest subscription code from paystack_payloads
+    const { data: subscriptionPayload, error: payloadError } =
+      await supabaseAdmin
+        .from("paystack_subscription_payloads")
+        .select("payload")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+    if (
+      payloadError || !subscriptionPayload || subscriptionPayload.length === 0
+    ) {
+      return c.json(
+        { success: false, message: "No subscription found" },
+        404,
+      );
+    }
+
+    const payload: any = subscriptionPayload[0].payload?.data;
+
+    // Extract subscription code and token from payload
+    // deno-lint-ignore no-explicit-any
+    const subscriptionCode = payload.subscription_code;
+    const email_token = payload.email_token;
+
+    if (!subscriptionCode || !email_token) {
+      console.error(
+        "Missing subscription code or email token in payload",
+        payload,
+      );
+      return c.json({
+        success: false,
+        message: "Subscription details not found. Please contact support.",
+      }, 404);
+    }
+
+    const isStatusEnable = status === "enable";
+
+    console.log({ isStatusEnable, status });
+
+    const successMessage = isStatusEnable
+      ? "Subscription enabled"
+      : "Subscription disabled";
+    const errorMessage = isStatusEnable
+      ? "Subscription could not be enabled"
+      : "Subscription could not be disabled";
+
+    const response = await fetch(`${subscriptionUrl}${status}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${paystackSecretKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code: subscriptionCode, token: email_token }),
+    });
+
+    const data = await response.json();
+    console.log({ data });
+
+    if (!data.status) {
+      return c.json({ success: false, message: errorMessage }, 400);
+    }
+
+    // Update user status
+    await supabaseAdmin
+      .from("users")
+      .update({ is_subscribed: isStatusEnable })
+      .eq("id", user.id);
+
+    return c.json({ success: true, message: successMessage });
+  } catch (error) {
+    console.error("Error cancelling subscription:", error);
+    if (error instanceof Error) {
+      return c.json(
+        { success: false, message: error.message },
+        500,
+      );
+    }
+    return c.json(
+      { success: false, message: "Failed to cancel subscription" },
+      500,
+    );
+  }
+});
+
+app.get("/subscription/next-subscription-date", async (c) => {
   try {
     const authHeader = c.req.header("Authorization");
     if (!authHeader) {
@@ -108,71 +219,32 @@ app.post("/subscription/cancel", async (c) => {
       return c.json({ success: false, message: "Unauthorized" }, 401);
     }
 
-    // Get the latest subscription code from paystack_payloads
-    const { data: payloads, error: payloadError } = await supabaseAdmin
-      .from("paystack_payloads")
-      .select("payload")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(1);
+    const { data, error } = await supabaseAdmin.from(
+      "paystack_subscription_payloads",
+    ).select("*").eq(
+      "user_id",
+      user.id,
+    ).order("created_at", { ascending: false }).limit(1);
 
-    if (payloadError || !payloads || payloads.length === 0) {
-      return c.json(
-        { success: false, message: "No subscription found" },
-        404,
-      );
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      return c.json({ success: true, message: "No subscription found" }, 200);
     }
 
-    // Extract subscription code and token from payload
-    // deno-lint-ignore no-explicit-any
-    const payloadData = payloads[0].payload as any;
-    const subscriptionCode = payloadData.data?.authorization
-      ?.authorization_code;
-    const email_token = payloadData.data?.customer?.email;
+    const payload: any = data[0].payload?.data;
+    const nextPaymentDate = payload?.next_payment_date;
+    console.log(nextPaymentDate);
 
-    console.log({
-      subscriptionCode,
-      email_token,
-      payloadData,
+    return c.json({
+      success: true,
+      message: "Subscription health checked",
+      data: { nextPaymentDate },
     });
-
-    if (!subscriptionCode || !email_token) {
-      console.error(
-        "Missing subscription code or email token in payload",
-        payloadData,
-      );
-      return c.json({
-        success: false,
-        message: "Subscription details not found. Please contact support.",
-      }, 404);
-    }
-
-    const response = await fetch(disableSubscriptionUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${paystackSecretKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code: subscriptionCode, token: email_token }),
-    });
-
-    const data = await response.json();
-
-    if (!data.status) {
-      return c.json({ success: false, message: data.message }, 400);
-    }
-
-    // Update user status
-    await supabaseAdmin
-      .from("users")
-      .update({ is_subscribed: false })
-      .eq("id", user.id);
-
-    return c.json({ success: true, message: "Subscription cancelled" });
   } catch (error) {
-    console.error("Error cancelling subscription:", error);
+    console.error("Error checking subscription health:", error);
     return c.json(
-      { success: false, message: "Failed to cancel subscription" },
+      { success: false, message: "Failed to check subscription health" },
       500,
     );
   }

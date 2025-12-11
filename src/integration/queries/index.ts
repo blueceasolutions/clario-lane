@@ -6,3 +6,4 @@ export * from "./fetchCountry";
 export * from "./fetchPassage";
 export * from "./fetchPractices";
 export * from "./fetchWordsReadToday";
+export * from "./fetchNextSubscriptionDate";

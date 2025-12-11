@@ -151,36 +151,6 @@ export type Database = {
         }
         Relationships: []
       }
-      feedback: {
-        Row: {
-          category: string
-          created_at: string
-          id: string
-          message: string
-          status: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          id?: string
-          message: string
-          status?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          id?: string
-          message?: string
-          status?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       goals: {
         Row: {
           created_at: string | null
@@ -227,6 +197,27 @@ export type Database = {
         Relationships: []
       }
       paystack_payloads: {
+        Row: {
+          created_at: string | null
+          id: string
+          payload: Json
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          payload?: Json
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          payload?: Json
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      paystack_subscription_payloads: {
         Row: {
           created_at: string | null
           id: string
@@ -587,7 +578,6 @@ export type Database = {
           just_unlocked: boolean
         }[]
       }
-      claim_quest: { Args: { quest_uuid: string }; Returns: Json }
       get_words_read_today: { Args: { uid: string }; Returns: number }
       update_avg_scores: { Args: { uid: string }; Returns: Json }
     }

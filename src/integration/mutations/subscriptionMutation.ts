@@ -15,14 +15,15 @@ export const subscriptionMutation = mutationOptions({
   },
 });
 
-export const cancelSubscriptionKey = "cancel-subscription";
+export const enableOrDisableSubscriptionToggleKey =
+  "enableOrDisableSubscriptionToggle";
 
-export const cancelSubscriptionMutation = mutationOptions({
-  mutationKey: [cancelSubscriptionKey],
-  mutationFn: async () => {
+export const enableOrDisableSubscriptionToggleMutation = mutationOptions({
+  mutationKey: [enableOrDisableSubscriptionToggleKey],
+  mutationFn: async (status: "enable" | "disable") => {
     const { data, error } = await supabaseService.sp.functions.invoke(
-      "subscription/cancel",
-      { method: "POST" },
+      "subscription/toggle",
+      { method: "POST", body: { status } },
     );
 
     if (error) throw error;

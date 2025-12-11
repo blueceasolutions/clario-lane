@@ -44,6 +44,16 @@ app.post("/paystack-webhook", async (c) => {
 
     const is_subscribed = payload.event === "charge.success";
 
+    if (payload.event === "subscription.create") {
+      // Store webhook payload
+      await supabaseAdmin.from("paystack_subscription_payloads").insert([
+        {
+          payload,
+          user_id: customer.id,
+        },
+      ]);
+    }
+
     // Store webhook payload
     await supabaseAdmin.from("paystack_payloads").insert([
       {
