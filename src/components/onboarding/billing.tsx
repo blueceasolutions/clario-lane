@@ -22,7 +22,7 @@ export default function Billing({ plans, onSubscribe }: Props) {
   const [interval, setInterval] = useState<'mo' | 'yr'>('mo')
 
   return (
-    <div className='max-w-2xl mx-auto w-full'>
+    <div className='max-w-md mx-auto w-full'>
       <header className='mb-8'>
         <h1 className='text-3xl font-extrabold'>Billing</h1>
         <p className='text-sm text-muted-foreground mt-2'>
@@ -47,7 +47,7 @@ export default function Billing({ plans, onSubscribe }: Props) {
         </div>
       </div>
 
-      <div className='grid md:grid-cols-2  gap-6'>
+      <div className='flex justify-center gap-6 flex-wrap'>
         {plans.map((plan) => (
           <PricingCard
             title={plan.name}

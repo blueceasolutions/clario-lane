@@ -45,7 +45,7 @@ export default function PricingCard({
     <motion.div
       whileHover={{ y: -8 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      className={cn('w-full max-w-sm', className)}>
+      className={cn('w-full', className)}>
       <Card
         className={cn(
           'relative h-full flex flex-col overflow-hidden transition-all duration-300',
