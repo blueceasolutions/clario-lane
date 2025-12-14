@@ -22,6 +22,7 @@ import { AuthValidationSchema } from '@/types'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { useForm } from '@tanstack/react-form'
 import { Link, useRouter } from '@tanstack/react-router'
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
 
@@ -35,6 +36,7 @@ export default function AuthPage({
   const { updateProfile } = useOnboardingStore()
   const route = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const successMessage =
     authState === 'signin' ? 'Logged in successfully' : 'Signed up successfully'
@@ -170,11 +172,12 @@ export default function AuthPage({
                     <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                     <Input
                       id={field.name}
+                      icon={<Mail />}
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       type='email'
-                      placeholder='m@example.com'
+                      placeholder='email@example.com'
                       required
                     />
                     <FieldInfo field={field} />
@@ -187,18 +190,23 @@ export default function AuthPage({
                   <Field>
                     <div className='flex items-center'>
                       <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                      <Link
-                        to='/auth/forgot-password'
-                        className='ml-auto text-sm underline-offset-4 hover:underline'>
-                        Forgot your password?
-                      </Link>
+                      <div className='ml-auto flex gap-2'>
+                        <Link
+                          to='/auth/forgot-password'
+                          className='text-sm underline-offset-4 hover:underline'>
+                          Forgot your password?
+                        </Link>
+                      </div>
                     </div>
                     <Input
                       id={field.name}
+                      hasIcon
+                      icon={<Lock />}
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      type='password'
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder='••••••••'
                       required
                     />
                     <FieldInfo field={field} />
@@ -223,13 +231,29 @@ export default function AuthPage({
                         <FieldLabel htmlFor={field.name}>
                           Confirm Password
                         </FieldLabel>
+
+                        <Button
+                          type='button'
+                          onClick={() => setShowPassword(!showPassword)}
+                          variant='ghost'
+                          size='icon'
+                          className='ml-auto size-7'>
+                          {showPassword ? (
+                            <EyeOff className='size-4' />
+                          ) : (
+                            <Eye className='size-4' />
+                          )}
+                        </Button>
                       </div>
                       <Input
+                        hasIcon
+                        icon={<Lock />}
                         id={field.name}
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        type='password'
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder='••••••••'
                         required
                       />
                       <FieldInfo field={field} />

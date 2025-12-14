@@ -19,6 +19,7 @@ import { type FormEvent, useState } from 'react'
 import { toast } from 'sonner'
 import { supabaseService } from '~supabase/clientServices'
 import { z } from 'zod'
+import { Eye, EyeOff, Lock } from 'lucide-react'
 
 export const Route = createFileRoute('/auth/reset-password')({
   component: ResetPasswordPage,
@@ -26,6 +27,7 @@ export const Route = createFileRoute('/auth/reset-password')({
 
 function ResetPasswordPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
 
   const form = useForm({
@@ -87,8 +89,11 @@ function ResetPasswordPage() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      type='password'
+                      type={showPassword ? 'text' : 'password'}
                       required
+                      hasIcon
+                      icon={<Lock />}
+                      placeholder='••••••••'
                     />
                     <FieldInfo field={field} />
                   </Field>
@@ -98,16 +103,33 @@ function ResetPasswordPage() {
                 name='confirmPassword'
                 children={(field) => (
                   <Field>
-                    <FieldLabel htmlFor={field.name}>
-                      Confirm Password
-                    </FieldLabel>
+                    <div className='flex items-center'>
+                      <FieldLabel htmlFor={field.name}>
+                        Confirm Password
+                      </FieldLabel>
+                      <Button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        variant='ghost'
+                        size='icon'
+                        className='ml-auto size-7'>
+                        {showPassword ? (
+                          <EyeOff className='size-4' />
+                        ) : (
+                          <Eye className='size-4' />
+                        )}
+                      </Button>
+                    </div>
                     <Input
                       id={field.name}
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      type='password'
+                      type={showPassword ? 'text' : 'password'}
                       required
+                      hasIcon
+                      icon={<Lock />}
+                      placeholder='••••••••'
                     />
                     <FieldInfo field={field} />
                   </Field>

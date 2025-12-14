@@ -15,19 +15,21 @@ export const Route = createFileRoute('/auth')({
 
 function RouteComponent() {
   return (
-    <div className='bg-background flex min-h-[80svh] flex-col items-center justify-center gap-6 p-6 md:p-10'>
+    <div className='bg-background min-h-[75svh] p-4 md:p-10'>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        className='flex w-full max-w-md flex-col gap-6'>
-        <Link
-          to='/'
-          className='flex items-center gap-2 self-center font-medium'>
-          <div className='bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md'>
-            <BookOpen className='size-4' />
-          </div>
-          ClarioLane
-        </Link>
+        className='w-full max-w-lg space-y-6 mx-auto'>
+        <div className='mx-auto w-fit '>
+          <Link
+            to='/'
+            className='flex items-center gap-2 self-center font-medium '>
+            <div className='bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md'>
+              <BookOpen className='size-4' />
+            </div>
+            ClarioLane
+          </Link>
+        </div>
         <Outlet />
       </motion.div>
     </div>
