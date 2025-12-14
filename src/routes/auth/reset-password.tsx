@@ -71,7 +71,7 @@ function ResetPasswordPage() {
 
   return (
     <div>
-      <Card className='w-full max-w-md'>
+      <Card className='w-full '>
         <CardHeader className='text-center'>
           <CardTitle className='text-xl'>Set new password</CardTitle>
           <CardDescription>Enter your new password below</CardDescription>

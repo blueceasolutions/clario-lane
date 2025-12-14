@@ -57,7 +57,7 @@ function ForgotPasswordPage() {
 
   return (
     <div>
-      <Card className='w-full max-w-md'>
+      <Card className='w-full '>
         <CardHeader className='text-center'>
           <CardTitle className='text-xl'>Forgot password?</CardTitle>
           <CardDescription>
@@ -78,7 +78,7 @@ function ForgotPasswordPage() {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       type='email'
-                      placeholder='m@example.com'
+                      placeholder='email@example.com'
                       required
                     />
                     <FieldInfo field={field} />
