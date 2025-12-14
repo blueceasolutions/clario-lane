@@ -1,68 +1,68 @@
-drop policy "Users can insert their own feedback" on "public"."feedback";
-
-drop policy "Users can view their own feedback" on "public"."feedback";
-
-drop policy "Users can insert their own stats" on "public"."user_stats";
-
-revoke delete on table "public"."feedback" from "anon";
-
-revoke insert on table "public"."feedback" from "anon";
-
-revoke references on table "public"."feedback" from "anon";
-
-revoke select on table "public"."feedback" from "anon";
-
-revoke trigger on table "public"."feedback" from "anon";
-
-revoke truncate on table "public"."feedback" from "anon";
-
-revoke update on table "public"."feedback" from "anon";
-
-revoke delete on table "public"."feedback" from "authenticated";
-
-revoke insert on table "public"."feedback" from "authenticated";
-
-revoke references on table "public"."feedback" from "authenticated";
-
-revoke select on table "public"."feedback" from "authenticated";
-
-revoke trigger on table "public"."feedback" from "authenticated";
-
-revoke truncate on table "public"."feedback" from "authenticated";
-
-revoke update on table "public"."feedback" from "authenticated";
-
-revoke delete on table "public"."feedback" from "service_role";
-
-revoke insert on table "public"."feedback" from "service_role";
-
-revoke references on table "public"."feedback" from "service_role";
-
-revoke select on table "public"."feedback" from "service_role";
-
-revoke trigger on table "public"."feedback" from "service_role";
-
-revoke truncate on table "public"."feedback" from "service_role";
-
-revoke update on table "public"."feedback" from "service_role";
-
-alter table "public"."feedback" drop constraint "feedback_category_check";
-
-alter table "public"."feedback" drop constraint "feedback_status_check";
-
-alter table "public"."feedback" drop constraint "feedback_user_id_fkey";
-
-drop function if exists "public"."claim_quest"(quest_uuid uuid);
-
-alter table "public"."feedback" drop constraint "feedback_pkey";
-
-drop index if exists "public"."feedback_pkey";
-
-drop index if exists "public"."idx_feedback_created_at";
-
-drop index if exists "public"."idx_feedback_user_id";
-
-drop table "public"."feedback";
+-- drop policy "Users can insert their own feedback" on "public"."feedback";
+-- 
+-- drop policy "Users can view their own feedback" on "public"."feedback";
+-- 
+-- drop policy "Users can insert their own stats" on "public"."user_stats";
+-- 
+-- revoke delete on table "public"."feedback" from "anon";
+-- 
+-- revoke insert on table "public"."feedback" from "anon";
+-- 
+-- revoke references on table "public"."feedback" from "anon";
+-- 
+-- revoke select on table "public"."feedback" from "anon";
+-- 
+-- revoke trigger on table "public"."feedback" from "anon";
+-- 
+-- revoke truncate on table "public"."feedback" from "anon";
+-- 
+-- revoke update on table "public"."feedback" from "anon";
+-- 
+-- revoke delete on table "public"."feedback" from "authenticated";
+-- 
+-- revoke insert on table "public"."feedback" from "authenticated";
+-- 
+-- revoke references on table "public"."feedback" from "authenticated";
+-- 
+-- revoke select on table "public"."feedback" from "authenticated";
+-- 
+-- revoke trigger on table "public"."feedback" from "authenticated";
+-- 
+-- revoke truncate on table "public"."feedback" from "authenticated";
+-- 
+-- revoke update on table "public"."feedback" from "authenticated";
+-- 
+-- revoke delete on table "public"."feedback" from "service_role";
+-- 
+-- revoke insert on table "public"."feedback" from "service_role";
+-- 
+-- revoke references on table "public"."feedback" from "service_role";
+-- 
+-- revoke select on table "public"."feedback" from "service_role";
+-- 
+-- revoke trigger on table "public"."feedback" from "service_role";
+-- 
+-- revoke truncate on table "public"."feedback" from "service_role";
+-- 
+-- revoke update on table "public"."feedback" from "service_role";
+-- 
+-- alter table "public"."feedback" drop constraint "feedback_category_check";
+-- 
+-- alter table "public"."feedback" drop constraint "feedback_status_check";
+-- 
+-- alter table "public"."feedback" drop constraint "feedback_user_id_fkey";
+-- 
+-- drop function if exists "public"."claim_quest"(quest_uuid uuid);
+-- 
+-- alter table "public"."feedback" drop constraint "feedback_pkey";
+-- 
+-- drop index if exists "public"."feedback_pkey";
+-- 
+-- drop index if exists "public"."idx_feedback_created_at";
+-- 
+-- drop index if exists "public"."idx_feedback_user_id";
+-- 
+-- drop table "public"."feedback";
 
 
   create table "public"."paystack_subscription_payloads" (
