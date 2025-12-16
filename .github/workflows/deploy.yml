@@ -13,18 +13,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.2 # Use a reliable SSH action
-        with:
-          host: ${{ secrets.INPUT_HOST }}      # e.g., your_server_ip
-          key: ${{ secrets.INPUT_KEY }} # The private SSH key of the user
-          username: ${{ secrets.INPUT_USERNAME }}  # e.g., ubuntu or root
+      # - name: Deploy via SSH
+      #   uses: appleboy/ssh-action@v0.1.2 # Use a reliable SSH action
+      #   with:
+      #     host: ${{ secrets.INPUT_HOST }}      # e.g., your_server_ip
+      #     key: ${{ secrets.INPUT_KEY }} # The private SSH key of the user
+      #     username: ${{ secrets.INPUT_USERNAME }}  # e.g., ubuntu or root
 
-          script: |
-            mkdir test
-            cd test
-          # git clone https://github.com/giprim/clario-lane.git
-            echo 'Deployment successful to digital ocean'
+          # script: |
+          #   mkdir test
+          #   cd test
+          # # git clone https://github.com/giprim/clario-lane.git
+          #   echo 'Deployment successful to digital ocean'
 
 
 
