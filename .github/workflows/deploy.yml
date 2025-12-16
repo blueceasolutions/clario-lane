@@ -20,8 +20,8 @@ jobs:
           key: ${{ secrets.INPUT_KEY }} # The private SSH key of the user
           username: ${{ secrets.INPUT_USERNAME }}  # e.g., ubuntu or root
 
-          # script: |
-          #   mkdir test
+          script: |
+            mkdir test
           #   cd test
           # # git clone https://github.com/giprim/clario-lane.git
           #   echo 'Deployment successful to digital ocean'
