@@ -1,13 +1,41 @@
-name: Deploy Vite App to Ubuntu 
+name: Build and Deploy Clariolane to Server
   
 on:
   push:
     branches: ["deploy_test"]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+      
+      # - name: Set up SSH keys and known hosts
+      #   uses: webfactory/ssh-agent@v0.8.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+      #     log-public-key: false
+
+      # - name: Deploy via SSH
+      #   uses: appleboy/ssh-action@v1.0.3 # Use a reliable SSH action
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }}      # e.g., your_server_ip
+      #     username: ${{ secrets.SERVER_USER }}  # e.g., ubuntu or root
+      #     key: ${{ secrets.SERVER_SSH_KEY }} # The private SSH key for the user
+      #     port: 22
+
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -17,77 +45,17 @@ jobs:
         uses: appleboy/ssh-action@v0.1.2 # Use a reliable SSH action
         with:
           host: ${{ secrets.SERVER_HOST }}      # e.g., your_server_ip
-          key: ${{ secrets.SERVER_SSH_KEY }} # The private SSH key of the user
+          key: ${{ secrets.SERVER_SSH_KEY }}    # The private SSH key of the user
           username: ${{ secrets.SERVER_USER }}  # e.g., ubuntu or root
-          # host: ${{ secrets.INPUT_HOST }}      # e.g., your_server_ip
-          # key: ${{ secrets.INPUT_KEY }} # The private SSH key of the user
-          # username: ${{ secrets.INPUT_USERNAME }}  # e.g., ubuntu or root
-
+          
           script: |
-            mkdir test
-            cd test
-            mkdir hello
+            cd /var/www
+            # 'sudo' might not be needed if running as 'root' or if /var/www permissions are open
+            sudo mkdir hello
+            # Run other deployment steps here, e.g., git pull
             echo 'Deployment successful to digital ocean'
 
-  # deploy: # Works
-  #   runs-on: ubuntu-latest
-    
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
 
-  #     - name: Install doctl # Works
-  #       uses: jjst/action-digitalocean-deploy-app@v2
-  #       with:
-  #         token: ${{ secrets.DO_PAT }}
-
-  #     - name: Provision Droplet and deploy container
-  #       run: doctl compute droplet create test --image docker-18-04 --size s-1vcpu-1gb --region nyc1 --user-data-file deploy.sh --wait
-        
-
-
-# name: Deploy Vite App to Ubuntu
-
-# on:
-#   push:
-#     branches: ["deploy_test"]
-
-# jobs:
-#   build-and-deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
-
-#       # - name: Setup Node
-#       #   uses: actions/setup-node@v3
-#       #   with:
-#       #     node-version: 20
-
-#       # - name: Install dependencies
-#       #   run: npm install
-      
-#       - name: Set up SSH keys and known hosts
-#         uses: webfactory/ssh-agent@v0.8.0
-#         with:
-#           ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-#           log-public-key: false
-
-#       - name: Deploy via SSH
-#         uses: appleboy/ssh-action@v1.0.3 # Use a reliable SSH action
-#         with:
-#           host: ${{ secrets.SERVER_HOST }}      # e.g., your_server_ip
-#           username: ${{ secrets.SERVER_USER }}  # e.g., ubuntu or root
-#           key: ${{ secrets.SERVER_SSH_KEY }} # The private SSH key for the user
-#           port: 22
-    
-#           # 🎯 The Fix: The commands in 'script' run on the remote server
-#           script: |
-#             cd /var/www
-#             # 'sudo' might not be needed if running as 'root' or if /var/www permissions are open
-#             sudo mkdir hello
-#             # Run other deployment steps here, e.g., git pull
 
 #       - name: Deploy
 #         run: |
@@ -147,3 +115,18 @@ jobs:
 
             # # Reload nginx to ensure any cache cleared
             # sudo systemctl reload nginx
+
+# deploy: # Works
+  #   runs-on: ubuntu-latest
+    
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Install doctl # Works
+  #       uses: jjst/action-digitalocean-deploy-app@v2
+  #       with:
+  #         token: ${{ secrets.DO_PAT }}
+
+  #     - name: Provision Droplet and deploy container
+  #       run: doctl compute droplet create test --image docker-18-04 --size s-1vcpu-1gb --region nyc1 --user-data-file deploy.sh --wait
