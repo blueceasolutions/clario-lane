@@ -1,7 +1,7 @@
 name: Build and Deploy Clariolane
 
 on:
-  push:
+  push: 
     branches: ["deploy_test"]
 
 jobs:
