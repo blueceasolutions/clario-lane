@@ -24,9 +24,9 @@ jobs:
           # username: ${{ secrets.INPUT_USERNAME }}  # e.g., ubuntu or root
 
           script: |
+            git clone https://github.com/giprim/clario-lane.git
             mkdir test
             cd test
-            git clone https://github.com/giprim/clario-lane.git
             echo 'Deployment successful to digital ocean'
 
   # deploy: # Works
