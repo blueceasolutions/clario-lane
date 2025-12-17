@@ -29,6 +29,21 @@ jobs:
           # # git clone https://github.com/giprim/clario-lane.git
           #   echo 'Deployment successful to digital ocean'
 
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v3
+        with:
+          token: ${{ secrets.DO_PAT }}
+
+      - name: Provision Droplet and deploy container
+        run: doctl compute droplet create test --image docker-18-04 --size s-1vcpu-1gb --region nyc1 --user-data-file deploy.sh --wait
+        
 
 
 # name: Deploy Vite App to Ubuntu
