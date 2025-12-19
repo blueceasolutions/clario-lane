@@ -6,7 +6,7 @@ on:
 
 jobs:
   # JOB 1: Build the application
-  build:
+  build: 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 
