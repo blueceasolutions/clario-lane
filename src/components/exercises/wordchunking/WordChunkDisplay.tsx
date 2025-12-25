@@ -29,7 +29,7 @@ export function WordChunkDisplay() {
 
   return (
     <div className='bg-card border border-border rounded-lg p-12 min-h-[240px] h-[45svh] flex items-center justify-center relative'>
-      <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-red-500 rounded-full opacity-50 pointer-events-none' />
+      <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-primary rounded-full opacity-50 pointer-events-none' />
 
       <div className='flex items-center gap-4 flex-wrap justify-center max-w-4xl z-10'>
         {currentChunk.map((word, index) => (
