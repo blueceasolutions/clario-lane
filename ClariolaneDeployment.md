@@ -525,8 +525,7 @@ Always remove `SSH` at `0.0.0.0` out of `Security Group Inbound Rules`.
     AllowUsers guddy
     ```
     Save.
-15. af
-16. fadsfadf
+15. ...
 
 ✅ Disable root login and password authentication
 ✅ Update sshd_config for key-only access
@@ -543,3 +542,154 @@ Always remove `SSH` at `0.0.0.0` out of `Security Group Inbound Rules`.
     - `/root/.ssh/authorized_keys` = This is where the `Server's Public Key`(for the `$USER` e.g `root` or `guddy`) will reside. This allows a handshake with it's `Private Key` in `SERVER_SSH_KEY` on GitHub. If it's a non `root` user, you'll have to setup `ssh` with `ssh-keygen` for the `$USER`.
 2. User's(e.g `root` or `guddy`) `Public Key` will be in the Server's Authorized_Keys and the User's(e.g `root` or `guddy`) `Private Key` will be in GitHub Secrets. 
 3. For normal local machine `SSH`, the User's `Public Key` will be added the the Server's `/$USER/.ssh/authorized_keys` file, so that the machines's `Private Key` unlocks the `Public Key` in the Server.
+
+### SETTING UP AN OFFCIAL/CUSTOM MAIL FOR CLARIOLANE
+Choosing the right email addresses for Clariolane is a great step toward building a professional brand.
+So we need an official/corporate/custom private mail for `info` and `support` purposes.
+1. `Use a Custom Domain:` Avoid using `clariolane@gmail.com`. Having `@clariolane.com` instantly builds trust with customers.
+- Go to Namecheap.com > Private Email 
+- Purchase the mail service: Free Trial for 2 months or 1$/Month
+- Purchase ONLY `admin@<domain name>` as we'll be using aliases so we don't spend much
+- After the purchase click on `Private Email` again
+<img width="1905" height="541" alt="image" src="https://github.com/user-attachments/assets/b5d67448-2fd0-4a3e-be9c-2dab6bc98079" />
+
+- Click on `Manage` > Catch all mailbox(to create your mail) e.g `admin@clariolane.com`
+  
+<img width="1251" height="158" alt="image" src="https://github.com/user-attachments/assets/a5e48952-118e-4baf-8595-0c83ece3bce4" />
+
+2. `Manage admin@clariolane.com aliases (Save Money):` You don't necessarily need to pay for two separate mailboxes. You can have one primary inbox (like `admin@clariolane.com`) and set up `hello@`, `info@`, `clariolane@` and `support@` as aliases that all forward to that one place.
+>[!Note]
+>Every mailbox has a main address – for example, 1@example.com. You may associate aliases to that same mailbox, such as 2@example.com and 3@example.com. The main address and all aliases share the same inbox, contacts and settings. Aliases are for receiving email only and cannot be used to login or send email. 
+This helps to reduce the cost of buying three `Private Mails`
+
+<img width="1707" height="556" alt="Image" src="https://github.com/user-attachments/assets/9f72f18e-ed39-445a-92d5-a286ed18b1b5" />
+
+### HOW TO ADD ALIASES
+1. `Get your primary email (admin@clariolane.com)`
+If you haven't already, you need to purchase a Private Email plan from Namecheap.
+Cost: Usually around $1/month (Starter plan).
+The Plan: The "Starter" plan allows you to have 1 primary mailbox but up to 10 aliases for free. This is perfect for your needs.
+How to buy: Go to Namecheap > Email > Private Email and follow the checkout process for clariolane.com.
+
+2. `Create your Aliases (clariolane@, hello@, support@ and info@)`
+- Once your `admin@clariolane.com` is active, you don't need to pay for more mailboxes. You just add the aliases through your Namecheap dashboard:
+- Log in to your Namecheap account.
+- Go to Private Email in the left sidebar.
+- Click the Manage button next to your domain.
+- Scroll down to the Mailboxes section.
+- Find `admin@clariolane.com` and click the arrow/dropdown next to the "Edit Storage" button.
+- Select Manage Aliases.
+- Click Add Alias and type in support. Repeat for info.
+- Click Save Changes.
+- Go to https://privateemail.com/appsuite/signin to signin with the `Email` and `Password`
+
+What happens now: Any email sent to `clariolane@clariolane.com`, `support@clariolane.com`, `hello@clariolane.com` or `info@clariolane.com` will instantly show up in your `admin@clariolane.com` inbox.
+
+<img width="1504" height="861" alt="Image" src="https://github.com/user-attachments/assets/4161bd5b-9614-46ea-b505-0d4768757e22" />
+
+<img width="1915" height="756" alt="image" src="https://github.com/user-attachments/assets/669adbf9-61c6-4e3c-94e6-bac85192ea2f" />
+
+### FIX
+
+<img width="1504" height="744" alt="Image" src="https://github.com/user-attachments/assets/129759aa-41e7-4921-ac0e-cb89283c762d" />
+
+<img width="1912" height="717" alt="Image" src="https://github.com/user-attachments/assets/e834b7d9-ea7a-4bf3-abe6-94c02c07f223" />
+
+4. `Email Signatures:` Ensure both emails have a consistent signature that includes your logo, website link, and perhaps a social media handle.
+
+### MAIL NAMESERVER ISSUES FOR CLARIOLANE
+Our Nameservers are from `DigitalOcean` and not `Namecheap`. For this reason, we are not using `Namecheap BasicDNS` to manage records, rather the `CustomDNS`. For us to be able to manage the `Mail Settings`, we need to either manage it from the mail settings in the `cPanel` which we don't have because we are hosting in `DigitalOcean` for total control, or transfer DNS back to `Namecheap BasicDNS` to manage the records and we can't do that and this is causing a blocker because mails don't get delivered to the `Private Mail` - `admin@clariolane.com` nor the `aliases`. <br><br>
+
+SENT from Gmail
+<img width="1905" height="326" alt="Image" src="https://github.com/user-attachments/assets/53b775db-93bb-4b3a-935a-05b8b4929971" />
+
+It wasn't received
+<img width="1905" height="586" alt="Image" src="https://github.com/user-attachments/assets/e7bab37f-18d7-4434-bf3c-fbdaa12429f1" />
+
+### FIX
+1. Go to Namecheap > `Private Email`
+<img width="1471" height="344" alt="image" src="https://github.com/user-attachments/assets/8bdad9d4-e95c-42b6-b38e-d046212df3a8" />
+
+2. Manage
+<img width="1471" height="397" alt="image" src="https://github.com/user-attachments/assets/a8252ec9-1b95-4ae9-9762-c07ff65f9957" />
+
+3. Setup exactly these DNS Records above in `Digital Ocean`
+<img width="1370" height="885" alt="image" src="https://github.com/user-attachments/assets/a1bc4dd0-7145-4025-9d73-8f77e07cf77e" />
+
+Record Type: `MX`
+```
+mx1.privateemail.com
+```
+Record Type: `MX`
+```
+mx2.privateemail.com
+```
+Record Type: `TXT`
+```
+v=spf1 include:spf.privateemail.com ~all
+```
+
+<img width="1370" height="885" alt="image" src="https://github.com/user-attachments/assets/e80fbca2-6a9e-47af-805e-9537324281a8" />
+
+<img width="1255" height="535" alt="image" src="https://github.com/user-attachments/assets/af3b25bc-56ae-4678-b315-76cc3494bbc6" />
+
+4. This routes everything properly to `admin@clariolane.com` including the `aliases`
+<img width="1911" height="845" alt="image" src="https://github.com/user-attachments/assets/45187ade-75f4-48af-82c9-8a4af44790b6" />
+
+### Configure "Send Mail As" for Clariolane Aliases
+Enable the primary `admin@clariolane.com` account (hosted via Namecheap Private Email) to send and reply to emails using the `support@clariolane.com`, `info@clariolane.com`, etc identities within the Gmail interface. This allows for a unified "Command Center" for all `Clariolane` communications without paying for multiple mailboxes.
+
+### Acceptance Criteria
+- `Inbound Verification:` An email sent to `support@clariolane.com` successfully appears in the `admin@clariolane.com` inbox.
+- `Outbound Identity:` When clicking "Compose," a dropdown menu appears allowing a choice between `admin@`, `support@`, `hello@`, `clariolane@` and `info@`.
+- `Consistency Check:` A test email sent from the `support@` alias arrives at the recipient's inbox showing `"Clariolane Support"` as the sender (not the admin address).
+
+Technical Configuration Details
+- `SMTP Server:` `mail.privateemail.com` or `mx1.privateemail.com`
+- `Username:` admin@clariolane.com
+- `Port Options:` 465 (SSL) or 587 (TLS)
+- `Authentication:` Required (Use the same password as the admin@ account)
+
+Execution Steps
+1. `Create Official Gmail:` Create an official Gmail for Clariolane, e.g `officialclariolane@gmail.com`
+<img width="1910" height="276" alt="image" src="https://github.com/user-attachments/assets/a53a3850-0a9d-44cf-9e0d-4b8b4325ea33" />
+
+2. `Identity Setup:` Navigate to Gmail Settings > Accounts and Import > Send mail as.
+<img width="1910" height="411" alt="image" src="https://github.com/user-attachments/assets/f72803cf-d223-4c0d-b28b-d5f6d89b5c98" />
+
+3. `Add Alias:` Click "Add another email address" and enter the name (e.g., "Clariolane Support" or "Clariolane") and the alias email e.g `support@clariolane.com`
+<img width="708" height="679" alt="image" src="https://github.com/user-attachments/assets/73fa6c58-f9d8-42c2-a2f8-6d849a9cbc8e" />
+
+4. `Authentication:` Enter the SMTP details provided above in the `Technical Configuration Details`.
+<img width="708" height="679" alt="image" src="https://github.com/user-attachments/assets/44525b08-e71b-4677-a69b-614568c5c271" />
+
+5. `Verification:` Check the `admin@clariolane.com` inbox for the Gmail confirmation code and enter it to verify ownership.
+
+<img width="614" height="281" alt="image" src="https://github.com/user-attachments/assets/889f88f9-0969-469c-8499-8a25982724a6" />
+<img width="680" height="451" alt="image" src="https://github.com/user-attachments/assets/06df0a4b-b4e0-4da9-bfa9-f613f4f5a69c" />
+<img width="568" height="237" alt="image" src="https://github.com/user-attachments/assets/a2a55cb1-4b3f-4f49-b599-cc4042c72e0c" />
+<img width="568" height="237" alt="image" src="https://github.com/user-attachments/assets/7e7f64a6-ec36-44f7-ba97-08c25d2e8129" />
+
+6. `Confirm the email alias addition:`
+
+<img width="1599" height="412" alt="image" src="https://github.com/user-attachments/assets/04a8c1a3-9639-4f19-9f5f-ce3ad4ee1845" />
+
+7. `Behavior Setting:` Under "Send mail as," select the option: "Reply from the same address the message was sent to." (Crucial for brand consistency).
+
+<img width="528" height="129" alt="image" src="https://github.com/user-attachments/assets/13878bc1-89c5-4b88-80fa-392eba9a65d5" />
+
+8. `Repeat:` Perform steps 1–5 for the info@clariolane.com alias.
+
+<img width="650" height="384" alt="image" src="https://github.com/user-attachments/assets/e87f93ee-1b28-4210-a105-963c20105ed4" />
+
+9. `Test:` Send a mail from `officialclariolane@gmail.com` to another mail, but select one of the aliases e.g `support@clariolane.com`
+
+<img width="608" height="319" alt="image" src="https://github.com/user-attachments/assets/0558ea98-6f0d-448f-aa69-f9377fea5c7d" />
+
+Result: <br>
+
+<img width="731" height="338" alt="image" src="https://github.com/user-attachments/assets/42538614-3bb2-4c7e-b059-57fa55858316" />
+
+
+
+
