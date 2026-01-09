@@ -117,7 +117,7 @@ language plpgsql
 security definer
 as $$
 begin
-  if new.onboardingcompleted = true and (old.onboardingcompleted = false or old.onboardingcompleted is null) then
+  if new.onboarding_completed = true and (old.onboarding_completed = false or old.onboarding_completed is null) then
       perform net.http_post(
           url := 'https://YOUR_PROJECT_REF.supabase.co/functions/v1/send-email',
           headers := '{"Content-Type": "application/json", "Authorization": "Bearer YOUR_SERVICE_ROLE_KEY"}'::jsonb,
