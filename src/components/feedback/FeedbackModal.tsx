@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label'
 import { useMutation } from '@tanstack/react-query'
 import { supabaseService } from '~supabase/clientServices'
 import { useRouteContext } from '@tanstack/react-router'
+import { apiInstance } from '@/integration'
 import { FEEDBACK_KEY, FEEDBACK_STATE, TOTAL_SESSIONS_KEY } from '@/lib'
 import { toast } from 'sonner'
 
@@ -45,7 +46,21 @@ export function FeedbackModal({ open, onOpenChange }: FeedbackModalProps) {
 
       if (error) throw error
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Send email notification
+      try {
+        await apiInstance.post('send-email', {
+          type: 'FEEDBACK_SUBMITTED',
+          email: userProfile?.email || 'user@example.com',
+          data: {
+            category,
+            message: feedback,
+          },
+        })
+      } catch (error) {
+        console.error('Failed to send feedback email:', error)
+      }
+
       setFeedback('')
       setCategory('general')
       onOpenChange(false)

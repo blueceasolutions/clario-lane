@@ -16,6 +16,32 @@ const secret = Deno.env.get("PAYSTACK_SECRET_KEY")!;
 
 const supabaseAdmin = createClient<Database>(supabaseUrl, supabase_service_key);
 
+async function invokeSendEmail(type: string, email: string, data: any) {
+  const functionUrl = `${supabaseUrl}/functions/v1/send-email`;
+  console.log(`Invoking send-email: ${functionUrl} for ${type}`);
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${supabase_service_key}`,
+      },
+      body: JSON.stringify({ type, email, data }),
+    });
+
+    if (!response.ok) {
+      console.error(
+        `Failed to send email: ${response.status} ${await response.text()}`,
+      );
+    } else {
+      console.log("Email sent successfully");
+    }
+  } catch (err) {
+    console.error("Error invoking send-email:", err);
+  }
+}
+
 // POST /paystack-webhook - Handle Paystack webhooks
 app.post("/paystack-webhook", async (c) => {
   try {
@@ -48,6 +74,22 @@ app.post("/paystack-webhook", async (c) => {
         "id",
         customer.id,
       );
+
+      // Send subscription created email
+      // Assuming 'customer' object from Supabase has 'name', if not we might need to fetch it or use email.
+      // The 'users' table has a 'name' column.
+      const { data: userData } = await supabaseAdmin.from("users").select(
+        "name",
+      ).eq("id", customer.id).single();
+
+      await invokeSendEmail(
+        "SUBSCRIPTION_CREATED",
+        payload.data.customer.email,
+        {
+          name: userData?.name || "Customer",
+          planName: payload.data.plan?.name,
+        },
+      );
     }
 
     if (
@@ -58,6 +100,18 @@ app.post("/paystack-webhook", async (c) => {
       await supabaseAdmin.from("users").update({ is_subscribed: false }).eq(
         "id",
         customer.id,
+      );
+
+      const { data: userData } = await supabaseAdmin.from("users").select(
+        "name",
+      ).eq("id", customer.id).single();
+
+      await invokeSendEmail(
+        "SUBSCRIPTION_CANCELLED",
+        payload.data.customer.email,
+        {
+          name: userData?.name || "Customer",
+        },
       );
     }
 

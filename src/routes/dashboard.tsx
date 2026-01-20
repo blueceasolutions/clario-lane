@@ -1,5 +1,5 @@
 import { BackButton, Tabs, TabsList, TabsTrigger } from '@/components'
-import { useOnboardingFlow } from '@/store'
+
 import {
   createFileRoute,
   Link,
@@ -19,8 +19,6 @@ export const Route = createFileRoute('/dashboard')({
   beforeLoad: async ({ context }) => {
     const { session, user, queryClient } = context
 
-    const response = await queryClient.fetchQuery(fetchNextSubscriptionDate)
-
     if (!session) {
       throw redirect({ to: '/auth' })
     }
@@ -28,12 +26,15 @@ export const Route = createFileRoute('/dashboard')({
     if (!user || !user?.onboarding_completed)
       throw redirect({ to: '/onboarding' })
 
-    if (!response) throw redirect({ to: '/pricing' })
-    const isSubscriptionExpired = new Date(response) < new Date()
+    if (user.is_subscribed) return
 
+    const response = await queryClient.fetchQuery(fetchNextSubscriptionDate)
+
+    const nextSubscriptionDate = new Date(response)
+    const currentDate = new Date()
+    const isSubscriptionExpired = nextSubscriptionDate < currentDate
     if (isSubscriptionExpired) {
-      useOnboardingFlow.setState({ current_step: 7 })
-      throw redirect({ to: '/onboarding' })
+      throw redirect({ to: '/pricing' })
     }
   },
 })

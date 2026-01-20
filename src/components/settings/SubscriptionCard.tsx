@@ -5,6 +5,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui'
 
 import { enableOrDisableSubscriptionToggleMutation } from '@/integration/mutations/subscriptionMutation'
@@ -12,12 +19,16 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Link } from '@tanstack/react-router'
 import { supabaseService } from '~supabase/clientServices'
+import { fetchNextSubscriptionDate } from '@/integration'
+import { useMemo } from 'react'
 
 export function SubscriptionCard() {
   const { data: user, refetch } = useQuery({
     queryKey: ['user'],
     queryFn: async () => await supabaseService.getUser(),
   })
+
+  const { data } = useQuery(fetchNextSubscriptionDate)
 
   const { mutate, isPending } = useMutation({
     ...enableOrDisableSubscriptionToggleMutation,
@@ -31,6 +42,10 @@ export function SubscriptionCard() {
   })
 
   const isSubscribed = user?.is_subscribed
+  const isSubscriptionExpired = useMemo(
+    () => new Date(data?.next_subscription_date) < new Date(),
+    [data]
+  )
 
   return (
     <Card>
@@ -47,21 +62,43 @@ export function SubscriptionCard() {
           <div className='flex items-center justify-between rounded-lg border p-4'>
             <div className='space-y-0.5'>
               <div className='font-medium'>
-                {isSubscribed ? 'Active Plan' : 'Free Tier / Cancelled'}
+                {isSubscriptionExpired ? 'Expired' : 'Active'}
               </div>
               <div className='text-sm text-muted-foreground'>
-                {isSubscribed
-                  ? 'You are currently on the active plan.'
-                  : 'Your subscription is not active.'}
+                {isSubscriptionExpired
+                  ? 'Your subscription is expired.'
+                  : 'Your subscription is active.'}
               </div>
             </div>
             {isSubscribed ? (
-              <Button
-                variant='outline'
-                onClick={() => mutate('disable')}
-                disabled={isPending}>
-                {isPending ? 'Cancelling...' : 'Cancel Subscription'}
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant='outline' disabled={isPending}>
+                    {isPending ? 'Cancelling...' : 'Cancel Subscription'}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className='sm:max-w-md'>
+                  <DialogHeader>
+                    <DialogTitle>Cancel Subscription</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to cancel your subscription? You
+                      will lose access to premium features at the end of your
+                      current billing period.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className='flex justify-end space-x-2'>
+                    <DialogClose asChild>
+                      <Button variant='outline'>Back</Button>
+                    </DialogClose>
+                    <Button
+                      variant='destructive'
+                      onClick={() => mutate('disable')}
+                      disabled={isPending}>
+                      {isPending ? 'Cancelling...' : 'Yes, Cancel Subscription'}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             ) : (
               <Button asChild disabled={isPending}>
                 <Link to='/pricing'>Upgrade Plan</Link>
