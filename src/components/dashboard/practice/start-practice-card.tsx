@@ -25,6 +25,7 @@ export const StartPracticeCard = ({
   const route = PRACTICE_ROUTES[id]
   const { setActivePractice } = useAppStore()
   const { setExerciseType } = usePracticeStore()
+
   const handleClick = useCallback(() => {
     setActivePractice(practice)
     setExerciseType(id)

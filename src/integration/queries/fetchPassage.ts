@@ -7,7 +7,7 @@ export const fetchPassageKey = "passage";
 
 export const fetchPassage = queryOptions({
   queryKey: [fetchPassageKey],
-  staleTime: Infinity,
+  // staleTime: 1000 * 60 * 1,
   // refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
