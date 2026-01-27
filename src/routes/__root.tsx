@@ -53,6 +53,11 @@ export const Route = createRootRouteWithContext<RootRouteContext>()({
   },
 })
 
+// Create a persister
+// const persister = createSyncStoragePersister({
+//   storage: window.localStorage,
+// })
+
 function RootComponent() {
   const pathname = useLocation().pathname
   return (

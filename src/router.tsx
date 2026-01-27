@@ -5,14 +5,19 @@ import { routeTree } from './routeTree.gen'
 import { DefaultCatchBoundary, PendingPage } from './components'
 import { logServerError } from './lib'
 
-export function getRouter() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      mutations: {
-        onError: (error) => logServerError(error),
+export function getRouter(queryClient?: QueryClient) {
+  const finalQueryClient =
+    queryClient ??
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          gcTime: 1000 * 60 * 60 * 24, // 24 hours
+        },
+        mutations: {
+          onError: (error) => logServerError(error),
+        },
       },
-    },
-  })
+    })
   const router = createRouter({
     routeTree,
     defaultErrorComponent: DefaultCatchBoundary,
@@ -20,7 +25,7 @@ export function getRouter() {
     scrollRestoration: true,
     defaultPreloadStaleTime: 1 * 60 * 1000,
     context: {
-      queryClient,
+      queryClient: finalQueryClient,
       session: null,
       user: undefined,
     },
@@ -28,7 +33,7 @@ export function getRouter() {
 
   setupRouterSsrQueryIntegration({
     router,
-    queryClient,
+    queryClient: finalQueryClient,
     // optional:
     // handleRedirects: true,
     // wrapQueryClient: true,

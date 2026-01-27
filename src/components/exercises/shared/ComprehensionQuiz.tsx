@@ -43,7 +43,10 @@ export function ComprehensionQuiz() {
     fetchPassageKey,
   ]) as PassageResponse
 
-  const { mutate, status: mutationStatus } = useMutation(sessionMutation)
+  const { mutate, status: mutationStatus } = useMutation({
+    ...sessionMutation,
+    networkMode: 'offlineFirst',
+  })
   const { activePractice } = useAppStore()
   const location = useLocation()
 

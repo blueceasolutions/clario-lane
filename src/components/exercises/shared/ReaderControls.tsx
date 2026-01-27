@@ -8,11 +8,8 @@ type ReaderControlsProps = {
   canReset?: boolean
 }
 
-export function ReaderControls({ canComplete, canReset }: ReaderControlsProps) {
-  const { isPlaying, progress, wpm, setWpm } = usePracticeStore()
-
-  const shouldShowComplete = canComplete ?? progress >= 100
-  const shouldAllowReset = canReset ?? progress > 0
+export function ReaderControls({}: ReaderControlsProps) {
+  const { isPlaying, wpm, setWpm } = usePracticeStore()
 
   return (
     <div className='bg-card p-4 rounded-2xl shadow-lg shadow-primary/10'>
