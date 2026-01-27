@@ -116,8 +116,8 @@ export function HeroSection({ session }: HeroSectionProps) {
         initial={{ opacity: 0, scale: 0.9, y: 50 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.8, type: 'spring' }}
-        className='mt-20 relative z-20 hidden'>
-        <div className='bg-background/80 backdrop-blur-xl border border-white/20 dark:border-white/10 p-8 rounded-2xl shadow-2xl w-[300px] md:w-[400px] text-center transform hover:scale-105 transition-transform duration-500'>
+        className='mt-20 relative z-20  w-full max-w-5xl '>
+        <div className='bg-background/80 backdrop-blur-xl mx-auto border border-white/20 dark:border-white/10 p-8 rounded-2xl shadow-2xl w-full   text-center transform hover:scale-105 transition-transform duration-500'>
           <div className='flex justify-center mb-6'>
             <div className='w-full h-1 bg-border rounded-full overflow-hidden'>
               <motion.div

@@ -73,6 +73,7 @@ export function ReadingPreferencesCard() {
               <SelectValue placeholder='Select a theme' />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value='auto'>System</SelectItem>
               <SelectItem value='light'>Light</SelectItem>
               <SelectItem value='dark'>Dark</SelectItem>
               <SelectItem value='sepia'>Sepia</SelectItem>

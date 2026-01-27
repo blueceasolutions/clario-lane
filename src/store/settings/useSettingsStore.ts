@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { supabaseService } from "~supabase/clientServices";
 
 export type FontFace = "Inter" | "Dyslexie" | "Serif" | "Mono";
-export type Theme = "light" | "dark" | "sepia";
+export type Theme = "light" | "dark" | "sepia" | "auto";
 
 type SettingsStore = {
   fontFace: FontFace;
@@ -20,7 +20,7 @@ export const useSettingsStore = create<SettingsStore>()(
     (set) => ({
       fontFace: "Inter",
       fontSizeScale: 100,
-      theme: "light",
+      theme: "auto",
       setFontFace: async (fontFace) => {
         set({ fontFace });
         const user = await supabaseService.getUser();

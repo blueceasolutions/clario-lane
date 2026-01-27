@@ -30,6 +30,21 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
   useEffect(() => {
     const root = document.documentElement
     root.classList.remove('light', 'dark', 'sepia')
+
+    if (theme === 'auto') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+      const applySystemTheme = () => {
+        root.classList.remove('light', 'dark', 'sepia')
+        root.classList.add(mediaQuery.matches ? 'dark' : 'light')
+      }
+
+      applySystemTheme()
+
+      mediaQuery.addEventListener('change', applySystemTheme)
+      return () => mediaQuery.removeEventListener('change', applySystemTheme)
+    }
+
     root.classList.add(theme)
   }, [theme])
 
