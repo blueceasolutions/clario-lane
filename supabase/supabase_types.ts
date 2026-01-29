@@ -151,6 +151,36 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          message: string
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          message: string
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          message?: string
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       goals: {
         Row: {
           created_at: string | null
@@ -476,7 +506,6 @@ export type Database = {
           current_comprehension_score: number | null
           current_wpm: number | null
           daily_reminder: boolean | null
-          date_of_birth: string | null
           display_settings: Json | null
           email: string
           focus_score: number | null
@@ -486,6 +515,7 @@ export type Database = {
           last_active_date: string | null
           level: number | null
           name: string
+          next_wpm: number | null
           onboarding_completed: boolean | null
           reminder_time: string | null
           streak_days: number | null
@@ -506,7 +536,6 @@ export type Database = {
           current_comprehension_score?: number | null
           current_wpm?: number | null
           daily_reminder?: boolean | null
-          date_of_birth?: string | null
           display_settings?: Json | null
           email: string
           focus_score?: number | null
@@ -516,6 +545,7 @@ export type Database = {
           last_active_date?: string | null
           level?: number | null
           name: string
+          next_wpm?: number | null
           onboarding_completed?: boolean | null
           reminder_time?: string | null
           streak_days?: number | null
@@ -536,7 +566,6 @@ export type Database = {
           current_comprehension_score?: number | null
           current_wpm?: number | null
           daily_reminder?: boolean | null
-          date_of_birth?: string | null
           display_settings?: Json | null
           email?: string
           focus_score?: number | null
@@ -546,6 +575,7 @@ export type Database = {
           last_active_date?: string | null
           level?: number | null
           name?: string
+          next_wpm?: number | null
           onboarding_completed?: boolean | null
           reminder_time?: string | null
           streak_days?: number | null
@@ -578,6 +608,7 @@ export type Database = {
           just_unlocked: boolean
         }[]
       }
+      claim_quest: { Args: { quest_uuid: string }; Returns: Json }
       get_words_read_today: { Args: { uid: string }; Returns: number }
       update_avg_scores: { Args: { uid: string }; Returns: Json }
     }

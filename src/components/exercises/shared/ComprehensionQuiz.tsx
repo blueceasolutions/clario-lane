@@ -99,6 +99,10 @@ export function ComprehensionQuiz() {
     openLevelUpModal,
   } = useGamificationStore()
 
+  const ers = Math.round((rest.wpm * rest.comprehension) / 100)
+  const tenPercent = Math.round(rest.wpm * 0.1)
+  const nextWpm = ers > 70 ? rest.wpm + tenPercent : rest.wpm
+
   const handleNext = () => {
     if (isLastQuestion) {
       const correctAnswers = answers.filter((a) => a).length
@@ -123,6 +127,7 @@ export function ComprehensionQuiz() {
           wpm: rest.wpm,
           exercise_id: exerciseUuid!,
           passage_id: passageResponse?.id,
+          next_wpm: nextWpm,
         },
         {
           onSuccess: async (response: any) => {
@@ -206,6 +211,7 @@ export function ComprehensionQuiz() {
             })
 
             updateStore(payload)
+            updateStore({ nextWpm })
           },
           onError: (error) => {
             console.error('Failed to save session:', error)
@@ -223,7 +229,7 @@ export function ComprehensionQuiz() {
   }
 
   return (
-    <div className='w-full max-w-2xl mx-auto space-y-6'>
+    <div className='w-full max-w-2xl mx-auto space-y-6 relative'>
       {/* Progress */}
       <div className='flex items-center justify-between text-sm text-muted-foreground'>
         <span>
@@ -233,9 +239,9 @@ export function ComprehensionQuiz() {
       </div>
 
       {/* Question Card */}
-      <Card className='p-6 space-y-6'>
+      <Card className='p-0 mb-20 md:mb-6 border-0 bg-transparent shadow-none md:shadow md:bg-card md:border md:p-6 space-y-3 '>
         <div>
-          <h3 className='text-xl mb-4'>{currentQuestion?.question}</h3>
+          <h3 className='text-xl'>{currentQuestion?.question}</h3>
         </div>
 
         {/* Options */}
@@ -255,8 +261,8 @@ export function ComprehensionQuiz() {
                   w-full text-left p-4 rounded-lg border-2 transition-all
                   ${!showResult && !isSelected ? 'border-border hover:border-primary/10 hover:bg-primary/5' : ''}
                   ${isSelected && !showResult ? 'border-primary bg-accent' : ''}
-                  ${showCorrect ? 'border-green-500/20 bg-green-50/20 dark:bg-green-950' : ''}
-                  ${showIncorrect ? 'border-red-500/20 bg-red-50/20 dark:bg-red-950' : ''}
+                  ${showCorrect ? 'border-green-500/20 bg-green-50/10 dark:bg-green-500/20' : ''}
+                  ${showIncorrect ? 'border-red-500/10 bg-red-50/5 dark:bg-red-500/20' : ''}
                   ${selectedAnswer !== null && !isSelected && !showCorrect ? 'opacity-50' : ''}
                   disabled:cursor-not-allowed
                 `}>
@@ -279,8 +285,8 @@ export function ComprehensionQuiz() {
           <div
             className={`p-4 rounded-lg ${
               selectedAnswer === currentQuestion?.correctIndex
-                ? 'bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100'
-                : 'bg-red-50 dark:bg-red-950 text-red-900 dark:text-red-100'
+                ? 'border-green-500/20 border bg-green-500/15 dark:border-green-400/30 text-green-900 dark:text-green-100'
+                : 'border-red-500/20 border-2 bg-red-500/15 dark:border-red-400/5 dark:bg-red-400/20 text-red-900 dark:text-red-100'
             }`}>
             {selectedAnswer === currentQuestion?.correctIndex ? (
               <p>Correct! Well done.</p>
@@ -296,17 +302,20 @@ export function ComprehensionQuiz() {
 
       {/* Next Button */}
       {showResult && (
-        <div className='flex justify-end'>
-          <Button
-            onClick={handleNext}
-            size='lg'
-            disabled={mutationStatus === 'pending'}>
-            {mutationStatus === 'pending'
-              ? 'Submitting...'
-              : isLastQuestion
-                ? 'Finish Quiz'
-                : 'Next Question'}
-          </Button>
+        <div className='w-full fixed bottom-0 left-0 right-0 z-50 md:relative md:bottom-auto md:left-auto md:right-auto bg-gradient-to-t from-background/50 via-background/5 to-transparent backdrop-blur-sm'>
+          <div className='py-4 px-4 pt-6 md:p-0'>
+            <Button
+              onClick={handleNext}
+              size='xl'
+              className='w-full'
+              disabled={mutationStatus === 'pending'}>
+              {mutationStatus === 'pending'
+                ? 'Submitting...'
+                : isLastQuestion
+                  ? 'Finish Quiz'
+                  : 'Next Question'}
+            </Button>
+          </div>
         </div>
       )}
     </div>

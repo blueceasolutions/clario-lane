@@ -7,12 +7,11 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
 export const Results = () => {
-  const { wpm, comprehension, reset, updateStore } = usePracticeStore()
+  const { wpm, comprehension, reset, updateStore, nextWpm } = usePracticeStore()
   const route = useRouter()
   const { refetch } = useQuery(fetchPassage)
 
   const ers = Math.round((wpm * comprehension) / 100)
-  const nextWpm = ers > 70 ? wpm + 30 : wpm
   const wpmChange = nextWpm - wpm
 
   const onComplete = () => {
@@ -32,13 +31,13 @@ export const Results = () => {
   return (
     <>
       <div className='w-full max-w-2xl mx-auto'>
-        <Card className=' bg-transparent border-none shadow-none md:shadow-lg md:border md:border-border md:bg-card md:p-8 space-y-6'>
+        <Card className=' bg-transparent border-none shadow-none md:shadow-lg md:border md:border-border md:bg-card md:p-8 md:space-y-6'>
           <div className='text-center space-y-2'>
             <h2 className='text-3xl'>Session Complete!</h2>
             <p className='text-muted-foreground'>Great work on this session</p>
           </div>
 
-          <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 py-6'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 md:py-6'>
             <div className='bg-accent/10 rounded-lg p-6'>
               <div className='flex items-center justify-between'>
                 <div>
@@ -76,7 +75,7 @@ export const Results = () => {
           </div>
 
           <div className='border-t pt-6'>
-            <div className='flex items-center justify-between mb-4'>
+            <div className='flex flex-wrap gap-2 items-center justify-between mb-4'>
               <div>
                 <h3 className='text-lg'>Next Session</h3>
                 <p className='text-sm text-muted-foreground'>

@@ -19,6 +19,7 @@ const sessionSchema = z.object({
   passage_id: z.string(),
   exercise_id: z.string(),
   wpm: z.number(),
+  next_wpm: z.number(),
   comprehension: z.number(),
   duration: z.number(),
   total_words: z.number(),
@@ -248,6 +249,7 @@ app.post("/practice/session", async (c: any) => {
     await supabaseClient.from("users").update({
       last_active_date: streakTracker.date.toISOString(),
       streak_days: streakTracker.streak,
+      next_wpm: vettedData.next_wpm,
     }).eq("id", user.id);
 
     const user_stats_update = {

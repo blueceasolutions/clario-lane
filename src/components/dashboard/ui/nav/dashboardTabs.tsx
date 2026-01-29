@@ -1,12 +1,12 @@
 import { Link, useLocation } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
-import { BookOpen, Target, TrendingUp } from 'lucide-react'
+import { BookOpen, TrendingUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const tabs = [
   { id: 'practice', label: 'Practice', icon: TrendingUp },
   { id: 'dashboard', label: 'Dashboard', icon: BookOpen },
-  { id: 'progress', label: 'Progress', icon: Target },
+  // { id: 'progress', label: 'Progress', icon: Target },
 ]
 
 export const DashboardTabs = () => {

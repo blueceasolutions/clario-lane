@@ -13,7 +13,7 @@ export type PracticeStore = {
   totalQuestions: number;
   startTime: number;
   elapsedTime: number;
-  nextWpm?: number;
+  nextWpm: number;
   currentStep: PracticeStep;
   passage: Passage | null;
   loading: boolean;
@@ -56,6 +56,7 @@ type PracticeStoreActions = {
 
 const initialState: PracticeStore = {
   wpm: 200,
+  nextWpm: 200,
   currentStep: PracticeStep.enum.Intro,
   correctAnswers: 0,
   totalQuestions: 0,

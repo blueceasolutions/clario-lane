@@ -5,19 +5,13 @@ import {
   OverviewPending,
   DailyGoalRing,
   StreakCounter,
-  LevelProgressBar,
   QuestCard,
   Button,
 } from '@/components'
 import { useQuery } from '@tanstack/react-query'
 import { useClaimQuest, useGamification } from '@/hooks'
 
-import {
-  createFileRoute,
-  Link,
-  redirect,
-  useRouteContext,
-} from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import { supabaseService } from '~supabase/clientServices'
 
@@ -27,7 +21,10 @@ export const Route = createFileRoute('/dashboard/')({
 })
 
 export function RouteComponent() {
-  const userProfile = useRouteContext({ from: '__root__' }).user
+  const { data: userProfile } = useQuery({
+    queryKey: ['user_profile'],
+    queryFn: () => supabaseService.getUser(),
+  })
   const { data } = useQuery({
     queryKey: ['progress_data'],
     queryFn: async () =>
@@ -59,7 +56,7 @@ export function RouteComponent() {
   const progressPercent = Math.round(
     ((userProfile.current_wpm! - userProfile.baseline_wpm!) /
       (goalWPM - userProfile.baseline_wpm!)) *
-      100
+      100,
   )
   const improvement = userProfile.current_wpm! - userProfile.baseline_wpm!
 
@@ -69,7 +66,7 @@ export function RouteComponent() {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -40, opacity: 0 }}
       transition={{ type: 'spring' }}
-      className='space-y-6'
+      className='space-y-4'
       key='overview'>
       {/* Quick Stats */}
       <OverviewStats
@@ -85,14 +82,14 @@ export function RouteComponent() {
         progress={null}
         session={{
           streak: stats?.current_streak || 0,
-          total: stats?.longest_streak || 0,
+          total: userProfile.total_sessions || 0,
         }}
       />
 
       {/* Gamification Widgets */}
       {!isLoadingGamification && stats && (
-        <div className='grid md:grid-cols-3 gap-4'>
-          <LevelProgressBar currentXP={stats.xp} level={stats.level} />
+        <div className='grid md:grid-cols-2 gap-4'>
+          {/* <LevelProgressBar currentXP={stats.xp} level={stats.level} /> */}
           <StreakCounter
             currentStreak={stats.current_streak}
             longestStreak={stats.longest_streak}
