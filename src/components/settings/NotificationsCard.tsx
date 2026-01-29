@@ -4,6 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Input,
   Label,
   Switch,
 } from '@/components/ui'
@@ -39,7 +40,7 @@ export function NotificationsCard() {
         daily_reminder: boolean
         reminder_time: string
         weekly_summary: boolean
-      }>
+      }>,
     ) => {
       if (!userProfile?.id) throw new Error('No user ID')
 
@@ -58,14 +59,14 @@ export function NotificationsCard() {
 
   if (isLoading || !settings) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className='bg-transparent border-0 md:bg-card md:border'>
+        <CardHeader className='p-0 md:px-6'>
           <CardTitle>Notifications</CardTitle>
           <CardDescription>
             Configure how you receive notifications.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className='p-0 md:px-6'>
           <div className='animate-pulse space-y-4'>
             <div className='h-12 bg-gray-200 dark:bg-gray-700 rounded'></div>
             <div className='h-12 bg-gray-200 dark:bg-gray-700 rounded'></div>
@@ -76,16 +77,18 @@ export function NotificationsCard() {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className='bg-transparent border-0 md:bg-card md:border'>
+      <CardHeader className='p-0 md:px-6'>
         <CardTitle>Notifications</CardTitle>
         <CardDescription>
           Configure how you receive notifications.
         </CardDescription>
       </CardHeader>
-      <CardContent className='space-y-4'>
+      <CardContent className='space-y-5 p-0 md:px-6'>
         <div className='flex items-center justify-between space-x-2'>
-          <Label htmlFor='daily-reminder' className='space-y-1'>
+          <Label
+            htmlFor='daily-reminder'
+            className='space-y-0.5 items-start flex flex-col'>
             <span>Daily Reminders</span>
             <span className='font-normal text-sm text-muted-foreground'>
               Receive a daily reminder to practice.
@@ -102,24 +105,26 @@ export function NotificationsCard() {
 
         {/* Reminder Time Picker */}
         {settings.daily_reminder && (
-          <div className='ml-6 flex items-center gap-3'>
+          <div className='flex flex-col gap-2 border-t pt-3'>
             <Label htmlFor='reminder-time' className='text-sm'>
               Reminder Time
             </Label>
-            <input
+            <Input
               id='reminder-time'
+              className='max-w-sm'
               type='time'
               value={settings.reminder_time ?? '09:00:00'}
               onChange={(e) =>
                 updateMutation.mutate({ reminder_time: e.target.value })
               }
-              className='px-3 py-2 border rounded-md dark:bg-zinc-800 dark:border-zinc-700'
             />
           </div>
         )}
 
-        <div className='flex items-center justify-between space-x-2'>
-          <Label htmlFor='weekly-summary'>
+        <div className='flex items-center justify-between space-x-2 border-t pt-4'>
+          <Label
+            htmlFor='weekly-summary'
+            className='space-y-0.5 items-start flex flex-col'>
             <span className='block'>Weekly Summary</span>
             <span className='font-normal text-sm text-muted-foreground'>
               Get a weekly summary of your progress.

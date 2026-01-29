@@ -65,14 +65,14 @@ export function PasswordCard() {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className='bg-transparent border-0 md:bg-card md:border'>
+      <CardHeader className='p-0 md:px-6'>
         <CardTitle>Change Password</CardTitle>
         <CardDescription>
           Update your password to keep your account secure.
         </CardDescription>
       </CardHeader>
-      <CardContent className='max-w-lg'>
+      <CardContent className='max-w-sm p-0 md:px-6'>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
             <form.Field
@@ -134,7 +134,10 @@ export function PasswordCard() {
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => {
                   return (
-                    <Button type='submit' disabled={!canSubmit || isSubmitting}>
+                    <Button
+                      size={'lg'}
+                      type='submit'
+                      disabled={!canSubmit || isSubmitting}>
                       {isSubmitting ? <Spinner /> : 'Update Password'}
                     </Button>
                   )
