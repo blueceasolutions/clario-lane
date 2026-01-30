@@ -6,7 +6,7 @@ interface SettingsLayoutProps {
 
 export function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
-    <div className='space-y-6 max-w-sm mx-auto'>
+    <div className='space-y-6 max-w-sm md:max-w-lg mx-auto'>
       <div>
         <h2 className='text-2xl font-bold tracking-tight'>Settings</h2>
         <p className='text-muted-foreground'>

@@ -25,7 +25,7 @@ export function ReadingPreferencesCard() {
   } = useSettingsStore()
 
   return (
-    <Card className='bg-transparent border-0 md:bg-card md:border'>
+    <Card className='bg-transparent border-0 shadow-none md:shadow-sm md:bg-card md:border'>
       <CardHeader className='p-0 md:px-6'>
         <CardTitle>Reading Preferences</CardTitle>
         <CardDescription>Customize your reading experience.</CardDescription>
@@ -36,7 +36,7 @@ export function ReadingPreferencesCard() {
           <Select
             value={fontFace}
             onValueChange={(value) => setFontFace(value as FontFace)}>
-            <SelectTrigger size='lg' className='w-full max-w-sm '>
+            <SelectTrigger size='lg' className='w-full'>
               <SelectValue placeholder='Select a font' />
             </SelectTrigger>
             <SelectContent>
@@ -69,7 +69,7 @@ export function ReadingPreferencesCard() {
           <Select
             value={theme}
             onValueChange={(value) => setTheme(value as Theme)}>
-            <SelectTrigger size='lg' className='w-full max-w-sm'>
+            <SelectTrigger size='lg' className='w-full'>
               <SelectValue placeholder='Select a theme' />
             </SelectTrigger>
             <SelectContent>

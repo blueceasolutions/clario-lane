@@ -48,7 +48,7 @@ export function SubscriptionCard() {
   )
 
   return (
-    <Card className='bg-transparent border-0 md:bg-card md:border'>
+    <Card className='bg-transparent border-0 shadow-none md:shadow-sm md:bg-card md:border'>
       <CardHeader className='p-0 md:px-6'>
         <CardTitle>Subscription Plan</CardTitle>
         <CardDescription>
@@ -78,7 +78,7 @@ export function SubscriptionCard() {
                     {isPending ? 'Cancelling...' : 'Cancel Subscription'}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className='sm:max-w-md'>
+                <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Cancel Subscription</DialogTitle>
                     <DialogDescription>
@@ -101,11 +101,7 @@ export function SubscriptionCard() {
                 </DialogContent>
               </Dialog>
             ) : (
-              <Button
-                size={'lg'}
-                className='max-w-sm'
-                asChild
-                disabled={isPending}>
+              <Button size={'lg'} asChild disabled={isPending}>
                 <Link to='/pricing'>Upgrade Plan</Link>
               </Button>
             )}

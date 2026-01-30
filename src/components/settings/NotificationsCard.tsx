@@ -77,7 +77,7 @@ export function NotificationsCard() {
   }
 
   return (
-    <Card className='bg-transparent border-0 md:bg-card md:border'>
+    <Card className='bg-transparent border-0 shadow-none md:shadow-sm md:bg-card md:border'>
       <CardHeader className='p-0 md:px-6'>
         <CardTitle>Notifications</CardTitle>
         <CardDescription>
@@ -111,7 +111,6 @@ export function NotificationsCard() {
             </Label>
             <Input
               id='reminder-time'
-              className='max-w-sm'
               type='time'
               value={settings.reminder_time ?? '09:00:00'}
               onChange={(e) =>

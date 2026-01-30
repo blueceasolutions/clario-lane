@@ -65,14 +65,14 @@ export function PasswordCard() {
   }
 
   return (
-    <Card className='bg-transparent border-0 md:bg-card md:border'>
+    <Card className='bg-transparent border-0 shadow-none md:shadow-sm md:bg-card md:border'>
       <CardHeader className='p-0 md:px-6'>
         <CardTitle>Change Password</CardTitle>
         <CardDescription>
           Update your password to keep your account secure.
         </CardDescription>
       </CardHeader>
-      <CardContent className='max-w-sm p-0 md:px-6'>
+      <CardContent className=' p-0 md:px-6'>
         <form onSubmit={handleSubmit}>
           <FieldGroup>
             <form.Field
