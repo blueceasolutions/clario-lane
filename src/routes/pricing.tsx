@@ -40,7 +40,7 @@ function RouteComponent() {
         planCode: plan,
       })
     },
-    [user?.email]
+    [user?.email],
   )
 
   useEffect(() => {
@@ -56,7 +56,7 @@ function RouteComponent() {
   }, [user?.email])
 
   return (
-    <div className='py-10 px-4'>
+    <div className='py-10 px-4 pt-28 nd:pt-24'>
       {isLoading ? (
         <PendingPage />
       ) : (

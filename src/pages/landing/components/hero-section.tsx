@@ -1,172 +1,116 @@
-import { motion, useScroll, useTransform } from 'motion/react'
-import { Button } from '@/components'
-import { ArrowRight, Play } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { motion } from 'motion/react'
 import type { Session } from '@supabase/supabase-js'
+import { useWordCycler } from '../hooks/useWordCycler'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { useNavigation } from '../hooks/useNavigation'
+import { RSVPDisplay } from './presentational/RSVPDisplay'
+import { CTAButton } from './presentational/CTAButton'
+import { DEMO_WORDS, WORD_CYCLING_INTERVAL_MS } from '../data'
 
+/**
+ * Single Responsibility: Orchestrate hero section layout and composition
+ * Dependency Inversion: Depends on hooks (abstractions), not concrete implementations
+ * Open/Closed: Behavior extended through hooks, not modification
+ */
 interface HeroSectionProps {
   session: Session | null
 }
 
 export function HeroSection({ session }: HeroSectionProps) {
-  const [wordIndex, setWordIndex] = useState(0)
-  const { scrollY } = useScroll()
-  const opacity = useTransform(scrollY, [0, 300], [1, 0])
-  const y = useTransform(scrollY, [0, 300], [0, 50])
+  // Business logic delegated to hooks
+  const wordCycler = useWordCycler({
+    words: DEMO_WORDS,
+    intervalMs: WORD_CYCLING_INTERVAL_MS,
+  })
 
-  // Interactive preview - word chunking demo
-  const demoWords = [
-    'Train',
-    'your',
-    'brain',
-    'to',
-    'read',
-    'faster',
-    'with',
-    'science',
-  ]
+  const { opacity, y } = useScrollAnimation(
+    { startScroll: 0, endScroll: 300, startValue: 1, endValue: 0 },
+    { startScroll: 0, endScroll: 300, startValue: 0, endValue: 50 },
+  )
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % demoWords.length)
-    }, 600)
-    return () => clearInterval(interval)
-  }, [demoWords.length])
+  const navigation = useNavigation(session)
 
   return (
-    <section className='relative min-h-[90vh] flex flex-col items-center justify-center px-4 overflow-hidden pt-20 pb-32'>
+    <section className='relative min-h-[65vh] pt-[20vh] md:pt-[15vh] flex flex-col items-center justify-center px-4 overflow-hidden  pb-20 bg-gradient-to-b from-purple-50/50 via-background to-background dark:from-purple-950/20 dark:via-background dark:to-background'>
       {/* Background Decorative Elements */}
-      <div className='absolute inset-0 pointer-events-none'>
-        <div className='absolute top-20 left-10 md:left-20 w-32 h-32 md:w-64 md:h-64 bg-primary/20 rounded-full blur-[100px] animate-[pulse-subtle_4s_ease-in-out_infinite]' />
-        <div className='absolute bottom-20 right-10 md:right-20 w-40 h-40 md:w-80 md:h-80 bg-chart-2/20 rounded-full blur-[100px] animate-[pulse-subtle_5s_ease-in-out_infinite_1s]' />
+      <div className='absolute inset-0 pointer-events-none overflow-hidden'>
+        <div className='absolute top-20 left-10 md:left-20 w-40 h-40 md:w-96 md:h-96 bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[120px] animate-[pulse-subtle_4s_ease-in-out_infinite]' />
+        <div className='absolute bottom-20 right-10 md:right-20 w-48 h-48 md:w-[400px] md:h-[400px] bg-violet-400/20 dark:bg-violet-500/10 rounded-full blur-[120px] animate-[pulse-subtle_5s_ease-in-out_infinite_1s]' />
       </div>
 
       <motion.div
         style={{ opacity, y }}
-        className='relative z-10 text-center max-w-4xl mx-auto space-y-8'>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 backdrop-blur-md border border-border shadow-sm mb-4'>
-          <span className='w-2 h-2 rounded-full bg-green-500 animate-pulse' />
-          <span className='text-sm font-medium text-muted-foreground'>
-            30k+ active readers
-          </span>
-        </motion.div>
+        className='relative z-10 max-w-7xl mx-auto w-full flex flex-col items-start'>
+        {/* Main Content Container */}
+        <div className='grid lg:grid-cols-2 gap-12 items-center'>
+          {/* Left: Text Content */}
+          <div className='text-left lg:pr-8'>
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className='inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-purple-100 dark:bg-purple-900/40 mb-8 self-start'>
+              <span className='text-[11px] font-bold text-purple-600 dark:text-purple-300 uppercase tracking-widest'>
+                VERSION 1.0 LIVE
+              </span>
+            </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className='text-5xl md:text-7xl lg:text-[5.5rem] leading-[0.95] tracking-tight font-bold mb-8 text-gray-900 dark:text-white'>
+              Read{' '}
+              <span className='bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-600 bg-clip-text text-transparent'>
+                3x Faster
+              </span>
+              <br />
+              Today.
+            </motion.h1>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className='text-6xl md:text-8xl tracking-tighter font-bold bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/50'>
-          Read faster.
-          <br />
-          <span className='bg-linear-to-r from-primary to-chart-4 bg-clip-text text-transparent'>
-            Understand better.
-          </span>
-        </motion.h1>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className='text-lg text-muted-foreground mb-10 leading-relaxed max-w-lg font-normal'>
+              Experience the fluid way to learn. Master speed reading with
+              AI-driven coaching and deep retention techniques.
+            </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className='text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed'>
-          The scientific approach to speed reading and maintaining lifelong
-          focus in an age of distraction.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className='flex flex-wrap items-center justify-center gap-4 pt-4'>
-          {session ? (
-            <Button
-              asChild
-              size='xl'
-              className='h-14 px-8 text-lg rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all'>
-              <Link to='/dashboard/practice'>
-                Go to Dashboard <ArrowRight className='ml-2 h-5 w-5' />
-              </Link>
-            </Button>
-          ) : (
-            <Button
-              asChild
-              size='xl'
-              className='h-14 px-8 text-lg rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all'>
-              <Link to='/auth'>
-                Get Started <ArrowRight className='ml-2 h-5 w-5' />
-              </Link>
-            </Button>
-          )}
-
-          <Button
-            variant='outline'
-            size='xl'
-            className='h-14 px-8 text-lg rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/80'>
-            <Play className='mr-2 h-5 w-5' /> How it Works
-          </Button>
-        </motion.div>
-      </motion.div>
-
-      {/* Floating Demo Card */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 50 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.8, type: 'spring' }}
-        className='mt-20 relative z-20  w-full max-w-5xl '>
-        <div className='bg-background/80 backdrop-blur-xl mx-auto border border-white/20 dark:border-white/10 p-8 rounded-2xl shadow-2xl w-full   text-center transform hover:scale-105 transition-transform duration-500'>
-          <div className='flex justify-center mb-6'>
-            <div className='w-full h-1 bg-border rounded-full overflow-hidden'>
-              <motion.div
-                className='h-full bg-primary'
-                animate={{
-                  width: [`${(wordIndex / demoWords.length) * 100}%`],
-                }}
-                transition={{ duration: 0.6 }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className='flex flex-wrap items-center gap-5'>
+              <CTAButton
+                label='Get started'
+                onClick={navigation.primaryAction}
+                variant='primary'
+                className='bg-[#9333EA] w-full md:w-auto hover:bg-[#7E22CE] text-white shadow-xl shadow-purple-500/20 h-14 px-8 text-[15px] font-semibold tracking-wide'
               />
-            </div>
-          </div>
-          <motion.div
-            key={wordIndex}
-            initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
-            className='text-5xl font-bold text-primary h-20 flex items-center justify-center'>
-            {demoWords[wordIndex]}
-          </motion.div>
-          <div className='mt-4 flex justify-between text-xs text-muted-foreground uppercase tracking-widest font-semibold'>
-            <span>450 WPM</span>
-            <span>Focus Mode</span>
-          </div>
-        </div>
-      </motion.div>
 
-      {/* Dashboard Preview */}
-      <motion.div
-        initial={{ opacity: 0, y: 100, rotateX: 20 }}
-        animate={{ opacity: 1, y: 0, rotateX: 0 }}
-        transition={{ duration: 1, delay: 1 }}
-        className='mt-24 relative w-full max-w-5xl mx-auto perspective-1000'>
-        <div className='relative rounded-xl overflow-hidden border border-border/50 shadow-2xl bg-background/50 backdrop-blur-sm'>
-          <div className='absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent pointer-events-none' />
-          {/* Light Mode Image */}
-          <img
-            src='/dashboard-light.png'
-            alt='ClarioLane Dashboard Light'
-            className='w-full h-auto block dark:hidden'
-          />
-          {/* Dark Mode Image */}
-          <img
-            src='/dashboard-dark.png'
-            alt='ClarioLane Dashboard Dark'
-            className='w-full h-auto hidden dark:block'
-          />
+              {/* <CTAButton
+                label='View Demo'
+                onClick={() => {}}
+                variant='secondary'
+                className='bg-white dark:bg-transparent border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white h-14 px-8 text-[15px] font-semibold tracking-wide hover:bg-gray-50 dark:hover:bg-gray-900'
+              /> */}
+            </motion.div>
+          </div>
+
+          {/* Right: RSVP Demo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, x: 50 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.6, type: 'spring' }}
+            className='relative'>
+            <RSVPDisplay
+              word={wordCycler.currentWord}
+              wpm={Math.floor(wordCycler.progress * 390 + 450)}
+              progress={wordCycler.progress}
+            />
+          </motion.div>
         </div>
-        {/* Reflection/Glow Effect */}
-        <div className='absolute -inset-4 bg-primary/20 blur-3xl -z-10 rounded-full opacity-20' />
       </motion.div>
     </section>
   )

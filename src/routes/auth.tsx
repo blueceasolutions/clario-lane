@@ -15,12 +15,12 @@ export const Route = createFileRoute('/auth')({
 
 function RouteComponent() {
   return (
-    <div className='bg-background min-h-[75svh] p-4 md:p-10'>
+    <div className='bg-background min-h-[75svh] p-4  md:p-10'>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        className='w-full max-w-lg space-y-6 mx-auto'>
-        <div className='mx-auto w-fit '>
+        className='w-full max-w-lg space-y-6 mx-auto pt-28 nd:pt-24'>
+        <div className='mx-auto w-fit'>
           <Link
             to='/'
             className='flex items-center gap-2 self-center font-medium '>

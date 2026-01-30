@@ -23,40 +23,42 @@ function RouteComponent() {
   const canSkip = [4].includes(current_step)
 
   return (
-    <div className='min-h-[80svh] p-4 max-w-6xl mx-auto'>
+    <div className='min-h-[80svh] p-4 max-w-6xl mx-auto pt-24'>
       {/* Progress Bar */}
-      <div className='mb-8'>
-        <div className='flex justify-between mb-2 text-sm text-muted-foreground'>
-          <div className='flex gap-2 items-center'>
-            {current_step > 0 ? (
-              <Button
-                size={'sm'}
-                variant='ghost'
-                onClick={() => update({ current_step: current_step - 1 })}>
-                <ArrowLeft />
-                Back
-              </Button>
-            ) : null}
-            {canSkip ? (
-              <Button
-                size='sm'
-                variant={'ghost'}
-                onClick={onSkipNextStep}
-                className='flex items-center gap-2'>
-                Skip <ArrowRight />
-              </Button>
-            ) : null}
-          </div>
-          <div className='flex gap-2 items-center'>
-            <span>
-              Step {current_step + 1} of {total_steps}
-            </span>
+      <div className=' pt-28 nd:pt-24'>
+        <div className='mb-8'>
+          <div className='flex justify-between mb-2 text-sm text-muted-foreground'>
+            <div className='flex gap-2 items-center'>
+              {current_step > 0 ? (
+                <Button
+                  size={'sm'}
+                  variant='ghost'
+                  onClick={() => update({ current_step: current_step - 1 })}>
+                  <ArrowLeft />
+                  Back
+                </Button>
+              ) : null}
+              {canSkip ? (
+                <Button
+                  size='sm'
+                  variant={'ghost'}
+                  onClick={onSkipNextStep}
+                  className='flex items-center gap-2'>
+                  Skip <ArrowRight />
+                </Button>
+              ) : null}
+            </div>
+            <div className='flex gap-2 items-center'>
+              <span>
+                Step {current_step + 1} of {total_steps}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className='flex items-center justify-center '>
-        <Outlet />
+        <div className='flex items-center justify-center '>
+          <Outlet />
+        </div>
       </div>
     </div>
   )

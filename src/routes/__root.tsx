@@ -60,6 +60,7 @@ export const Route = createRootRouteWithContext<RootRouteContext>()({
 
 function RootComponent() {
   const pathname = useLocation().pathname
+
   return (
     <React.Fragment>
       <SettingsProvider>
