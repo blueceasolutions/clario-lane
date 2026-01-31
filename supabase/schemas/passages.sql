@@ -1,7 +1,11 @@
 -- Passages table with RLS
 create table if not exists passages (
     id uuid primary key default gen_random_uuid(),
-    passage jsonb not null default '{}'::jsonb,
+    tags text[] not null default '{}',
+    text text not null,
+    title text not null,
+    difficulty text not null check (difficulty in ('Easy', 'Medium', 'Hard')),
+    questions jsonb not null default '[]'::jsonb,
     created_at timestamptz default now(),
     updated_at timestamptz default now()
 );

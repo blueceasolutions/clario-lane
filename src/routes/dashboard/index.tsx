@@ -13,7 +13,7 @@ import { useClaimQuest, useGamification } from '@/hooks'
 
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { motion } from 'motion/react'
-import { supabaseService } from '~supabase/clientServices'
+import { fetchPracticeSessions, fetchUserProfile } from '@/integration/queries'
 
 export const Route = createFileRoute('/dashboard/')({
   component: RouteComponent,
@@ -21,22 +21,15 @@ export const Route = createFileRoute('/dashboard/')({
 })
 
 export function RouteComponent() {
-  const { data: userProfile } = useQuery({
-    queryKey: ['user_profile'],
-    queryFn: () => supabaseService.getUser(),
-  })
-  const { data } = useQuery({
-    queryKey: ['progress_data'],
-    queryFn: async () =>
-      await supabaseService.getPracticedSessions(userProfile?.id),
-  })
+  const { data: userProfile } = useQuery(fetchUserProfile)
+  const { data } = useQuery(fetchPracticeSessions(userProfile?.id))
 
   const {
     stats,
     achievements,
     quests,
     isLoading: isLoadingGamification,
-  } = useGamification()
+  } = useGamification(userProfile?.id)
 
   if (!userProfile) {
     throw redirect({ to: '/auth' })
@@ -94,7 +87,7 @@ export function RouteComponent() {
             currentStreak={stats.current_streak}
             longestStreak={stats.longest_streak}
           />
-          <DailyGoalRing />
+          <DailyGoalRing userId={userProfile.id} />
         </div>
       )}
       <div className='flex justify-center items-center bg-linear-to-r from-primary/10 to-secondary/10 rounded-md py-12'>

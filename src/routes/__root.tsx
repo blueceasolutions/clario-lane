@@ -19,7 +19,6 @@ import {
   Copyright,
 } from '@/components'
 import type { Session } from '@supabase/supabase-js'
-import { supabaseService } from '~supabase/clientServices'
 import type { UserTable } from '@/types'
 import {
   useOnboardingFlow,
@@ -33,12 +32,22 @@ type RootRouteContext = {
   user: UserTable | undefined
 }
 
+import { fetchSession, fetchUserProfile } from '@/integration'
+
 export const Route = createRootRouteWithContext<RootRouteContext>()({
   component: RootComponent,
   pendingComponent: PendingPage,
   beforeLoad: async ({ context }) => {
-    const session = await supabaseService.getSession()
-    const user = await supabaseService.getUser()
+    const session = await context.queryClient.ensureQueryData(fetchSession)
+    let user = undefined
+    if (session) {
+      try {
+        user = await context.queryClient.ensureQueryData(fetchUserProfile)
+      } catch (e) {
+        console.error('Failed to fetch user profile', e)
+      }
+    }
+
     if (user) {
       useOnboardingStore.setState({
         ...(user as unknown as Partial<OnboardingType>),

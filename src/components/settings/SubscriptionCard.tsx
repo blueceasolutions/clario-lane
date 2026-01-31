@@ -18,15 +18,11 @@ import { enableOrDisableSubscriptionToggleMutation } from '@/integration/mutatio
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Link } from '@tanstack/react-router'
-import { supabaseService } from '~supabase/clientServices'
-import { fetchNextSubscriptionDate } from '@/integration'
+import { fetchNextSubscriptionDate, fetchUserProfile } from '@/integration'
 import { useMemo } from 'react'
 
 export function SubscriptionCard() {
-  const { data: user, refetch } = useQuery({
-    queryKey: ['user'],
-    queryFn: async () => await supabaseService.getUser(),
-  })
+  const { data: user, refetch } = useQuery(fetchUserProfile)
 
   const { data } = useQuery(fetchNextSubscriptionDate)
 

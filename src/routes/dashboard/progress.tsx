@@ -10,7 +10,7 @@ import { useGamification } from '@/hooks'
 
 import { motion } from 'motion/react'
 import { useQuery } from '@tanstack/react-query'
-import { supabaseService } from '~supabase/clientServices'
+import { fetchPracticeSessions, fetchUserProfile } from '@/integration/queries'
 import {
   format,
   subDays,
@@ -25,16 +25,11 @@ export const Route = createFileRoute('/dashboard/progress')({
 })
 
 export function RouteComponent() {
-  const { data: userProfile, isLoading } = useQuery({
-    queryKey: ['user_profile'],
-    queryFn: () => supabaseService.getUser(),
-  })
+  const { data: userProfile, isLoading } = useQuery(fetchUserProfile)
 
-  const { data: sessions } = useQuery({
-    queryKey: ['practice_sessions', userProfile?.id],
-    queryFn: () => supabaseService.getPracticedSessions(userProfile?.id, 100),
-    enabled: !!userProfile?.id,
-  })
+  const { data: sessions } = useQuery(
+    fetchPracticeSessions(userProfile?.id, 100),
+  )
 
   const { isLoading: isLoadingGamification } = useGamification()
 
@@ -55,14 +50,14 @@ export function RouteComponent() {
     // Calculate average for the day
     const avgWpm = daySessions.length
       ? Math.round(
-          daySessions.reduce((acc, s) => acc + s.wpm, 0) / daySessions.length
+          daySessions.reduce((acc, s) => acc + s.wpm, 0) / daySessions.length,
         )
       : null
 
     const avgComp = daySessions.length
       ? Math.round(
           daySessions.reduce((acc, s) => acc + s.comprehension, 0) /
-            daySessions.length
+            daySessions.length,
         )
       : null
 
@@ -82,12 +77,12 @@ export function RouteComponent() {
 
     const weekSessions =
       sessions?.filter((s) =>
-        isWithinInterval(new Date(s.created_at!), { start, end })
+        isWithinInterval(new Date(s.created_at!), { start, end }),
       ) || []
 
     const avgWPM = weekSessions.length
       ? Math.round(
-          weekSessions.reduce((acc, s) => acc + s.wpm, 0) / weekSessions.length
+          weekSessions.reduce((acc, s) => acc + s.wpm, 0) / weekSessions.length,
         )
       : 0
 

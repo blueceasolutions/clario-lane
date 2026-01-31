@@ -12,7 +12,7 @@ type SettingsStore = {
   setFontFace: (fontFace: FontFace) => void;
   setFontSizeScale: (fontSizeScale: number) => void;
   setTheme: (theme: Theme) => void;
-  fetchPreferences: (userId: string) => Promise<void>;
+  syncPreferences: (preferences: any) => void;
 };
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -48,21 +48,12 @@ export const useSettingsStore = create<SettingsStore>()(
             .upsert({ user_id: user.id, theme });
         }
       },
-      fetchPreferences: async (userId) => {
-        const { data } = await supabaseService.sp
-          .from("user_preferences")
-          .select("*")
-          .eq("user_id", userId)
-          .maybeSingle(); // Use maybeSingle() to return null instead of error when no row exists
-
-        if (data) {
-          set({
-            fontFace: data.font_face as FontFace,
-            fontSizeScale: data.font_size_scale,
-            theme: data.theme as Theme,
-          });
-        }
-        // If no data, keep default values from state
+      syncPreferences: (preferences) => {
+        set({
+          fontFace: preferences.font_face as FontFace,
+          fontSizeScale: preferences.font_size_scale,
+          theme: preferences.theme as Theme,
+        });
       },
     }),
     {

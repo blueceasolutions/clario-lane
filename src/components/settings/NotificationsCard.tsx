@@ -11,27 +11,16 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabaseService } from '~supabase/clientServices'
 import { useRouteContext } from '@tanstack/react-router'
+import { fetchNotifications } from '@/integration/queries'
 
 export function NotificationsCard() {
   const userProfile = useRouteContext({ from: '__root__' }).user
   const queryClient = useQueryClient()
 
   // Fetch current notification settings
-  const { data: settings, isLoading } = useQuery({
-    queryKey: ['notification-settings', userProfile?.id],
-    queryFn: async () => {
-      if (!userProfile?.id) return null
-      const { data, error } = await supabaseService.sp
-        .from('users')
-        .select('daily_reminder, reminder_time, weekly_summary')
-        .eq('id', userProfile.id)
-        .single()
-
-      if (error) throw error
-      return data
-    },
-    enabled: !!userProfile?.id,
-  })
+  const { data: settings, isLoading } = useQuery(
+    fetchNotifications(userProfile?.id),
+  )
 
   // Mutation to update settings
   const updateMutation = useMutation({

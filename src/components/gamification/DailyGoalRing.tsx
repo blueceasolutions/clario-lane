@@ -8,14 +8,23 @@ import { useEffect, useState } from 'react'
 
 const DAILY_GOAL_WORDS = 1000 // TODO: Make this configurable per user
 
-export function DailyGoalRing() {
-  const [userId, setUserId] = useState<string | undefined>(undefined)
+type DailyGoalRingProps = {
+  userId?: string
+}
+
+export function DailyGoalRing({ userId: propUserId }: DailyGoalRingProps) {
+  const [fetchedUserId, setFetchedUserId] = useState<string | undefined>(
+    undefined,
+  )
+  const userId = propUserId || fetchedUserId
 
   useEffect(() => {
-    supabaseService.getSession().then((session) => {
-      setUserId(session?.user?.id)
-    })
-  }, [])
+    if (!propUserId) {
+      supabaseService.getSession().then((session) => {
+        setFetchedUserId(session?.user?.id)
+      })
+    }
+  }, [propUserId])
 
   const { data: currentWords = 0 } = useQuery(fetchWordsReadToday(userId))
 
