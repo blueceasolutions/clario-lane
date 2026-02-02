@@ -28,7 +28,7 @@ export type PricingCardProps = {
   className?: string
 }
 
-export default function PricingCard({
+export function PricingCard({
   title,
   price,
   currency = 'NGN',
@@ -52,7 +52,7 @@ export default function PricingCard({
           popular
             ? 'border-transparent shadow-2xl ring-2 ring-primary/20 dark:ring-primary/40'
             : 'border-border/50 shadow-lg hover:border-primary/20',
-          'bg-white dark:bg-zinc-950/50 backdrop-blur-sm'
+          'bg-white dark:bg-zinc-950/50 backdrop-blur-sm',
         )}>
         {/* Gradient Background Effect for Popular Card */}
         {popular && (
@@ -65,7 +65,7 @@ export default function PricingCard({
             'absolute top-0 left-0 w-full h-1',
             popular
               ? 'bg-linear-to-r from-primary to-purple-600'
-              : 'bg-transparent group-hover:bg-linear-to-r group-hover:from-gray-300 group-hover:to-gray-400'
+              : 'bg-transparent group-hover:bg-linear-to-r group-hover:from-gray-300 group-hover:to-gray-400',
           )}
         />
 
@@ -78,7 +78,7 @@ export default function PricingCard({
               <Badge
                 variant='secondary'
                 className={cn(
-                  'px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary dark:bg-primary/20 hover:bg-primary/15'
+                  'px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary dark:bg-primary/20 hover:bg-primary/15',
                 )}>
                 {badge}
               </Badge>
@@ -131,7 +131,7 @@ export default function PricingCard({
               'w-full h-11 text-sm font-semibold transition-all duration-300 rounded-lg',
               popular
                 ? 'bg-linear-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg hover:shadow-primary/25'
-                : 'hover:bg-secondary/80'
+                : 'hover:bg-secondary/80',
             )}
             variant={popular ? 'default' : 'outline'}
             onClick={onCta}

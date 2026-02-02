@@ -22,7 +22,6 @@ import {
   fetchChallenges,
   fetchContentType,
   fetchGoals,
-  fetchPlans,
 } from '@/integration/queries'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { userMutation } from '@/integration'
@@ -60,7 +59,6 @@ function RouteComponent() {
   const { data: goals } = useQuery(fetchGoals)
   const { data: challenges } = useQuery(fetchChallenges)
   const { data: contentType } = useQuery(fetchContentType)
-  const { data: plans } = useQuery(fetchPlans)
 
   const { mutateAsync: createMutateAsync, isPending } =
     useMutation(userMutation)
@@ -135,8 +133,7 @@ function RouteComponent() {
     return (
       <NotificationSetup isLoading={isPending} onContinue={handleSubmission} />
     )
-  if (current_step === 6)
-    return <Billing plans={plans || []} onSubscribe={onSubscribe} />
+  if (current_step === 6) return <Billing onSubscribe={onSubscribe} />
 
   return (
     <Card className=' bg-transparent border-0 shadow-none w-full max-w-3xl mx-auto md:mt-20 md:bg-card md:shadow-lg md:p-8 '>

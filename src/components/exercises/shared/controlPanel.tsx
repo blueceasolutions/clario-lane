@@ -6,7 +6,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { ReaderControls } from './ReaderControls'
 import { Button } from '@/components'
 import { Settings } from 'lucide-react'
@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/tooltip'
 import { usePracticeStore } from '@/store'
 import type { PRACTICES } from '@/lib'
+import { supabaseService } from '~supabase/clientServices'
+import { useQuery } from '@tanstack/react-query'
 
 type ReaderControlsProps = {
   children?: ReactNode
@@ -41,6 +43,20 @@ export function ControlPanel({
   onTriggerClick,
 }: ReaderControlsProps) {
   const { exerciseType } = usePracticeStore()
+  const { setWpm } = usePracticeStore()
+
+  const { data: userProfile } = useQuery({
+    queryKey: ['user_profile'],
+    queryFn: () => supabaseService.getUser(),
+  })
+
+  const currentWpm = userProfile?.next_wpm || userProfile?.current_wpm || 250
+
+  useEffect(() => {
+    if (userProfile) {
+      setWpm(currentWpm)
+    }
+  }, [userProfile])
 
   return (
     <Drawer direction={window.innerWidth >= 768 ? 'right' : 'bottom'}>

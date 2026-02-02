@@ -21,7 +21,7 @@ export const fetchPassage = queryOptions({
     );
 
     if (data) {
-      usePracticeStore.setState({ passage: data.data.passage });
+      usePracticeStore.setState({ passage: data.data });
     }
 
     return data.data as PassageResponse;

@@ -1,9 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-// import type { Context } from "npm:hono"; // Removed due to missing package
-import { Hono } from "npm:hono";
-import { createClient } from "npm:@supabase/supabase-js@2";
-import { z } from "jsr:@zod/zod";
+import "@supabase/functions-js/edge-runtime.d.ts";
+import { Hono } from "hono";
+import { createClient } from "@supabase/supabase-js";
+import { z } from "zod";
 import type { Database } from "../../supabase_types.ts";
 import { corsMiddleware } from "../_shared/cors-middleware.ts";
 

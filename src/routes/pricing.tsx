@@ -1,7 +1,5 @@
 import Billing from '@/components/onboarding/billing'
 import { clientEnv } from '@/config/env'
-import { fetchPlans } from '@/integration'
-import { useQuery } from '@tanstack/react-query'
 import {
   createFileRoute,
   redirect,
@@ -10,7 +8,6 @@ import {
 } from '@tanstack/react-router'
 import { useCallback, useEffect } from 'react'
 import PaystackPop from '@paystack/inline-js'
-import { PendingPage } from '@/components'
 import type { UserTable } from '@/types'
 import { supabaseService } from '~supabase/clientServices'
 
@@ -27,7 +24,6 @@ export const Route = createFileRoute('/pricing')({
 })
 
 function RouteComponent() {
-  const { data: plans, isLoading } = useQuery(fetchPlans)
   const user = useRouteContext({ from: '__root__' }).user
   const route = useRouter()
 
@@ -57,11 +53,7 @@ function RouteComponent() {
 
   return (
     <div className='py-10 px-4 pt-28 nd:pt-24'>
-      {isLoading ? (
-        <PendingPage />
-      ) : (
-        <Billing plans={plans || []} onSubscribe={onSubscribe} />
-      )}
+      <Billing onSubscribe={onSubscribe} />
     </div>
   )
 }

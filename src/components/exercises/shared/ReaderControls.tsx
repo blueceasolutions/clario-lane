@@ -1,8 +1,6 @@
 import { Slider } from '@/components'
 import { usePracticeStore } from '@/store'
-import { useQuery } from '@tanstack/react-query'
-import { useEffect, type ReactNode } from 'react'
-import { supabaseService } from '~supabase/clientServices'
+import { type ReactNode } from 'react'
 
 type ReaderControlsProps = {
   children?: ReactNode
@@ -12,19 +10,6 @@ type ReaderControlsProps = {
 
 export function ReaderControls({}: ReaderControlsProps) {
   const { isPlaying, wpm, setWpm } = usePracticeStore()
-
-  const { data: userProfile } = useQuery({
-    queryKey: ['user_profile'],
-    queryFn: () => supabaseService.getUser(),
-  })
-
-  const currentWpm = userProfile?.next_wpm || userProfile?.current_wpm || 250
-
-  useEffect(() => {
-    if (userProfile) {
-      setWpm(currentWpm)
-    }
-  }, [userProfile])
 
   return (
     <div className='bg-card p-4 rounded-2xl shadow-lg shadow-primary/10'>

@@ -1,7 +1,7 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { Hono } from "npm:hono";
+import "@supabase/functions-js/edge-runtime.d.ts";
+import { Hono } from "hono";
 import crypto from "node:crypto";
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
 import type { Database } from "../../supabase_types.ts";
 import { corsMiddleware } from "../_shared/cors-middleware.ts";
 
