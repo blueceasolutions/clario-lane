@@ -27,6 +27,8 @@ import { toast } from 'sonner'
 
 import { supabaseService } from '~supabase/clientServices'
 
+import { fetchSession, fetchUserProfile } from '@/integration/queries'
+
 export default function AuthPage({
   className,
   ...props
@@ -63,7 +65,8 @@ export default function AuthPage({
           await supabaseService.signIn(rest.email, password)
         }
 
-        await rootContext.queryClient.invalidateQueries()
+        await rootContext.queryClient.fetchQuery(fetchSession)
+        await rootContext.queryClient.fetchQuery(fetchUserProfile)
 
         toast.success(successMessage)
       } catch (error) {

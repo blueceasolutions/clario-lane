@@ -34,7 +34,7 @@ export const useSubscription = () => {
     const handleConfirmSubscription = async (payload: UserTable) => {
       if (payload.email === email && payload.is_subscribed) {
         route.invalidate({ sync: true });
-        await rootContext.queryClient.invalidateQueries();
+        await rootContext.queryClient.fetchQuery(fetchUserProfile);
         refetch().then(() => {
           route.navigate({ to: "/dashboard/practice" });
         });
