@@ -72,10 +72,10 @@ import { clientEnv } from '@/config/env'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
 
-const ONBOARDING_ROUTES = ['/onboarding', '/dashboard/practice']
-
 function RootComponent() {
   const pathname = useLocation().pathname
+  const isValidRoute =
+    pathname.includes('onboarding') || pathname.includes('practice')
 
   useEffect(() => {
     const gaKey = clientEnv.VITE_GOOGLE_ANALYTICS_KEY
@@ -95,7 +95,7 @@ function RootComponent() {
       <SettingsProvider>
         <Navbar />
         <Outlet />
-        {ONBOARDING_ROUTES.includes(pathname) ? null : (
+        {isValidRoute ? null : (
           <>
             <FloatingActionButton />
             <Copyright />
