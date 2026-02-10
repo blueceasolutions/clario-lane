@@ -7,8 +7,8 @@ create table if not exists passages (
     difficulty text not null check (difficulty in ('Easy', 'Medium', 'Hard')),
     questions jsonb not null default '[]'::jsonb,
     created_at timestamptz default now(),
-    updated_at timestamptz default now(),
-    user_id uuid references auth.users(id) default auth.uid()
+    updated_at timestamptz default now()
+    -- user_id uuid references auth.users(id) default auth.uid()
 );
 
 -- Enable RLS
@@ -26,17 +26,17 @@ on passages for select
 to anon, authenticated
 using (true);
 
-create policy "Users can insert their own passages"
-on passages for insert
-to authenticated
-with check (auth.uid() = user_id);
+-- create policy "Users can insert their own passages"
+-- on passages for insert
+-- to authenticated
+-- with check (auth.uid() = user_id);
 
-create policy "Users can update their own passages"
-on passages for update
-to authenticated
-using (auth.uid() = user_id);
+-- create policy "Users can update their own passages"
+-- on passages for update
+-- to authenticated
+-- using (auth.uid() = user_id);
 
-create policy "Users can delete their own passages"
-on passages for delete
-to authenticated
-using (auth.uid() = user_id);
+-- create policy "Users can delete their own passages"
+-- on passages for delete
+-- to authenticated
+-- using (auth.uid() = user_id);
