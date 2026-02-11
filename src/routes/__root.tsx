@@ -10,6 +10,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import Navbar from '@/components/navbar'
+import { AuthProvider } from '@/context/auth-provider'
 
 import {
   // Footer,
@@ -92,19 +93,21 @@ function RootComponent() {
 
   return (
     <React.Fragment>
-      <SettingsProvider>
-        <Navbar />
-        <Outlet />
-        {isValidRoute ? null : (
-          <>
-            <FloatingActionButton />
-            <Copyright />
-          </>
-        )}
-        <Toaster position='top-center' richColors />
-        <TanStackRouterDevtools position='bottom-left' />
-        <ReactQueryDevtools position='bottom' initialIsOpen={false} />
-      </SettingsProvider>
+      <AuthProvider>
+        <SettingsProvider>
+          <Navbar />
+          <Outlet />
+          {isValidRoute ? null : (
+            <>
+              <FloatingActionButton />
+              <Copyright />
+            </>
+          )}
+          <Toaster position='top-center' richColors />
+          <TanStackRouterDevtools position='bottom-left' />
+          <ReactQueryDevtools position='bottom' initialIsOpen={false} />
+        </SettingsProvider>
+      </AuthProvider>
     </React.Fragment>
   )
 }

@@ -14,20 +14,17 @@ import {
   Spinner,
 } from '@/components'
 
+import { useAuth } from '@/context/auth-provider'
 import { catchError } from '@/lib'
 import { cn } from '@/lib/utils'
 import { useOnboardingStore } from '@/store'
 import { AuthValidationSchema } from '@/types'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { useForm } from '@tanstack/react-form'
-import { Link, useRouteContext, useRouter } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
-
-import { supabaseService } from '~supabase/clientServices'
-
-import { fetchSession, fetchUserProfile } from '@/integration/queries'
 
 export default function AuthPage({
   className,
@@ -35,10 +32,10 @@ export default function AuthPage({
 }: React.ComponentProps<'div'>) {
   const [authState, setAuthState] = useState<'signin' | 'signup'>('signin')
   const { updateProfile } = useOnboardingStore()
-  const route = useRouter()
+  // const route = useRouter()
+  const { login, signup } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const rootContext = useRouteContext({ from: '__root__' })
 
   const successMessage =
     authState === 'signin' ? 'Logged in successfully' : 'Signed up successfully'
@@ -59,20 +56,15 @@ export default function AuthPage({
         updateProfile({ ...rest })
 
         if (authState === 'signup') {
-          await supabaseService.signUp(rest.email, password, rest.name)
+          await signup(rest.email, password, rest.name)
         }
         if (authState === 'signin') {
-          await supabaseService.signIn(rest.email, password)
+          await login('email', rest.email, password)
         }
-
-        await rootContext.queryClient.fetchQuery(fetchSession)
-        await rootContext.queryClient.fetchQuery(fetchUserProfile)
 
         toast.success(successMessage)
       } catch (error) {
         catchError(error)
-      } finally {
-        route.invalidate()
       }
     },
   })
@@ -91,12 +83,11 @@ export default function AuthPage({
   const handleGoogleSignIn = async () => {
     setIsSubmitting(true)
     try {
-      await supabaseService.signInWithGoogle()
-      await rootContext.queryClient.invalidateQueries()
+      await login('google')
     } catch (error) {
       catchError(error)
     } finally {
-      route.invalidate()
+      setIsSubmitting(false)
     }
   }
 

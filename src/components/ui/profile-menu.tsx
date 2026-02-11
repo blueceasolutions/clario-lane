@@ -9,27 +9,26 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Skeleton,
 } from '@/components/'
-import { useLogout } from '@/hooks'
-import type { Session } from '@supabase/supabase-js'
+import { useAuth } from '@/context/auth-provider'
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 
-type Props = {
-  session: Session
-}
-
-export function ProfileMenu(props: Props) {
+export function ProfileMenu() {
   const [open, setOpen] = useState(false)
-  const { user_metadata } = props.session.user
-  const name = user_metadata.displayName || user_metadata.full_name
+  const { session, logout, user } = useAuth()
+
+  if (!session || !user) return <Skeleton className='h-8 w-8 rounded-full' />
+
+  const { user_metadata } = session.user
+  const name = user.name || user_metadata.displayName || user_metadata.full_name
   const picture = user_metadata.avatar_url || user_metadata.picture || undefined
   const fallbackInitials = name
-    .split(' ')
+    ?.split(' ')
     .map((n: string) => n[0])
     .join('')
     .slice(0, 2)
-  const logout = useLogout()
 
   const onOpenChanged = () => {
     setOpen((prev) => !prev)
@@ -74,7 +73,7 @@ export function ProfileMenu(props: Props) {
 
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={logout}
+          onClick={() => logout()}
           variant='destructive'
           className='rouned-md'>
           <span className='px-2 py-1'>Log out</span>

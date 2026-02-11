@@ -1,14 +1,14 @@
-import { Link, useRouteContext, useLocation } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { BookOpen } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { Button, ProfileMenu } from './ui'
+import { useAuth } from '@/context/auth-provider'
 
 const AnimateLink = motion.create(Link)
 
 const Navbar = () => {
-  const rootRoute = useRouteContext({ from: '__root__' })
-  const { session } = rootRoute
+  const { session } = useAuth()
   const pathname = useLocation().pathname
   const isDashboard = pathname.includes('/dashboard')
 
@@ -30,7 +30,7 @@ const Navbar = () => {
                 <AnimateLink to='/auth'>Sign in</AnimateLink>
               </Button>
             ) : (
-              <ProfileMenu session={session} />
+              <ProfileMenu />
             )}
           </div>
         </div>
@@ -81,7 +81,7 @@ const Navbar = () => {
               <AnimateLink to='/auth'>Login</AnimateLink>
             </Button>
           ) : (
-            <ProfileMenu session={session} />
+            <ProfileMenu />
           )}
         </div>
       </div>
