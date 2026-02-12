@@ -44,7 +44,7 @@ app.post("/send-email", async (c) => {
 
     switch (type) {
       case "WELCOME":
-        subject = "Welcome to ClarioLane!";
+        subject = "Welcome to Clariolane!";
         html = getWelcomeEmail(data?.name || "there");
         break;
       case "PASSWORD_CHANGED":
@@ -82,7 +82,7 @@ app.post("/send-email", async (c) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "ClarioLane <noreply@clariolane.com>",
+        from: "Clariolane <noreply@clariolane.com>",
         to: [toEmail],
         subject: subject,
         html: html,

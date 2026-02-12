@@ -28,7 +28,7 @@ function RouteComponent() {
 
   return (
     <div className='min-h-[80svh] p-4 max-w-6xl mx-auto '>
-      <SeoHead title='Onboarding' description='Get started with ClarioLane.' />
+      <SeoHead title='Onboarding' description='Get started with Clariolane.' />
       {/* Progress Bar */}
       <div className=' pt-24'>
         <div className='mb-4'>

@@ -100,8 +100,8 @@ function RootComponent() {
     <React.Fragment>
       <HelmetProvider>
         <SeoHead
-          title='ClarioLane'
-          description='Master speed reading and comprehension with ClarioLane. Interactive exercises and progress tracking.'
+          title='Clariolane'
+          description='Master speed reading and comprehension with Clariolane. Interactive exercises and progress tracking.'
         />
         <AuthProvider>
           <SettingsProvider>

@@ -42,7 +42,7 @@ export function FeedbackModal({ open, onOpenChange }: FeedbackModalProps) {
               Send Feedback
             </DialogTitle>
             <DialogDescription className='text-sm md:text-base text-gray-500 dark:text-gray-400 leading-relaxed font-normal'>
-              Help us improve ClarioLane. Share your thoughts, report bugs, or
+              Help us improve Clariolane. Share your thoughts, report bugs, or
               suggest new features to make your reading experience better.
             </DialogDescription>
           </DialogHeader>

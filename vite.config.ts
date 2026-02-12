@@ -22,8 +22,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
       manifest: {
-        name: "ClarioLane",
-        short_name: "ClarioLane",
+        name: "Clariolane",
+        short_name: "Clariolane",
         description: "Speed reading and comprehension training",
         theme_color: "#ffffff",
         start_url: "/auth",

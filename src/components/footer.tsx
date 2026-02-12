@@ -10,7 +10,7 @@ export const Footer = () => {
           <div>
             <div className='flex items-center gap-2 mb-4'>
               <BookOpen className='size-6 text-primary' />
-              <span className='text-xl'>ClarioLane</span>
+              <span className='text-xl'>Clariolane</span>
             </div>
             <p className='text-sm text-muted-foreground'>
               The clear path to reading mastery.

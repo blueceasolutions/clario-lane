@@ -38,7 +38,7 @@ const Navbar = () => {
             to='/'
             className='text-lg font-bold text-primary dark:text-primary-foreground flex gap-1 items-center'>
             <BookOpen className='size-6' />
-            <span className='hidden sm:inline'>ClarioLane</span>
+            <span className='hidden sm:inline'>Clariolane</span>
           </AnimateLink>
 
           {/* Center Tabs */}
@@ -110,7 +110,7 @@ const Navbar = () => {
           <div className='bg-purple-600 rounded-full p-1 text-white'>
             <BookOpen className='size-4' />
           </div>
-          ClarioLane
+          Clariolane
         </AnimateLink>
 
         {/* Center Links - Hidden on mobile, visible on md+ */}

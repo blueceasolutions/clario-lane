@@ -10,12 +10,12 @@ interface SeoHeadProps {
 
 export const SeoHead = ({
   title,
-  description = 'Speed reading and comprehension training application. Improve your reading skills with ClarioLane.',
+  description = 'Speed reading and comprehension training application. Improve your reading skills with Clariolane.',
   image = '/dashboard-light.png',
   url = typeof window !== 'undefined' ? window.location.href : '',
   type = 'website',
 }: SeoHeadProps) => {
-  const siteName = 'ClarioLane'
+  const siteName = 'Clariolane'
   const fullTitle = `${title} | ${siteName}`
 
   return (

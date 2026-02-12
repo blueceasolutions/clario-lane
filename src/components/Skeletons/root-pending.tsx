@@ -6,7 +6,7 @@ export function RootPending() {
       <div className='flex flex-col items-center gap-4'>
         <Spinner className='size-8 text-primary' />
         <p className='text-muted-foreground text-sm animate-pulse'>
-          Loading ClarioLane...
+          Loading Clariolane...
         </p>
       </div>
     </div>

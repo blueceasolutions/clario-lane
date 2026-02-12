@@ -20,7 +20,7 @@ function RouteComponent() {
     <div className='bg-background min-h-[75svh] p-5  md:p-10'>
       <SeoHead
         title='Authentication'
-        description='Login or Sign up to ClarioLane.'
+        description='Login or Sign up to Clariolane.'
       />
       <motion.div
         initial={{ opacity: 0, y: 40 }}

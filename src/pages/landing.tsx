@@ -31,7 +31,7 @@ export function LandingPage() {
     <div className='overflow-hidden'>
       <SeoHead
         title='Speed Reading & Retention'
-        description='Train your brain to read faster and retain more with ClarioLane.'
+        description='Train your brain to read faster and retain more with Clariolane.'
       />
       <HeroSection session={session} />
       <Suspense fallback={<div className='h-96' />}>
