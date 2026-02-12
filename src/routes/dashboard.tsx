@@ -1,9 +1,4 @@
-import {
-  DashboardPending,
-  DashboardTabs,
-  LevelUpModal,
-  VictoryModal,
-} from '@/components'
+import { DashboardPending, LevelUpModal, VictoryModal } from '@/components'
 import { SeoHead } from '@/components/shared'
 
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
@@ -52,7 +47,6 @@ function RouteComponent() {
           {/* <div className='w-fit md:w-[100px]'>
             <BackButton />
           </div> */}
-          <DashboardTabs />
         </div>
         <AnimatePresence mode='wait'>
           <Outlet />

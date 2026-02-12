@@ -5,7 +5,13 @@ import { usePracticeStore, useAppStore } from '@/store'
 import { useGamificationStore } from '@/store/gamification/useGamificationStore'
 import { PracticeStep, READING_SPEED_RANGE } from '@/lib'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { fetchPassageKey, sessionMutation } from '@/integration'
+import {
+  fetchPassageKey,
+  fetchPracticeSessionsKey,
+  fetchUserProfileKey,
+  fetchWordsReadTodayKey,
+  sessionMutation,
+} from '@/integration'
 import {
   fetchUserStats,
   fetchUserStatsKey,
@@ -227,13 +233,15 @@ export function ComprehensionQuiz() {
             }
 
             // Invalidate queries to refresh dashboard stats
-            await queryClient.invalidateQueries({ queryKey: ['user_profile'] })
+            await queryClient.invalidateQueries({
+              queryKey: [fetchUserProfileKey],
+            })
             await queryClient.invalidateQueries({ queryKey: ['progress_data'] })
             await queryClient.invalidateQueries({
-              queryKey: ['practice_sessions'],
+              queryKey: [fetchPracticeSessionsKey],
             })
             await queryClient.invalidateQueries({
-              queryKey: ['words-read-today'],
+              queryKey: [fetchWordsReadTodayKey],
             })
             await queryClient.invalidateQueries({
               queryKey: [fetchUserStatsKey],

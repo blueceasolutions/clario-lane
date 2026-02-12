@@ -4,6 +4,8 @@ import { motion } from 'motion/react'
 
 import { Button, ProfileMenu } from './ui'
 import { useAuth } from '@/context/auth-provider'
+import { cn } from '@/lib/utils'
+import { TrendingUp } from 'lucide-react'
 
 const AnimateLink = motion.create(Link)
 
@@ -12,18 +14,76 @@ const Navbar = () => {
   const pathname = useLocation().pathname
   const isDashboard = pathname.includes('/dashboard')
 
+  // ...
+
   if (isDashboard) {
-    // Standard full-width navbar for other pages
+    const tabs = [
+      { id: 'practice', label: 'Practice', icon: TrendingUp },
+      { id: 'dashboard', label: 'Dashboard', icon: BookOpen },
+    ]
+
+    const activeTab =
+      tabs.find((tab) => {
+        if (tab.id === 'dashboard') {
+          return pathname === '/dashboard' || pathname === '/dashboard/'
+        }
+        return pathname.includes(`/dashboard/${tab.id}`)
+      })?.id || 'dashboard'
+
     return (
       <nav className='w-full bg-background/80 backdrop-blur-md border-b py-3 px-4 sticky top-0 z-50'>
-        <div className='max-w-6xl mx-auto flex items-center justify-between'>
+        <div className='max-w-7xl mx-auto flex items-center justify-between'>
           <AnimateLink
             whileHover={{ scale: 1.05 }}
             to='/'
             className='text-lg font-bold text-primary dark:text-primary-foreground flex gap-1 items-center'>
             <BookOpen className='size-6' />
-            ClarioLane
+            <span className='hidden sm:inline'>ClarioLane</span>
           </AnimateLink>
+
+          {/* Center Tabs */}
+          <div className='flex items-center justify-center absolute left-1/2 transform -translate-x-1/2'>
+            <div className='flex items-center p-1 bg-muted/50 border border-border/40 rounded-full backdrop-blur-sm'>
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.id
+                const Icon = tab.icon
+
+                return (
+                  <Link
+                    key={tab.id}
+                    // @ts-ignore
+                    to={
+                      tab.id === 'dashboard'
+                        ? '/dashboard'
+                        : `/dashboard/${tab.id}`
+                    }
+                    className={cn(
+                      'relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                      isActive
+                        ? 'text-primary'
+                        : 'text-muted-foreground hover:text-foreground',
+                    )}>
+                    {isActive && (
+                      <motion.div
+                        layoutId='active-dashboard-tab-nav'
+                        className='absolute inset-0 bg-background rounded-full shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                        transition={{
+                          type: 'spring',
+                          bounce: 0.2,
+                          duration: 0.6,
+                        }}
+                      />
+                    )}
+                    <span className='relative z-10 flex items-center gap-2'>
+                      <Icon className='w-4 h-4' />
+                      {tab.label}
+                    </span>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+
           <div className='flex gap-4 items-center font-semibold'>
             {!session ? (
               <Button asChild>
