@@ -15,11 +15,11 @@ import { HelmetProvider } from 'react-helmet-async'
 import { SeoHead } from '@/components/shared'
 
 import {
-  // Footer,
+  Footer,
   SettingsProvider,
   FloatingActionButton,
-  Copyright,
   RootPending,
+  Copyright,
 } from '@/components'
 import type { Session } from '@supabase/supabase-js'
 import type { UserTable } from '@/types'
@@ -80,6 +80,9 @@ function RootComponent() {
   const isValidRoute =
     pathname.includes('onboarding') || pathname.includes('practice')
 
+  const hideFooterRoutes =
+    pathname.includes('onboarding') || pathname.includes('dashboard')
+
   useEffect(() => {
     const gaKey = clientEnv.VITE_GOOGLE_ANALYTICS_KEY
     if (gaKey) {
@@ -104,12 +107,8 @@ function RootComponent() {
           <SettingsProvider>
             <Navbar />
             <Outlet />
-            {isValidRoute ? null : (
-              <>
-                <FloatingActionButton />
-                <Copyright />
-              </>
-            )}
+            {isValidRoute ? null : <FloatingActionButton />}
+            {hideFooterRoutes ? <Copyright /> : <Footer />}
             <Toaster position='top-center' richColors />
             <TanStackRouterDevtools position='bottom-left' />
             <ReactQueryDevtools position='bottom' initialIsOpen={false} />

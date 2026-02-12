@@ -12,8 +12,6 @@ export const fetchPlans = queryOptions({
       { method: "GET" },
     );
 
-    console.log(data);
-
     return data as PlanObject[];
   },
   staleTime: "static",
