@@ -25,7 +25,7 @@ function TermsOfServicePage() {
             <li>
               <strong>Recurring Billing:</strong> Subscriptions automatically
               renew every 30 days. Your card or means of payment will be debited
-              via Flutterwave unless you cancel.
+              via PayStack unless you cancel.
             </li>
             <li>
               <strong>Cancellation:</strong> You may cancel at any time via your
@@ -169,10 +169,10 @@ function TermsOfServicePage() {
         <section className='mb-6'>
           <h3 className='text-xl font-semibold mb-2'>How are payments sent?</h3>
           <p>
-            Payouts are processed via [e.g., Bank Transfer / Flutterwave
-            Payout]. Please ensure your payment details are correctly filled out
-            in your profile settings. (Note: Payouts are usually processed
-            within 3–5 business days).
+            Payouts are processed via [e.g., Bank Transfer / PayStack Payout].
+            Please ensure your payment details are correctly filled out in your
+            profile settings. (Note: Payouts are usually processed within 3–5
+            business days).
           </p>
         </section>
 

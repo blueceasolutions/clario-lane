@@ -43,9 +43,9 @@ function PrivacyPolicyPage() {
         <section className='mb-8'>
           <h2 className='text-2xl font-semibold mb-4'>Payment Processing</h2>
           <p>
-            We use Flutterwave to process all payments. Clariolane never sees or
+            We use PayStack to process all payments. Clariolane never sees or
             stores your credit/debit card details. All financial data is handled
-            securely by Flutterwave according to their privacy standards.
+            securely by PayStack according to their privacy standards.
           </p>
         </section>
 
@@ -63,8 +63,8 @@ function PrivacyPolicyPage() {
           <h2 className='text-2xl font-semibold mb-4'>Third-Party Sharing</h2>
           <p>
             We do not sell your data. We only share information with third
-            parties (like Flutterwave for payments or your SSO provider)
-            necessary to run the service.
+            parties (like PayStack for payments or your SSO provider) necessary
+            to run the service.
           </p>
         </section>
       </div>
