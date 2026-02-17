@@ -251,23 +251,23 @@ app.post("/practice/session", async (c: any) => {
       next_wpm: vettedData.next_wpm,
     }).eq("id", user.id);
 
-    const user_stats_update = {
-      user_id: user.id,
-      xp: newTotalXp,
-      level: newLevel as number,
-      current_streak: streakTracker.streak,
-      longest_streak: Math.max(
-        streakTracker.streak,
-        currentStats?.longest_streak || 0,
-      ),
-      last_activity_date: streakTracker.date.toISOString().split("T")[0],
-      total_words_read: newTotalWords,
-      total_time_seconds: newTotalTime,
-    };
-
-    // Update user_stats
-    const { error: statsError } = await supabaseClient.from("user_stats")
-      .upsert(user_stats_update);
+    // Update user_stats via RPC to bypass RLS
+    const { error: statsError } = await supabaseClient.rpc(
+      "upsert_user_stats",
+      {
+        _user_id: user.id,
+        _xp: newTotalXp,
+        _level: newLevel as number,
+        _current_streak: streakTracker.streak,
+        _longest_streak: Math.max(
+          streakTracker.streak,
+          currentStats?.longest_streak || 0,
+        ),
+        _last_activity_date: streakTracker.date.toISOString().split("T")[0],
+        _total_words_read: newTotalWords,
+        _total_time_seconds: newTotalTime,
+      },
+    );
 
     if (statsError) throw statsError;
 
@@ -340,7 +340,7 @@ app.post("/practice/session", async (c: any) => {
     if (avgError) throw avgError;
 
     // Check and unlock achievements
-    const { data: newAchievements, error: achError } = await supabaseClient.rpc(
+    const { data: rawAchievements, error: achError } = await supabaseClient.rpc(
       "check_and_unlock_achievements",
       { uid: user.id },
     );
@@ -349,13 +349,19 @@ app.post("/practice/session", async (c: any) => {
       throw achError;
     }
 
+    // Map out_achievement_id back to achievement_id for frontend compatibility
+    const newAchievements = rawAchievements?.map((a: any) => ({
+      achievement_id: a.out_achievement_id,
+      just_unlocked: a.just_unlocked,
+    })) || [];
+
     return c.json({
       success: true,
       message: "Session successfully recorded",
       data: {
         xp_gained: sessionXp,
         new_level: newLevel,
-        new_achievements: newAchievements || [],
+        new_achievements: newAchievements,
       },
     });
   } catch (error) {

@@ -20,10 +20,11 @@ export function ProfileMenu() {
   const [open, setOpen] = useState(false)
   const { session, logout, user } = useAuth()
 
-  if (!session || !user) return <Skeleton className='h-8 w-8 rounded-full' />
+  if (!session) return <Skeleton className='h-8 w-8 rounded-full' />
 
   const { user_metadata } = session.user
-  const name = user.name || user_metadata.displayName || user_metadata.full_name
+  const name =
+    user?.name || user_metadata.displayName || user_metadata.full_name
   const picture = user_metadata.avatar_url || user_metadata.picture || undefined
   const fallbackInitials = name
     ?.split(' ')

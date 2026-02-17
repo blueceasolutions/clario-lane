@@ -14,8 +14,6 @@ const Navbar = () => {
   const pathname = useLocation().pathname
   const isDashboard = pathname.includes('/dashboard')
 
-  // ...
-
   if (isDashboard) {
     const tabs = [
       { id: 'practice', label: 'Practice', icon: TrendingUp },

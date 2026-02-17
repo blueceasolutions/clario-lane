@@ -29,7 +29,7 @@ export const QuestCard = ({ todaysTasks, onClaimQuest }: Props) => {
       <CardHeader className='flex flex-row items-center justify-between pb-2'>
         <CardTitle className='text-base font-medium flex items-center gap-2 text-gray-900 dark:text-white'>
           <Trophy className='w-4 h-4 text-purple-600' />
-          Daily Quests
+          Active Quests
         </CardTitle>
         <span className='px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs font-semibold rounded-md'>
           {activeQuests.length} Active

@@ -90,6 +90,27 @@ app.post("/paystack-webhook", async (c) => {
           planName: payload.data.plan?.name,
         },
       );
+
+      // Assign Weekly Quest with 7-day expiration
+      const { data: weeklyQuests } = await supabaseAdmin
+        .from("quests")
+        .select("id")
+        .eq("type", "weekly")
+        .limit(1);
+
+      if (weeklyQuests && weeklyQuests.length > 0) {
+        const questId = weeklyQuests[0].id;
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
+
+        await supabaseAdmin.from("user_quests").upsert({
+          user_id: customer.id,
+          quest_id: questId,
+          expires_at: expiresAt.toISOString(),
+          current_value: 0,
+          is_completed: false,
+        }, { onConflict: "user_id, quest_id" });
+      }
     }
 
     if (

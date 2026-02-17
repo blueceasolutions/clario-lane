@@ -33,6 +33,82 @@ create table if not exists public.user_achievements (
   primary key (user_id, achievement_id)
 );
 
+CREATE OR REPLACE FUNCTION check_and_unlock_achievements(uid UUID)
+RETURNS TABLE (out_achievement_id TEXT, just_unlocked BOOLEAN) AS $$
+DECLARE
+  user_stat RECORD;
+  latest_session RECORD;
+BEGIN
+  SELECT * INTO user_stat FROM user_stats WHERE user_id = uid;
+  SELECT * INTO latest_session FROM practice_sessions WHERE user_id = uid ORDER BY created_at DESC LIMIT 1;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'first_session') THEN
+    IF (SELECT COUNT(*) FROM practice_sessions WHERE user_id = uid) >= 1 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'first_session');
+      RETURN QUERY SELECT 'first_session'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'streak_3') THEN
+    IF user_stat.current_streak >= 3 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'streak_3');
+      RETURN QUERY SELECT 'streak_3'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'streak_7') THEN
+    IF user_stat.current_streak >= 7 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'streak_7');
+      RETURN QUERY SELECT 'streak_7'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'streak_30') THEN
+    IF user_stat.current_streak >= 30 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'streak_30');
+      RETURN QUERY SELECT 'streak_30'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'words_10k') THEN
+    IF user_stat.total_words_read >= 10000 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'words_10k');
+      RETURN QUERY SELECT 'words_10k'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'words_100k') THEN
+    IF user_stat.total_words_read >= 100000 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'words_100k');
+      RETURN QUERY SELECT 'words_100k'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'speed_400') THEN
+    IF latest_session.wpm >= 400 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'speed_400');
+      RETURN QUERY SELECT 'speed_400'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'speed_600') THEN
+    IF latest_session.wpm >= 600 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'speed_600');
+      RETURN QUERY SELECT 'speed_600'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM user_achievements ua WHERE ua.user_id = uid AND ua.achievement_id = 'perfect_quiz') THEN
+    IF latest_session.comprehension >= 100 THEN
+      INSERT INTO user_achievements (user_id, achievement_id) VALUES (uid, 'perfect_quiz');
+      RETURN QUERY SELECT 'perfect_quiz'::TEXT, TRUE;
+    END IF;
+  END IF;
+  
+  RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Create quests table
 create table if not exists public.quests (
   id uuid primary key default gen_random_uuid(),
@@ -51,6 +127,7 @@ create table if not exists public.user_quests (
   quest_id uuid references public.quests(id) on delete cascade,
   current_value int default 0 not null,
   is_completed boolean default false not null,
+  expires_at timestamptz,
   claimed_at timestamptz,
   updated_at timestamptz default now() not null,
   primary key (user_id, quest_id)
@@ -73,6 +150,10 @@ create policy "Users can view their own stats"
 create policy "Users can update their own stats"
   on public.user_stats for update
   using (auth.uid() = user_id);
+
+create policy "Users can insert their own stats"
+  on public.user_stats for insert
+  with check (auth.uid() = user_id);
 
 -- achievements
 create policy "Achievements are viewable by everyone"

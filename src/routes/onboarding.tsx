@@ -5,16 +5,13 @@ import { useOnboardingFlow } from '@/store'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { OnboardingPending } from '@/components'
+import { useQuery } from '@tanstack/react-query'
+import { fetchUserProfile } from '@/integration'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/onboarding')({
   component: RouteComponent,
   pendingComponent: OnboardingPending,
-  beforeLoad: ({ context }) => {
-    const { user } = context
-    if (user?.is_subscribed) {
-      throw redirect({ to: '/dashboard' })
-    }
-  },
 })
 
 function RouteComponent() {
@@ -23,6 +20,16 @@ function RouteComponent() {
   const onSkipNextStep = () => {
     if (current_step <= 5) update({ current_step: current_step + 1 })
   }
+
+  const { data: user } = useQuery(fetchUserProfile)
+
+  useEffect(() => {
+    if (user) {
+      if (user?.onboarding_completed && !user.is_subscribed) {
+        update({ current_step: 6 })
+      }
+    }
+  }, [user])
 
   const canSkip = [4].includes(current_step)
 

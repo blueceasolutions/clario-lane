@@ -36,7 +36,7 @@ export function RouteComponent() {
     throw redirect({ to: '/auth' })
   }
 
-  const { claimQuest } = useClaimQuest()
+  const { claimQuest } = useClaimQuest(userProfile?.id)
 
   const readingSpeedData = data?.length
     ? data?.map((practiced_session, index) => ({

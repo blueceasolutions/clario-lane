@@ -1,4 +1,5 @@
 import { fetchSession, fetchUserProfile } from '@/integration'
+import { useOnboardingFlow, useOnboardingStore } from '@/store'
 import type { UserTable } from '@/types'
 import type { Session } from '@supabase/supabase-js'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -109,6 +110,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       queryClient.removeQueries({ queryKey: fetchUserProfile.queryKey })
       queryClient.clear()
       router.invalidate()
+      useOnboardingStore.getState().reset()
+      useOnboardingFlow.getState().reset()
       router.navigate({ to: '/' })
       toast.success('Logged out successfully')
     },

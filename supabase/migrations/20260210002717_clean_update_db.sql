@@ -10,7 +10,7 @@ drop policy "Authenticated users can select content types" on "public"."content_
 
 alter table "public"."passages" drop constraint "passages_user_id_fkey";
 
-drop function if exists "public"."claim_quest"(quest_uuid uuid);
+-- drop function if exists "public"."claim_quest"(quest_uuid uuid);
 
 drop function if exists "public"."check_and_unlock_achievements"(uid uuid);
 

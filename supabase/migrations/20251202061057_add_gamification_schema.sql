@@ -59,6 +59,7 @@ create table if not exists public.user_quests (
   quest_id uuid references public.quests(id) on delete cascade,
   current_value int default 0 not null,
   is_completed boolean default false not null,
+  expires_at timestamptz,
   claimed_at timestamptz,
   updated_at timestamptz default now() not null,
   primary key (user_id, quest_id)
