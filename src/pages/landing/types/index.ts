@@ -70,4 +70,8 @@ export interface IWordCyclerState {
   readonly currentWord: string;
   readonly progress: number;
   readonly wordIndex: number;
+  readonly isPlaying: boolean;
+  readonly totalWords: number;
+  readonly togglePlay: () => void;
+  readonly restart: () => void;
 }

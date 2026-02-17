@@ -15,8 +15,13 @@ export function HeroRSVPContainer() {
   return (
     <RSVPDisplay
       word={wordCycler.currentWord}
-      wpm={Math.floor(wordCycler.progress * 390 + 450)}
+      wpm={Math.floor(wordCycler.progress * 10 + 10)} // Adjusted curve for demo feel
       progress={wordCycler.progress}
+      isPlaying={wordCycler.isPlaying}
+      totalWords={wordCycler.totalWords}
+      currentIndex={wordCycler.wordIndex}
+      onTogglePlay={wordCycler.togglePlay}
+      onRestart={wordCycler.restart}
     />
   )
 }

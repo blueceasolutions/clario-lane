@@ -10,18 +10,31 @@ import type { IWordCyclerConfig, IWordCyclerState } from "../types";
  */
 export function useWordCycler(config: IWordCyclerConfig): IWordCyclerState {
   const [wordIndex, setWordIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % config.words.length);
-    }, config.intervalMs);
-
+    let interval: ReturnType<typeof setInterval>;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setWordIndex((prev) => (prev + 1) % config.words.length);
+      }, config.intervalMs);
+    }
     return () => clearInterval(interval);
-  }, [config.words.length, config.intervalMs]);
+  }, [config.words.length, config.intervalMs, isPlaying]);
+
+  const togglePlay = () => setIsPlaying((prev) => !prev);
+  const restart = () => {
+    setWordIndex(0);
+    setIsPlaying(true);
+  };
 
   return {
     currentWord: config.words[wordIndex],
-    progress: (wordIndex / config.words.length) * 100,
+    progress: ((wordIndex + 1) / config.words.length) * 100,
     wordIndex,
+    isPlaying,
+    totalWords: config.words.length,
+    togglePlay,
+    restart,
   };
 }

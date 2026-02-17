@@ -36,9 +36,10 @@ export function HeroSection({ session }: HeroSectionProps) {
         style={{ opacity, y }}
         className='relative z-10 max-w-6xl mx-auto w-full flex flex-col items-start'>
         {/* Main Content Container */}
-        <div className='grid lg:grid-cols-2 gap-12 items-center'>
+        <div className='w-full space-y-32'>
           {/* Left: Text Content */}
-          <div className='text-left  lg:pr-8'>
+
+          <div className='text-center'>
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -53,20 +54,18 @@ export function HeroSection({ session }: HeroSectionProps) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className='text-5xl md:text-7xl lg:text-[5.5rem] leading-[0.95] tracking-tight font-bold mb-8 text-gray-900 dark:text-white'>
-              Read{' '}
+              className='text-3xl md:text-5xl lg:text-[4.5rem] leading-[0.95] tracking-tight font-bold mb-8 text-gray-900 dark:text-white'>
+              Read more{' '}
               <span className='bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-600 bg-clip-text text-transparent'>
-                3x Faster
+                in less time.
               </span>
-              <br />
-              Today.
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className='text-lg text-muted-foreground mb-10 leading-relaxed max-w-lg font-normal'>
+              className='text-lg mx-auto text-muted-foreground mb-10 leading-relaxed max-w-lg font-normal'>
               Experience the fluid way to learn. Master speed reading with
               AI-driven coaching and deep retention techniques.
             </motion.p>
@@ -75,20 +74,13 @@ export function HeroSection({ session }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className='flex flex-wrap items-center gap-5'>
+              className='flex flex-wrap justify-center items-center gap-5'>
               <CTAButton
                 label={session ? 'Go to Dashboard' : 'Get started'}
                 onClick={navigation.primaryAction}
                 variant='primary'
                 className='bg-[#9333EA] w-full md:w-auto hover:bg-[#7E22CE] text-white shadow-xl shadow-purple-500/20 h-14 px-8 text-[15px] font-semibold tracking-wide'
               />
-
-              {/* <CTAButton
-                label='View Demo'
-                onClick={() => {}}
-                variant='secondary'
-                className='bg-white dark:bg-transparent border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white h-14 px-8 text-[15px] font-semibold tracking-wide hover:bg-gray-50 dark:hover:bg-gray-900'
-              /> */}
             </motion.div>
           </div>
 
