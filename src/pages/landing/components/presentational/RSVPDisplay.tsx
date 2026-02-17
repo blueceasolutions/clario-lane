@@ -37,7 +37,7 @@ export function RSVPDisplay({
   }
 
   return (
-    <div className='relative w-full max-w-3xl mx-auto bg-white dark:bg-[#0a0a0a] rounded-xl border border-gray-200 dark:border-white/5 overflow-hidden flex flex-col transition-colors duration-300'>
+    <div className='relative w-full max-w-3xl mx-auto bg-white dark:bg-[#0a0a0a] rounded-xl border border-gray-200 dark:border-white/5 overflow-hidden flex flex-col transition-colors duration-300 md:h-[400px] lg:h-[450px]'>
       {/* Main Display Area */}
       <div className='flex-1 relative flex flex-col items-center justify-center p-8'>
         {/* Focus Guides */}
