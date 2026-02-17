@@ -1,11 +1,9 @@
 import { motion } from 'motion/react'
 import type { Session } from '@supabase/supabase-js'
-import { useWordCycler } from '../hooks/useWordCycler'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useNavigation } from '../hooks/useNavigation'
-import { RSVPDisplay } from './presentational/RSVPDisplay'
+import { HeroRSVPContainer } from './HeroRSVPContainer'
 import { CTAButton } from './presentational/CTAButton'
-import { DEMO_WORDS, WORD_CYCLING_INTERVAL_MS } from '../data'
 
 /**
  * Single Responsibility: Orchestrate hero section layout and composition
@@ -18,10 +16,6 @@ interface HeroSectionProps {
 
 export function HeroSection({ session }: HeroSectionProps) {
   // Business logic delegated to hooks
-  const wordCycler = useWordCycler({
-    words: DEMO_WORDS,
-    intervalMs: WORD_CYCLING_INTERVAL_MS,
-  })
 
   const { opacity, y } = useScrollAnimation(
     { startScroll: 0, endScroll: 750, startValue: 1, endValue: 0 },
@@ -44,7 +38,7 @@ export function HeroSection({ session }: HeroSectionProps) {
         {/* Main Content Container */}
         <div className='grid lg:grid-cols-2 gap-12 items-center'>
           {/* Left: Text Content */}
-          <div className='text-left lg:pr-8'>
+          <div className='text-left  lg:pr-8'>
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -104,11 +98,7 @@ export function HeroSection({ session }: HeroSectionProps) {
             animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.6, type: 'spring' }}
             className='relative'>
-            <RSVPDisplay
-              word={wordCycler.currentWord}
-              wpm={Math.floor(wordCycler.progress * 390 + 450)}
-              progress={wordCycler.progress}
-            />
+            <HeroRSVPContainer />
           </motion.div>
         </div>
       </motion.div>

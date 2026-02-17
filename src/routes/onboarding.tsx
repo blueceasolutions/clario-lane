@@ -2,7 +2,7 @@ import { Button } from '@/components'
 import { SeoHead } from '@/components/shared'
 
 import { useOnboardingFlow } from '@/store'
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { OnboardingPending } from '@/components'
 import { useQuery } from '@tanstack/react-query'

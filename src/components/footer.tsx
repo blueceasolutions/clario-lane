@@ -6,7 +6,7 @@ export const Footer = () => {
   return (
     <footer className='bg-card border-t py-12 px-4'>
       <div className='container mx-auto max-w-6xl'>
-        <div className='grid md:grid-cols-4 gap-8'>
+        <div className='flex flex-wrap justify-between gap-8'>
           <div>
             <div className='flex items-center gap-2 mb-4'>
               <BookOpen className='size-6 text-primary' />
@@ -16,6 +16,7 @@ export const Footer = () => {
               The clear path to reading mastery.
             </p>
           </div>
+          {/* 
           <div className='hidden'>
             <h3 className='mb-4'>Product</h3>
             <ul className='space-y-2 text-sm text-muted-foreground'>
@@ -35,7 +36,7 @@ export const Footer = () => {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> 
           <div className='hidden'>
             <h3 className='mb-4'>Company</h3>
             <ul className='space-y-2 text-sm text-muted-foreground'>
@@ -56,6 +57,7 @@ export const Footer = () => {
               </li>
             </ul>
           </div>
+          */}
           <div>
             <h3 className='mb-4'>Legal</h3>
             <ul className='space-y-2 text-sm text-muted-foreground'>

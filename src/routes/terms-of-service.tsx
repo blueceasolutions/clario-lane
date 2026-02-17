@@ -169,10 +169,10 @@ function TermsOfServicePage() {
         <section className='mb-6'>
           <h3 className='text-xl font-semibold mb-2'>How are payments sent?</h3>
           <p>
-            Payouts are processed via [e.g., Bank Transfer / PayStack Payout].
-            Please ensure your payment details are correctly filled out in your
-            profile settings. (Note: Payouts are usually processed within 3–5
-            business days).
+            Payouts are processed via [e.g., Bank Transfer / Paystack Payout].
+            Please ensure your payment details are correctly filled out when the
+            "Withdraw" button gets activated in your dashboard. (Note: Payouts
+            are usually processed within 3–5 business days after confirmation).
           </p>
         </section>
 
@@ -209,6 +209,12 @@ function TermsOfServicePage() {
             during a period when your account is deactivated, expired, or
             cancelled will not be credited to your dashboard or count toward
             your earnings.
+          </p>
+          <p>
+            You can only use the email you used to signup for clariolane to
+            signup for the referral program(ClarioLane), if not all referral
+            bonuses will be forfeited because the system will see the account as
+            Inactive
           </p>
         </section>
       </div>
