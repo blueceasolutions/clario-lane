@@ -51,18 +51,6 @@ app.post("/paystack-webhook", async (c) => {
     const payload = await c.req.json();
     const signature = c.req.header("x-paystack-signature");
 
-    fetch(`${affiliateUrl}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ payload }),
-    }).then((res) => {
-      console.log("Webhook response:", res);
-    }).catch((err) => {
-      console.error("Error invoking webhook:", err);
-    });
-
     // Verify webhook signature
     const hash = crypto.createHmac("sha512", secret)
       .update(JSON.stringify(payload))
@@ -70,6 +58,21 @@ app.post("/paystack-webhook", async (c) => {
 
     if (hash !== signature) {
       return c.json({ success: false, message: "Not authorized" }, 401);
+    }
+
+    if (payload) {
+      console.log("Payload:", payload);
+      fetch(`${affiliateUrl}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }).then((res) => {
+        console.log("Webhook response:", res);
+      }).catch((err) => {
+        console.error("Error invoking webhook:", err);
+      });
     }
 
     // Find user by email
