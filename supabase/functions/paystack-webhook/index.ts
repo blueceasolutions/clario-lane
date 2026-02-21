@@ -7,6 +7,9 @@ import { corsMiddleware } from "../_shared/cors-middleware.ts";
 
 const app = new Hono();
 
+const affiliateUrl =
+  "https://cpmdmwcmesrfsjealzoj.supabase.co/functions/v1/conversion-webhook";
+
 // Apply CORS middleware globally
 app.use("/*", corsMiddleware);
 
@@ -48,6 +51,18 @@ app.post("/paystack-webhook", async (c) => {
     const payload = await c.req.json();
     const signature = c.req.header("x-paystack-signature");
 
+    fetch(`${affiliateUrl}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ payload }),
+    }).then((res) => {
+      console.log("Webhook response:", res);
+    }).catch((err) => {
+      console.error("Error invoking webhook:", err);
+    });
+
     // Verify webhook signature
     const hash = crypto.createHmac("sha512", secret)
       .update(JSON.stringify(payload))
@@ -56,15 +71,6 @@ app.post("/paystack-webhook", async (c) => {
     if (hash !== signature) {
       return c.json({ success: false, message: "Not authorized" }, 401);
     }
-
-    fetch(`bluecea-affiliate.netlify.app/api/webhooks/paystack`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${supabase_service_key}`,
-      },
-      body: JSON.stringify({ payload }),
-    });
 
     // Find user by email
     const { data: customer, error: customerError } = await supabaseAdmin
@@ -76,7 +82,6 @@ app.post("/paystack-webhook", async (c) => {
     if (customerError || !customer) {
       return c.json({ success: false, message: "User not found" }, 400);
     }
-
     if (payload.event === "charge.success") {
       // Update user subscription status
       await supabaseAdmin.from("users").update({ is_subscribed: true }).eq(

@@ -75,6 +75,8 @@ import { clientEnv } from '@/config/env'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
 
+import { REF_KEYWORD } from '@/lib/constants'
+
 function RootComponent() {
   const pathname = useLocation().pathname
   const isValidRoute =
@@ -82,6 +84,14 @@ function RootComponent() {
 
   const hideFooterRoutes =
     pathname.includes('onboarding') || pathname.includes('dashboard')
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const ref = searchParams.get(REF_KEYWORD)
+    if (ref) {
+      localStorage.setItem(REF_KEYWORD, ref)
+    }
+  }, [])
 
   useEffect(() => {
     const gaKey = clientEnv.VITE_GOOGLE_ANALYTICS_KEY

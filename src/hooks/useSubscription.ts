@@ -8,6 +8,8 @@ import { supabaseService } from "~supabase/clientServices";
 import type { UserTable } from "@/types";
 import { useRouteContext, useRouter } from "@tanstack/react-router";
 
+import { REF_KEYWORD } from "@/lib/constants";
+
 export const useSubscription = () => {
   const { data: user, refetch } = useQuery(fetchUserProfile);
   const paystackPop = new PaystackPop();
@@ -17,8 +19,9 @@ export const useSubscription = () => {
   const route = useRouter();
   const rootContext = useRouteContext({ from: "__root__" });
 
-  // @ts-ignore
-  const affiliateId = window?.Bluecea?.getAffiliateId();
+  const affiliateId = typeof window !== "undefined"
+    ? window.localStorage.getItem(REF_KEYWORD)
+    : null;
 
   const onSubscribe = useCallback(
     (amount: number, plan: string) => {
@@ -32,7 +35,7 @@ export const useSubscription = () => {
             {
               display_name: "Affiliate Link ID",
               variable_name: "affiliate_link_id",
-              value: affiliateId,
+              value: affiliateId || "",
             },
           ],
         },
