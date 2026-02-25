@@ -30,7 +30,7 @@ export function FooterCTA({ session }: FooterCTAProps) {
               self for it.
             </p>
             <CTAButton
-              label='Get Started Now'
+              label='Start training for $5/mo'
               onClick={navigation.primaryAction}
               variant='primary'
               className='bg-[#A855F7] hover:bg-[#9333EA] text-white rounded-full h-14 px-10 text-lg font-bold shadow-xl shadow-purple-500/20'

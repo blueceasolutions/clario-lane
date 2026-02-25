@@ -8,6 +8,11 @@ const FeaturesSection = lazy(() =>
     default: module.FeaturesSection,
   })),
 )
+const RSVPSection = lazy(() =>
+  import('./landing/components/rsvp-section').then((module) => ({
+    default: module.RSVPSection,
+  })),
+)
 const StatsSection = lazy(() =>
   import('./landing/components/stats-section').then((module) => ({
     default: module.StatsSection,
@@ -23,6 +28,11 @@ const FooterCTA = lazy(() =>
     default: module.FooterCTA,
   })),
 )
+const PricingSection = lazy(() =>
+  import('./landing/components/pricing-section').then((module) => ({
+    default: module.PricingSection,
+  })),
+)
 
 export function LandingPage() {
   const { session } = Route.useRouteContext()
@@ -35,9 +45,11 @@ export function LandingPage() {
       />
       <HeroSection session={session} />
       <Suspense fallback={<div className='h-96' />}>
+        <RSVPSection />
         <FeaturesSection />
         <StatsSection />
         <TestimonialsSection />
+        <PricingSection />
         <FooterCTA session={session} />
       </Suspense>
     </div>

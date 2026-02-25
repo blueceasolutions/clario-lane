@@ -2,7 +2,6 @@ import { motion } from 'motion/react'
 import type { Session } from '@supabase/supabase-js'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useNavigation } from '../hooks/useNavigation'
-import { HeroRSVPContainer } from './HeroRSVPContainer'
 import { CTAButton } from './presentational/CTAButton'
 
 /**
@@ -18,8 +17,8 @@ export function HeroSection({ session }: HeroSectionProps) {
   // Business logic delegated to hooks
 
   const { opacity, y } = useScrollAnimation(
-    { startScroll: 0, endScroll: 750, startValue: 1, endValue: 0 },
-    { startScroll: 0, endScroll: 750, startValue: 0, endValue: 50 },
+    { startScroll: 0, endScroll: 1050, startValue: 1, endValue: 0 },
+    { startScroll: 0, endScroll: 1050, startValue: 0, endValue: 50 },
   )
 
   const navigation = useNavigation(session)
@@ -55,10 +54,11 @@ export function HeroSection({ session }: HeroSectionProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
               className='text-3xl md:text-5xl lg:text-[4.5rem] leading-[0.95] tracking-tight font-bold mb-8 text-gray-900 dark:text-white'>
-              Read more{' '}
-              <span className='bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-600 bg-clip-text text-transparent'>
-                in less time.
-              </span>
+              Systematize your{' '}
+              <span className='bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-600 bg-clip-text text-transparent italic'>
+                intellectual intake
+              </span>{' '}
+              for maximum retention.
             </motion.h1>
 
             <motion.p
@@ -66,8 +66,9 @@ export function HeroSection({ session }: HeroSectionProps) {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               className='text-lg mx-auto text-muted-foreground mb-10 leading-relaxed max-w-lg font-normal'>
-              Experience the fluid way to learn. Master speed reading with
-              AI-driven coaching and deep retention techniques.
+              Modern reading is broken. Clariolane provides a rigorous
+              environment for processing complex texts, tracking comprehension
+              velocity, and eliminating regression.
             </motion.p>
 
             <motion.div
@@ -76,7 +77,7 @@ export function HeroSection({ session }: HeroSectionProps) {
               transition={{ duration: 0.8, delay: 0.5 }}
               className='flex flex-wrap justify-center items-center gap-5'>
               <CTAButton
-                label={session ? 'Go to Dashboard' : 'Get started'}
+                label={session ? 'Go to Dashboard' : 'Start training for $5/mo'}
                 onClick={navigation.primaryAction}
                 variant='primary'
                 className='bg-[#9333EA] w-full md:w-auto hover:bg-[#7E22CE] text-white shadow-xl shadow-purple-500/20 h-14 px-8 text-[15px] font-semibold tracking-wide'
@@ -84,13 +85,25 @@ export function HeroSection({ session }: HeroSectionProps) {
             </motion.div>
           </div>
 
-          {/* Right: RSVP Demo */}
+          {/* Right: App Preview */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, x: 50 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6, type: 'spring' }}
-            className='relative'>
-            <HeroRSVPContainer />
+            className='relative w-full overflow-hidden'>
+            <img
+              src='/light_preview.svg'
+              alt='Clariolane App Preview (Light)'
+              className='w-full h-auto block dark:hidden object-cover'
+            />
+            <img
+              src='/dark_preview.svg'
+              alt='Clariolane App Preview (Dark)'
+              className='w-full h-auto hidden dark:block object-cover'
+            />
+
+            {/* Subtle inner glow overlay */}
+            <div className='absolute inset-0 rounded-2xl md:rounded-[2rem] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] pointer-events-none' />
           </motion.div>
         </div>
       </motion.div>
