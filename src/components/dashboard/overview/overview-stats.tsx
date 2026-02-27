@@ -3,13 +3,11 @@ import {
   ArrowUp,
   Calendar,
   CheckCircle2,
-  Target,
-  TrendingDown,
   TrendingUp,
 } from 'lucide-react'
 import { Card, CardContent } from '../..'
 import { motion } from 'motion/react'
-import { cn } from '@/lib'
+import { cn } from '@/lib/utils'
 
 type Props = {
   currentSpeed: {
@@ -34,92 +32,84 @@ type Props = {
 }
 
 export const OverviewStats = (props: Props) => {
-  const { comprehension, currentSpeed, session, progress } = props
+  const { comprehension, currentSpeed, session } = props
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className='grid md:grid-cols-3 gap-4'>
-      <Card>
-        <CardContent>
-          <div className='flex items-center justify-between mb-2'>
-            <span className=' text-sm'>Current Speed</span>
-            <span
+      className='grid md:grid-cols-3 gap-6'>
+      <Card className='bg-white dark:bg-zinc-900 border-none shadow-sm'>
+        <CardContent className='p-6'>
+          <div className='flex justify-between items-start mb-4'>
+            <span className='text-sm font-medium text-muted-foreground'>
+              Average Reading Speed
+            </span>
+            <TrendingUp className='w-4 h-4 text-red-500' />
+          </div>
+          <div className='space-y-1'>
+            <div className='text-4xl font-bold text-foreground'>
+              {currentSpeed.wpm}{' '}
+              <span className='text-base font-normal text-muted-foreground'>
+                WPM
+              </span>
+            </div>
+            <div
               className={cn(
+                'flex items-center gap-1 text-xs font-medium',
                 currentSpeed.improvement > 0
-                  ? 'text-green-600 dark:text-green-400'
-                  : 'text-red-400'
+                  ? 'text-green-600'
+                  : 'text-red-500',
               )}>
               {currentSpeed.improvement > 0 ? (
-                <TrendingUp className='w-5 h-5' />
+                <ArrowUp className='w-3 h-3' />
               ) : (
-                <TrendingDown className='w-5 h-5' />
+                <ArrowDown className='w-3 h-3' />
               )}
-            </span>
-          </div>
-          <div className='text-2xl text-primary mb-1'>
-            {currentSpeed.wpm} WPM
-          </div>
-          <div
-            className={cn(
-              'flex items-center gap-1 text-sm',
-              currentSpeed.improvement > 0 ? 'text-green-600' : 'text-red-400'
-            )}>
-            {currentSpeed.improvement > 0 ? (
-              <ArrowUp className='w-3 h-3' />
-            ) : (
-              <ArrowDown className='w-3 h-3' />
-            )}
-            <span>
-              {currentSpeed.improvement > 0
-                ? `+${currentSpeed.improvement}`
-                : currentSpeed.improvement}{' '}
-              from baseline
-            </span>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent>
-          <div className='flex items-center justify-between mb-2'>
-            <span className=' text-sm'>Comprehension</span>
-            <CheckCircle2 className='w-4 h-4 text-blue-600' />
-          </div>
-          <div className='text-2xl text-primary mb-1'>
-            {comprehension.score}%
-          </div>
-          <div className='text-sm '>Excellent retention</div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent>
-          <div className='flex items-center justify-between mb-2'>
-            <span className=' text-sm'>Total Sessions</span>
-            <Calendar className='w-4 h-4 text-purple-600' />
-          </div>
-          <div className='text-2xl text-primary mb-1'>{session.total || 0}</div>
-          <div className='text-sm '>Keep it up!</div>
-        </CardContent>
-      </Card>
-
-      {progress ? (
-        <Card>
-          <CardContent>
-            <div className='flex items-center justify-between mb-2'>
-              <span className=' text-sm'>Goal Progress</span>
-              <Target className='w-4 h-4 text-orange-600' />
+              <span>{Math.abs(currentSpeed.improvement)} from baseline</span>
             </div>
-            <div className='text-2xl text-primary mb-1'>
-              {progress.percentage}%
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className='bg-white dark:bg-zinc-900 border-none shadow-sm'>
+        <CardContent className='p-6'>
+          <div className='flex justify-between items-start mb-4'>
+            <span className='text-sm font-medium text-muted-foreground'>
+              Average Comprehension
+            </span>
+            <CheckCircle2 className='w-4 h-4 text-green-500' />
+          </div>
+          <div className='space-y-1'>
+            <div className='text-4xl font-bold text-purple-600 dark:text-purple-400'>
+              {comprehension.score}%
             </div>
-            <div className='text-sm '>{progress.target} WPM to go</div>
-          </CardContent>
-        </Card>
-      ) : null}
+            <div className='text-xs font-medium text-green-600'>
+              Excellent retention
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className='bg-white dark:bg-zinc-900 border-none shadow-sm'>
+        <CardContent className='p-6'>
+          <div className='flex justify-between items-start mb-4'>
+            <span className='text-sm font-medium text-muted-foreground'>
+              Total Sessions
+            </span>
+            <Calendar className='w-4 h-4 text-purple-500' />
+          </div>
+          <div className='space-y-1'>
+            <div className='text-4xl font-bold text-blue-600 dark:text-blue-400'>
+              {session.total || 0}
+            </div>
+            <div className='text-xs font-medium text-muted-foreground'>
+              Keep it up!
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </motion.div>
   )
 }

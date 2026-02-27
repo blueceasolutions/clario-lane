@@ -22,4 +22,4 @@ begin
     'avg_comprehension', avg_comprehension
   );
 end;
-$$ language plpgsql;
+$$ language plpgsql security definer;

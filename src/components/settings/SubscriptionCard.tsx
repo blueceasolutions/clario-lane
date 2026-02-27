@@ -18,15 +18,11 @@ import { enableOrDisableSubscriptionToggleMutation } from '@/integration/mutatio
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Link } from '@tanstack/react-router'
-import { supabaseService } from '~supabase/clientServices'
-import { fetchNextSubscriptionDate } from '@/integration'
+import { fetchNextSubscriptionDate, fetchUserProfile } from '@/integration'
 import { useMemo } from 'react'
 
 export function SubscriptionCard() {
-  const { data: user, refetch } = useQuery({
-    queryKey: ['user'],
-    queryFn: async () => await supabaseService.getUser(),
-  })
+  const { data: user, refetch } = useQuery(fetchUserProfile)
 
   const { data } = useQuery(fetchNextSubscriptionDate)
 
@@ -44,22 +40,22 @@ export function SubscriptionCard() {
   const isSubscribed = user?.is_subscribed
   const isSubscriptionExpired = useMemo(
     () => new Date(data?.next_subscription_date) < new Date(),
-    [data]
+    [data],
   )
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className='bg-transparent border-0 shadow-none md:shadow-sm md:bg-card md:border'>
+      <CardHeader className='p-0 md:px-6'>
         <CardTitle>Subscription Plan</CardTitle>
         <CardDescription>
           Manage your subscription and billing information.
         </CardDescription>
       </CardHeader>
-      <CardContent className='space-y-4'>
+      <CardContent className='space-y-4 p-0 md:px-6 '>
         {isPending ? (
           <div className='bg-muted h-20 w-full animate-pulse rounded-lg' />
         ) : (
-          <div className='flex items-center justify-between rounded-lg border p-4'>
+          <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between md:border-t md:pt-4'>
             <div className='space-y-0.5'>
               <div className='font-medium'>
                 {isSubscriptionExpired ? 'Expired' : 'Active'}
@@ -70,14 +66,15 @@ export function SubscriptionCard() {
                   : 'Your subscription is active.'}
               </div>
             </div>
+
             {isSubscribed ? (
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant='outline' disabled={isPending}>
+                  <Button variant='outline' size={'lg'} disabled={isPending}>
                     {isPending ? 'Cancelling...' : 'Cancel Subscription'}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className='sm:max-w-md'>
+                <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Cancel Subscription</DialogTitle>
                     <DialogDescription>
@@ -100,7 +97,7 @@ export function SubscriptionCard() {
                 </DialogContent>
               </Dialog>
             ) : (
-              <Button asChild disabled={isPending}>
+              <Button size={'lg'} asChild disabled={isPending}>
                 <Link to='/pricing'>Upgrade Plan</Link>
               </Button>
             )}

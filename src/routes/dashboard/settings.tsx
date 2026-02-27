@@ -1,6 +1,21 @@
-import { SettingsPage } from '@/components/settings/SettingsPage'
+import { SettingsPage, SettingsPending } from '@/components'
 import { createFileRoute } from '@tanstack/react-router'
 
+import { SeoHead } from '@/components/shared'
+
 export const Route = createFileRoute('/dashboard/settings')({
-  component: SettingsPage,
+  component: RouteComponent,
+  pendingComponent: SettingsPending,
 })
+
+function RouteComponent() {
+  return (
+    <>
+      <SeoHead
+        title='Settings'
+        description='Manage your account and preferences.'
+      />
+      <SettingsPage />
+    </>
+  )
+}

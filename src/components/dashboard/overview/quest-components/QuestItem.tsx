@@ -48,8 +48,8 @@ export function QuestItem({ quest, progress, onClaim }: QuestItemProps) {
         onClaim={handleClaim}
       />
 
-      {quest.expires_at && !isCompleted && (
-        <QuestExpiry expiresAt={quest.expires_at} />
+      {(progress?.expires_at || quest.expires_at) && !isCompleted && (
+        <QuestExpiry expiresAt={progress?.expires_at || quest.expires_at!} />
       )}
     </div>
   )

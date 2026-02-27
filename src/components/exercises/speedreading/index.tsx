@@ -13,8 +13,12 @@ export const SpeedReadingTraining = () => {
         title='Speed Reading Training'
         onContinue={() => setStep(PracticeStep.enum.Reading)}>
         <p>
-          Focus on the center of the screen. Words will appear one at a time.
-          Try to minimize subvocalization.
+          Focus on the space in between the vertical{' '}
+          <span className=' px-3 py-0.5 rounded-full text-primary-foreground bg-primary'>
+            lines
+          </span>{' '}
+          on center of the screen. Words will appear one at a time. Try to
+          minimize subvocalization.
         </p>
       </IntroStep>
     ),

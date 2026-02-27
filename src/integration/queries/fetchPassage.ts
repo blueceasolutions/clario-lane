@@ -7,21 +7,21 @@ export const fetchPassageKey = "passage";
 
 export const fetchPassage = queryOptions({
   queryKey: [fetchPassageKey],
-  // staleTime: 5 * 60 * 1000,
+  // staleTime: 1000 * 60 * 1,
   // refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
 
   queryFn: async () => {
     const { data } = await supabaseService.sp.functions.invoke(
-      "/practice/passage",
+      "practice/passage",
       {
         method: "GET",
       },
     );
 
     if (data) {
-      usePracticeStore.setState({ passage: data.data.passage });
+      usePracticeStore.setState({ passage: data.data });
     }
 
     return data.data as PassageResponse;

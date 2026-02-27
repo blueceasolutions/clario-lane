@@ -366,7 +366,7 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 
 [functions.subscription]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/subscription/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
@@ -389,7 +389,7 @@ entrypoint = "./functions/paystack-webhook/index.ts"
 
 [functions.practice]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/practice/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
@@ -397,3 +397,30 @@ entrypoint = "./functions/practice/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/practice/*.html" ]
+
+[functions.passages]
+enabled = true
+verify_jwt = false
+import_map = "./functions/passages/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/passages/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/passages/*.html" ]
+
+[functions.send-email]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/send-email/index.ts"
+
+[functions.feedback]
+enabled = true
+verify_jwt = false
+import_map = "./functions/feedback/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/feedback/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/feedback/*.html" ]

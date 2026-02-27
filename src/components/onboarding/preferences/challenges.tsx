@@ -23,7 +23,9 @@ const Icons: Record<challenges, ReactNode> = {
 export function Challenges({ selections, toggleSelection, challenges }: Props) {
   return (
     <StepContainer key='step-2'>
-      <h3 className='mb-6 text-center'>What challenges do you face?</h3>
+      <h3 className='mb-6 text-lg font-semibold text-center'>
+        What challenges do you face?
+      </h3>
       <div className='grid sm:grid-cols-2 gap-4'>
         {challenges.map(({ challenge, id, description }) => (
           <OptionCard

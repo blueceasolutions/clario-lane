@@ -9,7 +9,7 @@ export * from "./input";
 export * from "./popover";
 export * from "./date-picker";
 export * from "./calendar";
-export * from "./skeleton";
+export * from "../Skeletons/skeleton";
 export * from "./spinner";
 export * from "./progress";
 export * from "./radio-group";

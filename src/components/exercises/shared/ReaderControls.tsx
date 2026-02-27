@@ -1,8 +1,7 @@
-import { Play, Pause, RotateCcw } from 'lucide-react'
-import { Button, Slider } from '@/components'
-import { DisplaySettings } from './DisplaySettings'
+import { Slider } from '@/components'
+import { READING_SPEED_RANGE } from '@/lib'
 import { usePracticeStore } from '@/store'
-import type { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 
 type ReaderControlsProps = {
   children?: ReactNode
@@ -10,88 +9,31 @@ type ReaderControlsProps = {
   canReset?: boolean
 }
 
-export function ReaderControls({
-  children,
-  canComplete,
-  canReset,
-}: ReaderControlsProps) {
-  const {
-    isPlaying,
-    progress,
-    wpm,
-    setWpm,
-    handlePlayPause,
-    handleReset,
-    handleComplete,
-  } = usePracticeStore()
-
-  const shouldShowComplete = canComplete ?? progress >= 100
-  const shouldAllowReset = canReset ?? progress > 0
+export function ReaderControls({}: ReaderControlsProps) {
+  const { isPlaying, wpm, setWpm } = usePracticeStore()
 
   return (
-    <div className='space-y-6'>
-      {/* Controls */}
-      <div className='flex items-center flex-wrap gap-4 bg-card border border-border p-4 rounded-lg'>
-        <Button
-          onClick={handlePlayPause}
-          disabled={progress >= 100 && !isPlaying}
-          size='lg'>
-          {isPlaying ? (
-            <>
-              <Pause className='mr-2 h-4 w-4' />
-              Pause
-            </>
-          ) : (
-            <>
-              <Play className='mr-2 h-4 w-4' />
-              {progress > 0 && progress < 100 ? 'Resume' : 'Start'}
-            </>
-          )}
-        </Button>
-
-        <Button
-          onClick={handleReset}
-          variant='outline'
-          size='lg'
-          disabled={!shouldAllowReset}>
-          <RotateCcw className='mr-2 h-4 w-4' />
-          Reset
-        </Button>
-
-        <div className='flex-1' />
-
-        {shouldShowComplete && (
-          <Button onClick={handleComplete} variant='default' size='lg'>
-            Continue to Quiz
-          </Button>
-        )}
-
-        {!shouldShowComplete && <div className='flex-1' />}
-
-        {children}
-      </div>
-
+    <div className='bg-card p-4 rounded-2xl shadow-lg shadow-primary/10'>
       {/* WPM Slider */}
-      <div className='space-y-2 bg-card border border-border p-4 rounded-lg'>
+      <div className='space-y-2 '>
         <div className='flex justify-between items-center'>
-          <label className='text-sm font-medium'>Reading Speed</label>
+          <label className='font-medium'>Reading Speed</label>
           <div className='flex items-center gap-2'>
-            <span className='text-sm tabular-nums'>{wpm} WPM</span>
-            <DisplaySettings />
+            <span className='tabular-nums'>{wpm} WPM</span>
           </div>
         </div>
         <Slider
           value={[wpm]}
           onValueChange={(value) => setWpm(value[0])}
-          min={100}
-          max={1000}
+          min={READING_SPEED_RANGE.MIN}
+          max={READING_SPEED_RANGE.MAX}
           step={10}
           disabled={isPlaying}
           className='w-full'
         />
-        <div className='flex justify-between text-xs text-muted-foreground'>
-          <span>100 WPM</span>
-          <span>1000 WPM</span>
+        <div className='flex justify-between text-sm text-muted-foreground'>
+          <span>{READING_SPEED_RANGE.MIN} WPM</span>
+          <span>{READING_SPEED_RANGE.MAX} WPM</span>
         </div>
       </div>
     </div>

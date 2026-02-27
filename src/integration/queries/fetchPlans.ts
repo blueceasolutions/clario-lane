@@ -1,3 +1,4 @@
+import type { PlanObject } from "@/types";
 import { queryOptions } from "@tanstack/react-query";
 import { supabaseService } from "~supabase/clientServices";
 
@@ -11,7 +12,7 @@ export const fetchPlans = queryOptions({
       { method: "GET" },
     );
 
-    return data;
+    return data as PlanObject[];
   },
   staleTime: "static",
 });

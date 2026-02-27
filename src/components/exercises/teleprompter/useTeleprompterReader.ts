@@ -24,7 +24,8 @@ export const useTeleprompterReader = ({
     setProgress,
     setEstimatedDuration,
     setIsPlaying,
-    updateStore,
+    setLoading,
+    setWordsRead,
   } = usePracticeStore();
 
   const { isLoading } = useQuery(fetchPassage);
@@ -36,13 +37,15 @@ export const useTeleprompterReader = ({
   // Update estimated duration in store
   useEffect(() => {
     setEstimatedDuration(estimatedDuration);
-    updateStore({ loading: isLoading, wordsRead: wordCount });
+    setLoading(isLoading);
+    setWordsRead(wordCount);
   }, [
     estimatedDuration,
     isLoading,
     wordCount,
     setEstimatedDuration,
-    updateStore,
+    setLoading,
+    setWordsRead,
   ]);
 
   // Calculate and update progress

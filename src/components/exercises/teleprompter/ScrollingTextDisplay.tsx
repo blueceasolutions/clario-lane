@@ -30,6 +30,11 @@ export function ScrollingTextDisplay() {
       <div className='absolute top-0 left-0 right-0 h-24 bg-linear-to-b from-card to-transparent z-10 pointer-events-none' />
       <div className='absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-card to-transparent z-10 pointer-events-none' />
 
+      <div className='absolute left-1/4 top-0  w-1 h-1/4 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
+      <div className='absolute right-1/4 top-0  w-1 h-1/4 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
+      <div className='absolute left-1/4 bottom-0  w-1 h-1/4 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
+      <div className='absolute right-1/4 bottom-0  w-1 h-1/4 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
+
       {/* Scrollable Content */}
       <div
         ref={scrollContainerRef}

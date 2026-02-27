@@ -8,6 +8,12 @@ export const PRACTICES = z.enum([
   "PERIPHERAL_VISION",
 ]);
 
+export const READING_SPEED_RANGE = {
+  MIN: 50,
+  MAX: 1500,
+  DEFAULT: 200,
+};
+
 export type PRACTICES = z.infer<typeof PRACTICES>;
 
 export const PracticeStep = z.enum([
@@ -29,7 +35,7 @@ export const PRACTICE_ICONS: Record<PRACTICES, typeof TypeIcon> = {
 export const PRACTICE_COLORS: Record<PRACTICES, string> = {
   SPEED_READING: "blue",
   TELEPROMPTER: "green",
-  WORD_CHUNKING: "yellow",
+  WORD_CHUNKING: "orange",
   PERIPHERAL_VISION: "red",
 };
 

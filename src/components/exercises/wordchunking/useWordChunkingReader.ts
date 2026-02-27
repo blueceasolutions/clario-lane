@@ -27,7 +27,8 @@ export const useWordChunkingReader = ({
     setStartTime,
     setProgress,
     setIsPlaying,
-    updateStore,
+    setLoading,
+    setWordsRead,
   } = usePracticeStore();
 
   const { isLoading } = useQuery(fetchPassage);
@@ -38,8 +39,9 @@ export const useWordChunkingReader = ({
       word.length > 0
     ) || [];
     setWords(wordArray);
-    updateStore({ loading: isLoading, wordsRead: wordArray.length });
-  }, [passage, isLoading, setWords, updateStore]);
+    setLoading(isLoading);
+    setWordsRead(wordArray.length);
+  }, [passage, isLoading, setWords, setWordsRead, setLoading]);
 
   // Update progress based on current index
   useEffect(() => {

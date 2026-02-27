@@ -12,8 +12,11 @@ import { supabaseService } from "~supabase/clientServices";
 import { useEffect, useState } from "react";
 import { useGamificationStore } from "@/store/gamification/useGamificationStore";
 
-export function useGamification() {
-  const [userId, setUserId] = useState<string | undefined>(undefined);
+export function useGamification(propUserId?: string) {
+  const [fetchedUserId, setFetchedUserId] = useState<string | undefined>(
+    undefined,
+  );
+  const userId = propUserId || fetchedUserId;
 
   // Store actions
   const {
@@ -26,10 +29,12 @@ export function useGamification() {
   } = useGamificationStore();
 
   useEffect(() => {
-    supabaseService.getSession().then((session) => {
-      setUserId(session?.user?.id);
-    });
-  }, []);
+    if (!propUserId) {
+      supabaseService.getSession().then((session) => {
+        setFetchedUserId(session?.user?.id);
+      });
+    }
+  }, [propUserId]);
 
   const { data: stats, isLoading: isLoadingStats } = useQuery(
     fetchUserStats(userId),

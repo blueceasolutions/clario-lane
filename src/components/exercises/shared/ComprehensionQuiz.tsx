@@ -3,9 +3,15 @@ import { Button, Card } from '@/components'
 import { CheckCircle, XCircle } from 'lucide-react'
 import { usePracticeStore, useAppStore } from '@/store'
 import { useGamificationStore } from '@/store/gamification/useGamificationStore'
-import { PracticeStep } from '@/lib'
+import { PracticeStep, READING_SPEED_RANGE } from '@/lib'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { fetchPassageKey, sessionMutation } from '@/integration'
+import {
+  fetchPassageKey,
+  fetchPracticeSessionsKey,
+  fetchUserProfileKey,
+  fetchWordsReadTodayKey,
+  sessionMutation,
+} from '@/integration'
 import {
   fetchUserStats,
   fetchUserStatsKey,
@@ -16,7 +22,20 @@ import type { PassageResponse } from '@/types'
 import { useLocation } from '@tanstack/react-router'
 
 export function ComprehensionQuiz() {
-  const { passage, updateStore, ...rest } = usePracticeStore()
+  const {
+    passage,
+    wpm,
+    duration,
+    wordsRead,
+    startTime,
+    elapsedTime,
+    setComprehension,
+    setCorrectAnswers,
+    setTotalQuestions,
+    setStep,
+    setLoading,
+    setNextWpm,
+  } = usePracticeStore()
   const questions = passage!.questions!
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -43,7 +62,10 @@ export function ComprehensionQuiz() {
     fetchPassageKey,
   ]) as PassageResponse
 
-  const { mutate, status: mutationStatus } = useMutation(sessionMutation)
+  const { mutate, status: mutationStatus } = useMutation({
+    ...sessionMutation,
+    networkMode: 'offlineFirst',
+  })
   const { activePractice } = useAppStore()
   const location = useLocation()
 
@@ -100,26 +122,47 @@ export function ComprehensionQuiz() {
     if (isLastQuestion) {
       const correctAnswers = answers.filter((a) => a).length
       const comprehension = (correctAnswers / questions.length) * 100
+
+      const tenPercent = Math.round(wpm * 0.1)
+      let nextWpm = wpm
+
+      if (comprehension >= 80) {
+        nextWpm = wpm + tenPercent
+      } else if (comprehension < 60) {
+        nextWpm = wpm - tenPercent
+      }
+
+      // Ensure we don't go below MIN or above MAX
+      if (nextWpm > READING_SPEED_RANGE.MAX) {
+        nextWpm = READING_SPEED_RANGE.MAX
+      } else if (nextWpm < READING_SPEED_RANGE.MIN) {
+        nextWpm = READING_SPEED_RANGE.MIN
+      }
+
+      const actualNextWpm = nextWpm
+
       const payload = {
         correctAnswers,
         totalQuestions: questions.length,
         comprehension,
         currentStep: PracticeStep.enum.Results,
-        loading: true,
+        loading: false,
+        nextWpm: actualNextWpm,
       }
 
       mutate(
         {
           comprehension,
           correct_answers: correctAnswers,
-          duration: rest.duration!,
-          elapsed_time: rest.elapsedTime,
-          start_time: rest.startTime,
+          duration: duration!,
+          elapsed_time: elapsedTime,
+          start_time: startTime,
           total_questions: questions.length,
-          total_words: rest.wordsRead!,
-          wpm: rest.wpm,
+          total_words: wordsRead!,
+          wpm: wpm,
           exercise_id: exerciseUuid!,
           passage_id: passageResponse?.id,
+          next_wpm: actualNextWpm,
         },
         {
           onSuccess: async (response: any) => {
@@ -135,7 +178,7 @@ export function ComprehensionQuiz() {
             if (userId) {
               // Fetch updated stats to calculate XP gained and check for level up
               const newStats = await queryClient.fetchQuery(
-                fetchUserStats(userId)
+                fetchUserStats(userId),
               )
 
               const newAchievementsData = response?.data?.new_achievements || []
@@ -145,13 +188,13 @@ export function ComprehensionQuiz() {
               const newAchievementsWithTitles = newAchievementsData.map(
                 (na: any) => {
                   const ach = allAchievements.find(
-                    (a) => a.id === na.achievement_id
+                    (a) => a.id === na.achievement_id,
                   )
                   return {
                     achievement_id: na.achievement_id,
                     title: ach?.title || na.achievement_id,
                   }
-                }
+                },
               )
 
               // Use response data if stats fetch fails or is delayed
@@ -169,8 +212,8 @@ export function ComprehensionQuiz() {
 
               openVictoryModal({
                 xpGained: xpGained > 0 ? xpGained : 0,
-                wordsRead: rest.wordsRead!,
-                timeSpentSeconds: rest.duration!,
+                wordsRead: wordsRead!,
+                timeSpentSeconds: duration!,
                 currentLevel,
                 currentXP,
                 isLevelUp: !!isLevelUp,
@@ -190,27 +233,39 @@ export function ComprehensionQuiz() {
             }
 
             // Invalidate queries to refresh dashboard stats
-            await queryClient.invalidateQueries({ queryKey: ['user_profile'] })
+            await queryClient.invalidateQueries({
+              queryKey: [fetchUserProfileKey],
+            })
             await queryClient.invalidateQueries({ queryKey: ['progress_data'] })
             await queryClient.invalidateQueries({
-              queryKey: ['practice_sessions'],
+              queryKey: [fetchPracticeSessionsKey],
             })
             await queryClient.invalidateQueries({
-              queryKey: ['words-read-today'],
+              queryKey: [fetchWordsReadTodayKey],
             })
             await queryClient.invalidateQueries({
               queryKey: [fetchUserStatsKey],
             })
 
-            updateStore(payload)
+            setCorrectAnswers(payload.correctAnswers)
+            setTotalQuestions(payload.totalQuestions)
+            setComprehension(payload.comprehension)
+            setNextWpm(payload.nextWpm)
+            setLoading(false)
+            setStep(payload.currentStep)
           },
           onError: (error) => {
             console.error('Failed to save session:', error)
             // Still proceed to results even if save fails?
             // Maybe show a toast error but let them see results.
-            updateStore(payload)
+            setCorrectAnswers(payload.correctAnswers)
+            setTotalQuestions(payload.totalQuestions)
+            setComprehension(payload.comprehension)
+            setNextWpm(payload.nextWpm)
+            setLoading(false)
+            setStep(payload.currentStep)
           },
-        }
+        },
       )
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
@@ -220,7 +275,7 @@ export function ComprehensionQuiz() {
   }
 
   return (
-    <div className='w-full max-w-2xl mx-auto space-y-6'>
+    <div className='w-full max-w-2xl mx-auto space-y-6 relative'>
       {/* Progress */}
       <div className='flex items-center justify-between text-sm text-muted-foreground'>
         <span>
@@ -230,9 +285,9 @@ export function ComprehensionQuiz() {
       </div>
 
       {/* Question Card */}
-      <Card className='p-6 space-y-6'>
+      <Card className='p-0 mb-20 md:mb-6 border-0 bg-transparent shadow-none md:shadow md:bg-card md:border md:p-6 space-y-3 '>
         <div>
-          <h3 className='text-xl mb-4'>{currentQuestion?.question}</h3>
+          <h3 className='text-xl'>{currentQuestion?.question}</h3>
         </div>
 
         {/* Options */}
@@ -250,10 +305,10 @@ export function ComprehensionQuiz() {
                 disabled={selectedAnswer !== null}
                 className={`
                   w-full text-left p-4 rounded-lg border-2 transition-all
-                  ${!showResult && !isSelected ? 'border-border hover:border-primary hover:bg-accent' : ''}
+                  ${!showResult && !isSelected ? 'border-border hover:border-primary/10 hover:bg-primary/5' : ''}
                   ${isSelected && !showResult ? 'border-primary bg-accent' : ''}
-                  ${showCorrect ? 'border-green-500 bg-green-50 dark:bg-green-950' : ''}
-                  ${showIncorrect ? 'border-red-500 bg-red-50 dark:bg-red-950' : ''}
+                  ${showCorrect ? 'border-green-500/20 bg-green-50/10 dark:bg-green-500/20' : ''}
+                  ${showIncorrect ? 'border-red-500/10 bg-red-50/5 dark:bg-red-500/20' : ''}
                   ${selectedAnswer !== null && !isSelected && !showCorrect ? 'opacity-50' : ''}
                   disabled:cursor-not-allowed
                 `}>
@@ -276,8 +331,8 @@ export function ComprehensionQuiz() {
           <div
             className={`p-4 rounded-lg ${
               selectedAnswer === currentQuestion?.correctIndex
-                ? 'bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100'
-                : 'bg-red-50 dark:bg-red-950 text-red-900 dark:text-red-100'
+                ? 'border-green-500/20 border bg-green-500/15 dark:border-green-400/30 text-green-900 dark:text-green-100'
+                : 'border-red-500/20 border-2 bg-red-500/15 dark:border-red-400/5 dark:bg-red-400/20 text-red-900 dark:text-red-100'
             }`}>
             {selectedAnswer === currentQuestion?.correctIndex ? (
               <p>Correct! Well done.</p>
@@ -293,17 +348,20 @@ export function ComprehensionQuiz() {
 
       {/* Next Button */}
       {showResult && (
-        <div className='flex justify-end'>
-          <Button
-            onClick={handleNext}
-            size='lg'
-            disabled={mutationStatus === 'pending'}>
-            {mutationStatus === 'pending'
-              ? 'Submitting...'
-              : isLastQuestion
-                ? 'Finish Quiz'
-                : 'Next Question'}
-          </Button>
+        <div className='w-full fixed bottom-0 left-0 right-0 z-50 md:relative md:bottom-auto md:left-auto md:right-auto bg-gradient-to-t from-background/50 via-background/5 to-transparent backdrop-blur-sm'>
+          <div className='py-4 px-4 pt-6 md:p-0'>
+            <Button
+              onClick={handleNext}
+              size='xl'
+              className='w-full'
+              disabled={mutationStatus === 'pending'}>
+              {mutationStatus === 'pending'
+                ? 'Submitting...'
+                : isLastQuestion
+                  ? 'Finish Quiz'
+                  : 'Next Question'}
+            </Button>
+          </div>
         </div>
       )}
     </div>

@@ -67,10 +67,9 @@ class SupabaseService {
   }
 
   async getUser() {
-    const { data, error } = await supabaseService.sp.from("users").select(
+    const { data, error } = await this.sp.from("users").select(
       "*",
-    )
-      .single();
+    ).single();
 
     if (error) {
       logServerError(error.message);
@@ -80,7 +79,7 @@ class SupabaseService {
   }
 
   async getSession() {
-    const { data: { session }, error } = await supabaseService.sp.auth
+    const { data: { session }, error } = await this.sp.auth
       .getSession();
 
     if (error) {

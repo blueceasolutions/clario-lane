@@ -13,26 +13,26 @@ const BASE_STYLES = `
 
 // TODO: Replace with actual hosted URL of the logo
 const LOGO_URL =
-  "https://clariolane-bucket.nyc3.cdn.digitaloceanspaces.com/brand.png";
+  "https://res.cloudinary.com/dgdlf0668/image/upload/v1770759102/brand_ztp3ex.png";
 
 const baseLayout = (content: string) => `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>ClarioLane</title>
+  <title>Clariolane</title>
   <style>${BASE_STYLES}</style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <img src="${LOGO_URL}" alt="ClarioLane" class="logo">
+      <img src="${LOGO_URL}" alt="Clariolane" class="logo">
     </div>
     <div class="content">
       ${content}
     </div>
     <div class="footer">
-      <p>&copy; ${new Date().getFullYear()} ClarioLane. All rights reserved.</p>
+      <p>&copy; ${new Date().getFullYear()} Clariolane. All rights reserved.</p>
       <p>123 Innovation Dr, Tech City, TC 90210</p>
       <p><a href="#" class="link">Unsubscribe</a></p>
     </div>
@@ -58,8 +58,8 @@ export const getFeedbackSubmittedEmail = (
 
 export const getWelcomeEmail = (name: string) =>
   baseLayout(`
-  <h1 class="h1">Welcome to ClarioLane, ${name}!</h1>
-  <p class="p">We're thrilled to have you on board. ClarioLane is here to help you achieve your reading and comprehension goals.</p>
+  <h1 class="h1">Welcome to Clariolane, ${name}!</h1>
+  <p class="p">We're thrilled to have you on board. Clariolane is here to help you achieve your reading and comprehension goals.</p>
   <p class="p">Get started by exploring your dashboard and setting up your first practice session.</p>
   <a href="https://clariolane.com/dashboard" class="button">Go to Dashboard</a>
 `);
@@ -68,7 +68,7 @@ export const getPasswordChangedEmail = (name: string) =>
   baseLayout(`
   <h1 class="h1">Password Changed</h1>
   <p class="p">Hello ${name},</p>
-  <p class="p">The password for your ClarioLane account was recently changed. If you made this change, you can safely ignore this email.</p>
+  <p class="p">The password for your Clariolane account was recently changed. If you made this change, you can safely ignore this email.</p>
   <p class="p">If you did not make this change, please contact our support team immediately.</p>
   <a href="mailto:support@clariolane.com" class="button">Contact Support</a>
 `);
@@ -87,7 +87,7 @@ export const getSubscriptionCreatedEmail = (name: string, planName?: string) =>
   baseLayout(`
   <h1 class="h1">Subscription Confirmed!</h1>
   <p class="p">Hi ${name},</p>
-  <p class="p">Thank you for subscribing to ClarioLane${
+  <p class="p">Thank you for subscribing to Clariolane${
     planName ? ` ${planName}` : ""
   }. We're excited to support your journey.</p>
   <p class="p">You now have full access to all premium features.</p>

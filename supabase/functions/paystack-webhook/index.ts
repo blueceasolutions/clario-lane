@@ -1,11 +1,14 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { Hono } from "npm:hono";
+import "@supabase/functions-js/edge-runtime.d.ts";
+import { Hono } from "hono";
 import crypto from "node:crypto";
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
 import type { Database } from "../../supabase_types.ts";
 import { corsMiddleware } from "../_shared/cors-middleware.ts";
 
 const app = new Hono();
+
+const affiliateUrl =
+  "https://cpmdmwcmesrfsjealzoj.supabase.co/functions/v1/conversion-webhook";
 
 // Apply CORS middleware globally
 app.use("/*", corsMiddleware);
@@ -57,6 +60,21 @@ app.post("/paystack-webhook", async (c) => {
       return c.json({ success: false, message: "Not authorized" }, 401);
     }
 
+    if (payload) {
+      console.log("Payload:", payload);
+      fetch(`${affiliateUrl}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }).then((res) => {
+        console.log("Webhook response:", res);
+      }).catch((err) => {
+        console.error("Error invoking webhook:", err);
+      });
+    }
+
     // Find user by email
     const { data: customer, error: customerError } = await supabaseAdmin
       .from("users")
@@ -67,7 +85,6 @@ app.post("/paystack-webhook", async (c) => {
     if (customerError || !customer) {
       return c.json({ success: false, message: "User not found" }, 400);
     }
-
     if (payload.event === "charge.success") {
       // Update user subscription status
       await supabaseAdmin.from("users").update({ is_subscribed: true }).eq(
@@ -90,6 +107,27 @@ app.post("/paystack-webhook", async (c) => {
           planName: payload.data.plan?.name,
         },
       );
+
+      // Assign Weekly Quest with 7-day expiration
+      const { data: weeklyQuests } = await supabaseAdmin
+        .from("quests")
+        .select("id")
+        .eq("type", "weekly")
+        .limit(1);
+
+      if (weeklyQuests && weeklyQuests.length > 0) {
+        const questId = weeklyQuests[0].id;
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
+
+        await supabaseAdmin.from("user_quests").upsert({
+          user_id: customer.id,
+          quest_id: questId,
+          expires_at: expiresAt.toISOString(),
+          current_value: 0,
+          is_completed: false,
+        }, { onConflict: "user_id, quest_id" });
+      }
     }
 
     if (

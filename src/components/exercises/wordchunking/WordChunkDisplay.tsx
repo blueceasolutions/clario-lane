@@ -13,7 +13,7 @@ export function WordChunkDisplay() {
 
   if (words.length === 0) {
     return (
-      <div className='bg-card border border-border rounded-lg p-12 min-h-[240px] h-[45svh] flex items-center justify-center'>
+      <div className='bg-card border border-border rounded-lg p-12 min-h-[240px] h-[calc(70vh-180px)] flex items-center justify-center'>
         <DisplayText className='text-muted-foreground'>Loading...</DisplayText>
       </div>
     )
@@ -21,24 +21,33 @@ export function WordChunkDisplay() {
 
   if (currentIndex >= words.length) {
     return (
-      <div className='bg-card border border-border rounded-lg p-12 min-h-[240px] h-[45svh] flex items-center justify-center'>
+      <div className='bg-card border border-border rounded-lg p-12 min-h-[240px] h-[calc(70vh-180px)] flex items-center justify-center'>
         <DisplayText className='text-muted-foreground'>Complete!</DisplayText>
       </div>
     )
   }
 
   return (
-    <div className='bg-card border border-border rounded-lg p-12 min-h-[240px] h-[45svh] flex items-center justify-center relative'>
-      <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
+    <div className='w-full '>
+      <div className='md:bg-card md:border md:border-border md:rounded-lg md:p-4 lg:p-12 min-h-[240px] h-[calc(70vh-180px)] flex items-center justify-center relative'>
+        <div className='absolute left-1/4 top-0  w-1 h-1/4 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
+        <div className='absolute right-1/4 top-0  w-1 h-1/4 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
+        <div className='absolute left-1/4 bottom-0  w-1 h-1/4 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
+        <div className='absolute right-1/4 bottom-0  w-1 h-1/4 bg-primary/50 rounded-full opacity-50 pointer-events-none' />
 
-      <div className='flex items-center gap-4 flex-wrap justify-center max-w-4xl z-10'>
-        {currentChunk.map((word, index) => (
-          <DisplayText
-            key={chunkStart + index}
-            className='text-foreground text-2xl transition-all'>
-            {word}
-          </DisplayText>
-        ))}
+        <p className='text-muted-foreground/50 uppercase font-mono lg:text-md text-xs absolute bottom-4 w-full z-20 text-center'>
+          Rest your gaze in between the lines
+        </p>
+
+        <div className='flex items-center gap-4 flex-wrap justify-center max-w-4xl z-10'>
+          {currentChunk.map((word, index) => (
+            <DisplayText
+              key={chunkStart + index}
+              className='text-foreground text-2xl transition-all'>
+              {word}
+            </DisplayText>
+          ))}
+        </div>
       </div>
     </div>
   )

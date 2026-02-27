@@ -1,8 +1,9 @@
+import { fetchQuestsKey, fetchUserQuestsKey } from "@/integration";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabaseService } from "~supabase/clientServices";
 
-export const useClaimQuest = () => {
+export const useClaimQuest = (userId: string | undefined) => {
   const queryClient = useQueryClient();
 
   const { isPending, mutate: claimQuest } = useMutation({
@@ -31,7 +32,8 @@ export const useClaimQuest = () => {
 
       // Invalidate relevant queries to refresh UI
       queryClient.invalidateQueries({ queryKey: ["gamification-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["quests"] });
+      queryClient.invalidateQueries({ queryKey: [fetchQuestsKey] });
+      queryClient.invalidateQueries({ queryKey: [fetchUserQuestsKey, userId] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       queryClient.invalidateQueries({ queryKey: ["progress_data"] });
     },
