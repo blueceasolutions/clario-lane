@@ -14,6 +14,10 @@ const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabase_anon_key = Deno.env.get("SUPABASE_ANON_KEY")!;
 const supabase_service_key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
+// Paystack plan IDs for different continents
+const paystackAfricaPlanId = Deno.env.get("PAYSTACK_AFRICA_PLAN_ID")!;
+const paystackGlobalPlanId = Deno.env.get("PAYSTACK_GLOBAL_PLAN_ID")!;
+
 const supabaseAdmin = createClient<Database>(supabaseUrl, supabase_service_key);
 
 const planUrl = "https://api.paystack.co/plan?status=active";
@@ -22,6 +26,10 @@ const subscriptionUrl = "https://api.paystack.co/subscription/";
 
 // GET /subscription/plans - Get all plans
 app.get("/subscription/plans", async (c) => {
+  const continent =  c.req.query().c || "unknown";
+
+  const planId = continent === "AF" ? paystackAfricaPlanId : paystackGlobalPlanId;
+
   try {
     const response = await fetch(planUrl, {
       method: "GET",
@@ -32,8 +40,10 @@ app.get("/subscription/plans", async (c) => {
     });
 
     const data = await response.json();
+    const filterPlans = data.data.filter((plan: any) => plan.plan_code === planId)
 
-    const plans = data.data.map((plan: unknown) => {
+
+    const plan = filterPlans.map((plan: unknown) => {
       // deno-lint-ignore no-explicit-any
       const p = plan as any;
       return {
@@ -48,7 +58,7 @@ app.get("/subscription/plans", async (c) => {
       };
     });
 
-    return c.json(plans);
+    return c.json(plan);
   } catch (error) {
     console.error(error);
     return c.json([]);
