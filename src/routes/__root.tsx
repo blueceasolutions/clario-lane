@@ -65,6 +65,18 @@ export const Route = createRootRouteWithContext<RootRouteContext>()({
     }
     return { ...context, session, user }
   },
+  loader: async ({ context }) => {
+    const userLocation = localStorage.getItem(USER_LOCATION)
+    if (!userLocation) {
+      // Fetch user location and store in localStorage
+    axios.get('https://ipapi.co/json/').then((response) => {
+      localStorage.setItem(USER_LOCATION, JSON.stringify(response.data.continent_code))
+    }).catch((error) => {
+      console.error('Error fetching user location:', error)
+    })
+  }
+    return context
+  }
 })
 
 // Create a persister
@@ -76,7 +88,8 @@ import { clientEnv } from '@/config/env'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
 
-import { REF_KEYWORD } from '@/lib/constants'
+import { REF_KEYWORD, USER_LOCATION } from '@/lib/constants'
+import axios from 'axios'
 
 function RootComponent() {
   const pathname = useLocation().pathname
