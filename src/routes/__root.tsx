@@ -3,6 +3,7 @@ import {
   Outlet,
   createRootRouteWithContext,
   useLocation,
+  useRouter,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -126,6 +127,15 @@ function RootComponent() {
       ReactGA.send({ hitType: 'pageview', page: pathname, title: pathname })
     }
   }, [pathname])
+
+  const { continent } = Route.useRouteContext()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!continent) {
+      router.invalidate({ sync: true })
+    }
+  }, [continent])
 
   return (
     <React.Fragment>

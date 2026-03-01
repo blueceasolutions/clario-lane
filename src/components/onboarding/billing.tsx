@@ -2,15 +2,7 @@ import { PricingCard, BillingPendingPage } from '@/components'
 
 import { useQuery } from '@tanstack/react-query'
 import { fetchPlans } from '@/integration'
-
-const features = [
-  'Unlimited speed reading exercises',
-  'Personalized AI coaching',
-  'Detailed progress analytics',
-  'Daily reading goals & reminders',
-  'Access to advanced RSVP training',
-  'Focus building exercises',
-]
+import { FEATURES } from '@/lib'
 
 type Props = {
   onSubscribe: (amount: number, plan: string) => void
@@ -43,7 +35,7 @@ export default function Billing({ onSubscribe }: Props) {
             currency={plan.currency}
             frequency={plan.interval}
             description={plan.description}
-            features={features}
+            features={FEATURES}
             badge={plan.interval}
             ctaLabel='Start'
             onCta={() => onSubscribe(plan.amount, plan.planCode)}
