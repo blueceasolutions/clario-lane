@@ -1,7 +1,7 @@
 import { PricingCard } from '@/components/pricingCard'
 import { motion } from 'motion/react'
 import { useRouter } from '@tanstack/react-router'
-import { SUBSCRIPTION_PRICE } from '@/lib'
+import { FEATURES, SUBSCRIPTION_PRICE } from '@/lib'
 
 type Props = {
   continent: string | undefined
@@ -45,7 +45,11 @@ export function PricingSection({ continent }: Props) {
           className='max-w-xl mx-auto'>
           <PricingCard
             title='Scholar Plan'
-            price={continent === 'AF' ? SUBSCRIPTION_PRICE.af : SUBSCRIPTION_PRICE.global}
+            price={
+              continent === 'AF'
+                ? SUBSCRIPTION_PRICE.af
+                : SUBSCRIPTION_PRICE.global
+            }
             currency='USD'
             frequency='mo'
             description='Full access to the platform'
@@ -58,12 +62,7 @@ export function PricingSection({ continent }: Props) {
               // We'll leave it as a link wrapper or let the parent component pass down the logic if needed.
               // For now, adhering to the component's internal design which accepts `onCta`.
             }}
-            features={[
-              'Unlimited articles',
-              'Advanced analytics',
-              'Multiple training sessions',
-              'Variety of training types',
-            ]}
+            features={FEATURES}
           />
         </motion.div>
 
