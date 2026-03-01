@@ -35,7 +35,7 @@ const PricingSection = lazy(() =>
 )
 
 export function LandingPage() {
-  const { session,continent } = Route.useRouteContext()
+  const { session, continent } = Route.useRouteContext()
 
   return (
     <div className='overflow-hidden'>

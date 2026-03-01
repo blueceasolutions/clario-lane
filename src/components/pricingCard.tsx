@@ -66,7 +66,7 @@ export function PricingCard({
           )}
         />
 
-        <CardHeader className='flex flex-col gap-2 pb-8 relative z-10'>
+        <CardHeader className='flex flex-col gap-2 pb-2 relative z-10'>
           <div className='flex items-center justify-between'>
             <CardTitle className='text-xl font-bold tracking-tight'>
               {title}
@@ -79,7 +79,7 @@ export function PricingCard({
           )}
         </CardHeader>
 
-        <CardContent className='flex-1 flex flex-col gap-6 relative z-10'>
+        <CardContent className='flex-1 flex flex-col gap-4 relative z-10'>
           <div className='flex items-baseline gap-1'>
             <span className='text-4xl font-bold tracking-tight text-foreground'>
               {typeof price === 'number'
@@ -115,7 +115,7 @@ export function PricingCard({
           </ul>
         </CardContent>
 
-        <CardFooter className='flex flex-col gap-4 pt-8 relative z-10'>
+        <CardFooter className='flex flex-col gap-4 pt-6 relative z-10'>
           <Button
             className={cn(
               'w-full h-11 text-sm font-semibold transition-all duration-300 rounded-lg',
