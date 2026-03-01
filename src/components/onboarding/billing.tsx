@@ -39,7 +39,7 @@ export default function Billing({ onSubscribe }: Props) {
         {plans?.map((plan) => (
           <PricingCard
             title={plan.name}
-            price={`${plan.amount}`}
+            price={plan.amount}
             currency={plan.currency}
             frequency={plan.interval}
             description={plan.description}

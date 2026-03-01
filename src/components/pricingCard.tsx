@@ -10,11 +10,11 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Check } from 'lucide-react'
 import { motion } from 'motion/react'
-import { cn } from '@/lib'
+import { cn, formatCurrency } from '@/lib'
 
 export type PricingCardProps = {
   title: string
-  price: string
+  price: string | number
   currency?: string
   frequency?: string
   description?: string
@@ -30,6 +30,7 @@ export function PricingCard({
   title,
   price,
   frequency = 'mo',
+  currency,
   description,
   features = [],
   popular = false,
@@ -81,7 +82,9 @@ export function PricingCard({
         <CardContent className='flex-1 flex flex-col gap-6 relative z-10'>
           <div className='flex items-baseline gap-1'>
             <span className='text-4xl font-bold tracking-tight text-foreground'>
-              {price}
+              {typeof price === 'number'
+                ? formatCurrency(price, currency)
+                : price}
             </span>
             <span className='text-sm font-medium text-muted-foreground/80'>
               /{frequency.slice(0, 2)}
