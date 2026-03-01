@@ -3,6 +3,7 @@ import type { Session } from '@supabase/supabase-js'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useNavigation } from '../hooks/useNavigation'
 import { CTAButton } from './presentational/CTAButton'
+import { SUBSCRIPTION_PRICE } from '@/lib'
 
 /**
  * Single Responsibility: Orchestrate hero section layout and composition
@@ -11,16 +12,16 @@ import { CTAButton } from './presentational/CTAButton'
  */
 interface HeroSectionProps {
   session: Session | null
+  continent: string | undefined
 }
 
-export function HeroSection({ session }: HeroSectionProps) {
+export function HeroSection({ session, continent }: HeroSectionProps) {
   // Business logic delegated to hooks
 
   const { opacity, y } = useScrollAnimation(
     { startScroll: 0, endScroll: 1050, startValue: 1, endValue: 0 },
     { startScroll: 0, endScroll: 1050, startValue: 0, endValue: 50 },
   )
-
   const navigation = useNavigation(session)
 
   return (
@@ -77,7 +78,11 @@ export function HeroSection({ session }: HeroSectionProps) {
               transition={{ duration: 0.8, delay: 0.5 }}
               className='flex flex-wrap justify-center items-center gap-5'>
               <CTAButton
-                label={session ? 'Go to Dashboard' : 'Start training for $5/mo'}
+                label={
+                  session
+                    ? 'Go to Dashboard'
+                    : `Start training for ${continent === 'AF' ? SUBSCRIPTION_PRICE.af : SUBSCRIPTION_PRICE.global}/mo`
+                }
                 onClick={navigation.primaryAction}
                 variant='primary'
                 className='bg-[#9333EA] w-full md:w-auto hover:bg-[#7E22CE] text-white shadow-xl shadow-purple-500/20 h-14 px-8 text-[15px] font-semibold tracking-wide'

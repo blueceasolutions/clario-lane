@@ -63,20 +63,26 @@ export const Route = createRootRouteWithContext<RootRouteContext>()({
         useOnboardingFlow.setState({ current_step: 5 })
       }
     }
-    return { ...context, session, user }
-  },
-  loader: async ({ context }) => {
-    const userLocation = localStorage.getItem(USER_LOCATION)
-    if (!userLocation) {
+
+    let continent = getContinent()
+    if (!continent) {
       // Fetch user location and store in localStorage
-    axios.get('https://ipapi.co/json/').then((response) => {
-      localStorage.setItem(USER_LOCATION, JSON.stringify(response.data.continent_code))
-    }).catch((error) => {
-      console.error('Error fetching user location:', error)
-    })
-  }
-    return context
-  }
+      axios
+        .get('https://ipapi.co/json/')
+        .then((response) => {
+          localStorage.setItem(
+            USER_LOCATION,
+            JSON.stringify(response.data.continent_code),
+          )
+          continent = response.data.continent_code
+        })
+        .catch((error) => {
+          console.error('Error fetching user location:', error)
+        })
+    }
+
+    return { ...context, session, user, continent }
+  },
 })
 
 // Create a persister
@@ -90,6 +96,7 @@ import ReactGA from 'react-ga4'
 
 import { REF_KEYWORD, USER_LOCATION } from '@/lib/constants'
 import axios from 'axios'
+import { getContinent } from '@/lib'
 
 function RootComponent() {
   const pathname = useLocation().pathname

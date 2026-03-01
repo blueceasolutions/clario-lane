@@ -1,6 +1,7 @@
 import type { Session } from '@supabase/supabase-js'
 import { useNavigation } from '../hooks/useNavigation'
 import { CTAButton } from './presentational/CTAButton'
+import { SUBSCRIPTION_PRICE } from '@/lib'
 
 /**
  * Single Responsibility: CTA section presentation only
@@ -8,9 +9,10 @@ import { CTAButton } from './presentational/CTAButton'
  */
 interface FooterCTAProps {
   session: Session | null
+  continent: string | undefined
 }
 
-export function FooterCTA({ session }: FooterCTAProps) {
+export function FooterCTA({ session, continent }: FooterCTAProps) {
   const navigation = useNavigation(session)
 
   return (
@@ -30,7 +32,7 @@ export function FooterCTA({ session }: FooterCTAProps) {
               self for it.
             </p>
             <CTAButton
-              label='Start training for $5/mo'
+              label={`Start training for ${continent === 'AF' ? SUBSCRIPTION_PRICE.af : SUBSCRIPTION_PRICE.global}/mo`}
               onClick={navigation.primaryAction}
               variant='primary'
               className='bg-[#A855F7] hover:bg-[#9333EA] text-white rounded-full h-14 px-10 text-lg font-bold shadow-xl shadow-purple-500/20'

@@ -1,8 +1,13 @@
 import { PricingCard } from '@/components/pricingCard'
 import { motion } from 'motion/react'
 import { useRouter } from '@tanstack/react-router'
+import { SUBSCRIPTION_PRICE } from '@/lib'
 
-export function PricingSection() {
+type Props = {
+  continent: string | undefined
+}
+
+export function PricingSection({ continent }: Props) {
   const router = useRouter()
   return (
     <section className='py-24 px-4 bg-background relative overflow-hidden'>
@@ -40,7 +45,7 @@ export function PricingSection() {
           className='max-w-xl mx-auto'>
           <PricingCard
             title='Scholar Plan'
-            price={5}
+            price={continent === 'AF' ? SUBSCRIPTION_PRICE.af : SUBSCRIPTION_PRICE.global}
             currency='USD'
             frequency='mo'
             description='Full access to the platform'
