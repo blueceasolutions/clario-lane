@@ -19,18 +19,18 @@ function TermsOfServicePage() {
           </h2>
           <ul className='list-disc pl-6 space-y-2'>
             <li>
-              <strong>Pricing:</strong> Access to Clariolane is $5 USD per
-              month.
+              <strong>Pricing:</strong> Access to Clariolane is $5.00 USD per
+              month for international users. For users within the African
+              continent, a localized rate of ₦2,900 NGN applies.
             </li>
             <li>
               <strong>Recurring Billing:</strong> Subscriptions automatically
-              renew every 30 days. Your card or means of payment will be debited
-              via PayStack unless you cancel.
+              renew every 30 days via PayStack unless cancelled.
             </li>
             <li>
               <strong>Cancellation:</strong> You may cancel at any time via your
               dashboard. To avoid being charged for the next period, you must
-              cancel before your billing date.
+              cancel at least 24 hours before your billing date.
             </li>
             <li>
               <strong>Fees:</strong> Clariolane covers all transaction fees
@@ -43,21 +43,52 @@ function TermsOfServicePage() {
           <h2 className='text-2xl font-semibold mb-4'>2. Referral Program</h2>
           <ul className='list-disc pl-6 space-y-2'>
             <li>
-              <strong>Earnings:</strong> You earn $1.50 for every unique user
-              who signs up via your link and completes a paid subscription.
+              <strong>Affiliate Program Link:</strong>{' '}
+              <a
+                href='https://affiliate.bluecea.com/'
+                target='_blank'
+                rel='noreferrer'
+                className='text-blue-600 dark:text-blue-400 hover:underline'>
+                https://affiliate.bluecea.com/
+              </a>
             </li>
             <li>
-              <strong>One-Time Payment:</strong> Referral commissions are
-              one-time only. You do not receive recurring commissions if the
-              referred user renews their subscription.
+              <strong>Commission Structure:</strong> Affiliates earn a 30%
+              commission on the "Net Plan Fee" (Base Plan Fee minus 4%
+              Maintenance Fee).
+              <ul className='list-[circle] pl-6 mt-2 space-y-1'>
+                <li>
+                  International ($): $5.00 - 4% ($0.20) = $4.80 Net. Commission:
+                  $1.44 USD.
+                </li>
+                <li>
+                  African (₦): ₦2,900 - 4% (₦116) = ₦2,784 Net. Commission:
+                  ₦835.20.
+                </li>
+              </ul>
             </li>
             <li>
-              <strong>Minimum Withdrawal:</strong> You can request a payout once
-              your "Referral Dashboard" balance reaches $10 USD.
+              <strong>Currency Conversion:</strong> All earnings from Naira (₦)
+              transactions are converted to USD ($) at the current market rate
+              at the time of the transaction and added to your Available
+              Balance.
             </li>
             <li>
-              <strong>N/B:</strong> You are responsible for the transaction
-              fees.
+              <strong>One-Time Payment:</strong> Commissions are one-time only
+              for the initial signup. No recurring commissions are paid on
+              renewals.
+            </li>
+            <li>
+              <strong>Minimum Withdrawal:</strong> The minimum withdrawal limit
+              is $10.00 USD. You can request a payout once your{' '}
+              <a
+                href='https://affiliate.bluecea.com/affiliate/wallet'
+                target='_blank'
+                rel='noreferrer'
+                className='text-blue-600 dark:text-blue-400 hover:underline'>
+                "Wallet"
+              </a>{' '}
+              balance reaches $10 USD.
             </li>
             <li>
               <strong>Tracking:</strong> Referrals are tracked via your unique
@@ -123,8 +154,8 @@ function TermsOfServicePage() {
             <li>
               <strong>Referral Earnings:</strong> Refunded subscriptions do not
               count toward referral earnings. If a referred user’s payment is
-              refunded or charged back, the $1.50 commission will be deducted
-              from the referrer's dashboard.
+              refunded or charged back, the associated commission will be
+              deducted from the referrer's dashboard balance.
             </li>
           </ul>
         </section>
@@ -137,19 +168,47 @@ function TermsOfServicePage() {
           <h3 className='text-xl font-semibold mb-2'>
             How do I make money with Clariolane?
           </h3>
-          <p>
-            Every user gets a unique referral link in their dashboard. Share
-            this link with friends, students, or colleagues. When someone signs
-            up and subscribes for $5, you earn $1.50.
+          <p className='mb-2'>
+            Every user can join the{' '}
+            <a
+              href='https://affiliate.bluecea.com/'
+              target='_blank'
+              rel='noreferrer'
+              className='text-blue-600 dark:text-blue-400 hover:underline'>
+              Blucea Affiliate Program
+            </a>
+            . Once you select Clariolane as your promoted product, you will
+            receive a unique referral link. Share this link with friends,
+            students, and colleagues. When a new user signs up and completes a
+            subscription via your link, you earn a one-time bonus. Earnings are
+            calculated as 30% of the plan price after a 4% maintenance fee is
+            deducted.
           </p>
+          <ul className='list-disc pl-6 space-y-1'>
+            <li>If your referral pays $5, you earn $1.44.</li>
+            <li>
+              If your referral pays ₦2,900, you earn ₦835.20 (converted to USD
+              in your dashboard).
+            </li>
+          </ul>
         </section>
 
         <section className='mb-6'>
           <h3 className='text-xl font-semibold mb-2'>
             How do I track my earnings?
           </h3>
-          <p>Your Referral Dashboard shows real-time stats, including:</p>
-          <ul className='list-disc pl-6 space-y-1 mt-2'>
+          <p className='mb-2'>
+            Your{' '}
+            <a
+              href='https://affiliate.bluecea.com/dashboard#'
+              target='_blank'
+              rel='noreferrer'
+              className='text-blue-600 dark:text-blue-400 hover:underline'>
+              Bluecea Affiliate Dashboard
+            </a>{' '}
+            shows real-time stats, including:
+          </p>
+          <ul className='list-disc pl-6 space-y-1'>
             <li>Total clicks on your link.</li>
             <li>Number of successful (paid) subscribers.</li>
             <li>Your current withdrawable balance.</li>
@@ -158,21 +217,122 @@ function TermsOfServicePage() {
 
         <section className='mb-6'>
           <h3 className='text-xl font-semibold mb-2'>
+            Why am I not getting conversions (Referral Bonuses)?
+          </h3>
+          <p className='mb-2'>
+            Our "Active Member" policy requires a live subscription to benefit
+            from the affiliate program. By cancelling your subscription, you are
+            signaling the end of your partnership with the program. Therefore,
+            any referrals made during a "Cancelled" or "Expired" state—including
+            the remaining days of your final month—are forfeited.
+          </p>
+          <p className='mb-2 font-medium'>
+            To earn and accumulate bonuses, you must maintain an Active Paid
+            Subscription to Clariolane.
+          </p>
+          <ul className='list-disc pl-6 space-y-2'>
+            <li>
+              <strong>The "Active" Rule:</strong> If your subscription is
+              inactive, expired, or has been cancelled, you are no longer
+              eligible to earn referral bonuses.
+            </li>
+            <li>
+              <strong>Immediate Forfeiture:</strong> Please note that once you
+              click "Cancel Subscription," you immediately forfeit your right to
+              earn new referral bonuses. Any conversions attempted by your
+              referrals during a cancelled or "grace period" state will not be
+              credited and are permanently forfeited.
+            </li>
+            <li>
+              <strong>System Tracking:</strong> Our system uses cookies to track
+              referrals. If a user does not use your specific link or has
+              cookies disabled, the system cannot attribute the sale. We cannot
+              manually credit referrals after a signup is complete.
+            </li>
+          </ul>
+        </section>
+
+        <section className='mb-6'>
+          <h3 className='text-xl font-semibold mb-2'>
             When can I withdraw my money?
           </h3>
+          <p className='mb-2'>
+            Once your balance hits the $10 minimum, a "Request Withdrawal"
+            button will be activated in your{' '}
+            <a
+              href='https://affiliate.bluecea.com/affiliate/wallet'
+              target='_blank'
+              rel='noreferrer'
+              className='text-blue-600 dark:text-blue-400 hover:underline'>
+              wallet
+            </a>
+            .
+          </p>
+          <ul className='list-disc pl-6 space-y-2'>
+            <li>
+              <strong>Pending Status:</strong> When you request a withdrawal,
+              the amount is held for processing.
+            </li>
+            <li>
+              <strong>Rejected Withdrawals:</strong> If a withdrawal is rejected
+              (e.g., due to incorrect bank details), the funds are immediately
+              returned to your "Available Balance."
+            </li>
+            <li>
+              <strong>Approved Withdrawals:</strong> Once approved, the funds
+              are deducted from your "Available Balance," and the payout process
+              begins.
+            </li>
+          </ul>
+        </section>
+
+        <section className='mb-6'>
+          <h3 className='text-xl font-semibold mb-2'>
+            When will I receive my money?
+          </h3>
           <p>
-            Once your balance hits the $10 minimum, a "Withdraw" button will be
-            activated in your dashboard.
+            We process all approved withdrawal requests once a month, between
+            the 25th and the 30th. If your request is made after the 25th, it
+            may be rolled over to the following month's payout window.
           </p>
         </section>
 
         <section className='mb-6'>
           <h3 className='text-xl font-semibold mb-2'>How are payments sent?</h3>
+          <p className='mb-2'>
+            Payouts are processed via Bank Transfer or PayStack Payout. Please
+            ensure your payment details are correctly filled out in your profile
+            settings.
+          </p>
+          <ul className='list-disc pl-6 space-y-2'>
+            <li>
+              <strong>Processing Time:</strong> Payouts are typically finalized
+              within 3–5 business days.
+            </li>
+            <li>
+              <strong>Note on Transaction Costs:</strong> Blucea Solutions
+              Limited facilitates the referral program as a value-add for active
+              Clariolane subscribers. To maintain the commission rate, all
+              third-party processing fees, bank charges, or "gas fees" incurred
+              during the payout process are the sole responsibility of the
+              Affiliate(Non Africans ONLY). By requesting a withdrawal, you
+              agree to receive the net amount after these mandatory deductions.
+            </li>
+          </ul>
+        </section>
+
+        <section className='mb-6'>
+          <h3 className='text-xl font-semibold mb-2'>
+            Why was my received amount lower than my withdrawal request?
+            (International Users)
+          </h3>
           <p>
-            Payouts are processed via [e.g., Bank Transfer / Paystack Payout].
-            Please ensure your payment details are correctly filled out when the
-            "Withdraw" button gets activated in your dashboard. (Note: Payouts
-            are usually processed within 3–5 business days after confirmation).
+            For international payouts, the user is responsible for the
+            gas/transaction fees. Your automated email receipt will contain an
+            attachment showing exactly how much the third-party processors
+            charged for the transfer. For users receiving funds in Naira
+            (African continent), these specific fees are currently covered by
+            Bluecea Solutions Limited.
           </p>
         </section>
 
@@ -181,9 +341,9 @@ function TermsOfServicePage() {
             Is the commission recurring?
           </h3>
           <p>
-            No. The $1.50 is a one-time reward for the initial signup. You do
-            not receive additional payments when the user renews their
-            subscription for the second month.
+            No. The commission is a one-time reward for the initial signup. You
+            do not receive additional payments for subsequent monthly renewals
+            by the same user.
           </p>
         </section>
 
@@ -194,8 +354,8 @@ function TermsOfServicePage() {
           <p>
             Our system uses cookies to track your referrals. If a user does not
             use your specific link to sign up, the system cannot attribute the
-            sale to you. We cannot manually add referrals to your account after
-            a signup is complete.
+            sale to you. We cannot manually add or retroactively credit
+            referrals to your account after a signup is complete.
           </p>
         </section>
 
@@ -203,18 +363,31 @@ function TermsOfServicePage() {
           <h3 className='text-xl font-semibold mb-2'>
             Active Account Requirement
           </h3>
-          <p>
+          <p className='mb-2'>
             To be eligible to receive referral payouts, you must maintain an
             active, paid subscription. Any referrals generated or completed
             during a period when your account is deactivated, expired, or
             cancelled will not be credited to your dashboard or count toward
             your earnings.
           </p>
-          <p>
-            You can only use the email you used to signup for clariolane to
+          <p className='mb-2'>
+            You can only use the email you used to signup for Clariolane to
             signup for the referral program(ClarioLane), if not all referral
             bonuses will be forfeited because the system will see the account as
-            Inactive
+            Inactive.
+          </p>
+        </section>
+
+        <section className='mb-6'>
+          <h3 className='text-xl font-semibold mb-2'>
+            Important Note on "Active Status"
+          </h3>
+          <p>
+            <strong>Strict Policy:</strong> To protect the integrity of the
+            Blucea Solutions ecosystem, referral earnings are reserved for
+            active members of the Clariolane community. Any referrals generated
+            while your account is in a "Cancelled" or "Expired" state will not
+            be recovered or credited back once you resubscribe.
           </p>
         </section>
       </div>

@@ -35,7 +35,7 @@ const PricingSection = lazy(() =>
 )
 
 export function LandingPage() {
-  const { session } = Route.useRouteContext()
+  const { session,continent } = Route.useRouteContext()
 
   return (
     <div className='overflow-hidden'>
@@ -43,14 +43,14 @@ export function LandingPage() {
         title='Speed Reading & Retention'
         description='Train your brain to read faster and retain more with Clariolane.'
       />
-      <HeroSection session={session} />
+      <HeroSection session={session} continent={continent} />
       <Suspense fallback={<div className='h-96' />}>
         <RSVPSection />
         <FeaturesSection />
         <StatsSection />
         <TestimonialsSection />
-        <PricingSection />
-        <FooterCTA session={session} />
+        <PricingSection continent={continent} />
+        <FooterCTA session={session} continent={continent} />
       </Suspense>
     </div>
   )

@@ -7,16 +7,14 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Check } from 'lucide-react'
-import { formatCurrency } from '@/lib'
 import { motion } from 'motion/react'
-import { cn } from '@/lib'
+import { cn, formatCurrency } from '@/lib'
 
 export type PricingCardProps = {
   title: string
-  price: number
+  price: string | number
   currency?: string
   frequency?: string
   description?: string
@@ -31,10 +29,9 @@ export type PricingCardProps = {
 export function PricingCard({
   title,
   price,
-  currency = 'NGN',
   frequency = 'mo',
+  currency,
   description,
-  badge,
   features = [],
   popular = false,
   ctaLabel = 'Get started',
@@ -45,7 +42,7 @@ export function PricingCard({
     <motion.div
       whileHover={{ y: -8 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      className={cn('w-full', className)}>
+      className={cn('w-full max-w-[320px] mx-auto', className)}>
       <Card
         className={cn(
           'relative h-full flex flex-col overflow-hidden transition-all duration-300',
@@ -74,15 +71,6 @@ export function PricingCard({
             <CardTitle className='text-xl font-bold tracking-tight'>
               {title}
             </CardTitle>
-            {badge && (
-              <Badge
-                variant='secondary'
-                className={cn(
-                  'px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary dark:bg-primary/20 hover:bg-primary/15',
-                )}>
-                {badge}
-              </Badge>
-            )}
           </div>
           {description && (
             <CardDescription className='text-sm text-muted-foreground leading-relaxed'>
@@ -94,7 +82,9 @@ export function PricingCard({
         <CardContent className='flex-1 flex flex-col gap-6 relative z-10'>
           <div className='flex items-baseline gap-1'>
             <span className='text-4xl font-bold tracking-tight text-foreground'>
-              {formatCurrency(price, currency)}
+              {typeof price === 'number'
+                ? formatCurrency(price, currency)
+                : price}
             </span>
             <span className='text-sm font-medium text-muted-foreground/80'>
               /{frequency.slice(0, 2)}
@@ -138,12 +128,6 @@ export function PricingCard({
             size='lg'>
             {ctaLabel}
           </Button>
-
-          {popular && (
-            <div className='text-center text-xs font-medium text-primary/80 animate-pulse'>
-              🔥 Most popular choice
-            </div>
-          )}
         </CardFooter>
       </Card>
     </motion.div>
