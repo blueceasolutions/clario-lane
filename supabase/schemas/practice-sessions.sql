@@ -5,6 +5,7 @@ create table if not exists practice_sessions (
     passage_id uuid null references passages(id) on delete set null,
     exercise_id uuid null references exercises(id) on delete set null,
     wpm numeric not null,
+    next_wpm numeric default 0,
     comprehension numeric not null,
     duration numeric,
     total_words numeric,

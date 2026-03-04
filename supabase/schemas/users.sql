@@ -6,6 +6,7 @@ create table if not exists users (
     baseline_wpm numeric default 0,
     baseline_comprehension numeric default 0,
     current_wpm numeric default 0,
+    next_wpm numeric default 0,
     total_sessions numeric default 0,
     total_time_spent numeric default 0, -- in seconds
     goals text default '{}',

@@ -25,6 +25,7 @@ export const OnboardingSchema = z.object({
 export type OnboardingType = z.infer<typeof OnboardingSchema>;
 export type OnboardingContextType = {
   updateProfile: (updates: Partial<OnboardingType>) => void;
+  reset: () => void;
 };
 
 export const OnboardingFlowSchema = z.object({
@@ -39,4 +40,5 @@ export type OnboardingFlowType = z.infer<typeof OnboardingFlowSchema>;
 
 export type OnboardingFlowActionType = {
   update: (updates: Partial<OnboardingFlowType>) => void;
+  reset: () => void;
 };

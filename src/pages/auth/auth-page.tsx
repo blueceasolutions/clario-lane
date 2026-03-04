@@ -6,26 +6,23 @@ import {
   CardHeader,
   CardTitle,
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
   Input,
   Spinner,
 } from '@/components'
 
+import { useAuth } from '@/context/auth-provider'
 import { catchError } from '@/lib'
 import { cn } from '@/lib/utils'
 import { useOnboardingStore } from '@/store'
 import { AuthValidationSchema } from '@/types'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { useForm } from '@tanstack/react-form'
-import { Link, useRouter } from '@tanstack/react-router'
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { BookOpen, Eye, EyeOff } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
-
-import { supabaseService } from '~supabase/clientServices'
 
 export default function AuthPage({
   className,
@@ -33,7 +30,8 @@ export default function AuthPage({
 }: React.ComponentProps<'div'>) {
   const [authState, setAuthState] = useState<'signin' | 'signup'>('signin')
   const { updateProfile } = useOnboardingStore()
-  const route = useRouter()
+  // const route = useRouter()
+  const { login, signup } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
@@ -56,16 +54,15 @@ export default function AuthPage({
         updateProfile({ ...rest })
 
         if (authState === 'signup') {
-          await supabaseService.signUp(rest.email, password, rest.name)
+          await signup(rest.email, password, rest.name)
         }
         if (authState === 'signin') {
-          await supabaseService.signIn(rest.email, password)
+          await login('email', rest.email, password)
         }
+
         toast.success(successMessage)
       } catch (error) {
         catchError(error)
-      } finally {
-        route.invalidate()
       }
     },
   })
@@ -84,99 +81,130 @@ export default function AuthPage({
   const handleGoogleSignIn = async () => {
     setIsSubmitting(true)
     try {
-      await supabaseService.signInWithGoogle()
+      await login('google')
     } catch (error) {
       catchError(error)
     } finally {
-      route.invalidate()
+      setIsSubmitting(false)
     }
   }
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
-        <CardHeader className='text-center'>
-          <CardTitle className='text-xl'>
+      <Card className='w-full max-w-md mx-auto border-none shadow-none  md:shadow-xl rounded-2xl bg-transparent md:bg-white/80 md:dark:bg-zinc-900/80 backdrop-blur-xl'>
+        <CardHeader className='text-center space-y-2 pb-6 px-0 md:px-6'>
+          <div className='mx-auto bg-primary/10 w-12 h-12 rounded-xl flex items-center justify-center mb-2'>
+            <BookOpen className='w-6 h-6 text-primary' />
+          </div>
+          <CardTitle className='text-2xl font-bold tracking-tight'>
             {authState === 'signin' ? 'Welcome back' : 'Create an account'}
           </CardTitle>
-          <CardDescription>Continue with your Google account</CardDescription>
+          <CardDescription className='text-base'>
+            {authState === 'signin'
+              ? 'Enter your details to sign in to your account'
+              : 'Enter your details to create your account'}
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <FieldGroup>
-              <Field>
-                <Button
-                  variant='outline'
-                  type='button'
-                  size={'lg'}
-                  onClick={handleGoogleSignIn}>
-                  {isSubmitting ? (
-                    <Spinner />
-                  ) : (
-                    <>
-                      {/** biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 24 24'>
-                        <path
-                          d='M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z'
-                          fill='currentColor'
-                        />
-                      </svg>
-                    </>
-                  )}
+        <CardContent className='space-y-6 px-0 md:px-6'>
+          <div className='grid gap-4'>
+            <Button
+              variant='outline'
+              type='button'
+              size={'lg'}
+              className='w-full font-medium h-11 bg-white hover:bg-gray-50 text-gray-700 border-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-gray-200 dark:border-zinc-700'
+              onClick={handleGoogleSignIn}>
+              {isSubmitting ? (
+                <Spinner />
+              ) : (
+                <>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    className='mr-2 h-5 w-5'>
+                    <path
+                      d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'
+                      fill='#4285F4'
+                    />
+                    <path
+                      d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z'
+                      fill='#34A853'
+                    />
+                    <path
+                      d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z'
+                      fill='#FBBC05'
+                    />
+                    <path
+                      d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z'
+                      fill='#EA4335'
+                    />
+                  </svg>
                   {authState === 'signin'
-                    ? 'Login with Google'
-                    : 'Signup with Google'}
-                </Button>
-              </Field>
-              <FieldSeparator className='*:data-[slot=field-separator-content]:bg-card'>
+                    ? 'Sign in with Google'
+                    : 'Sign up with Google'}
+                </>
+              )}
+            </Button>
+          </div>
+
+          <div className='relative'>
+            <div className='absolute inset-0 flex items-center'>
+              <span className='w-full border-t border-gray-200 dark:border-zinc-700' />
+            </div>
+            <div className='relative flex justify-center text-xs uppercase'>
+              <span className='bg-white dark:bg-zinc-900 px-2 text-muted-foreground'>
                 Or continue with
-              </FieldSeparator>
+              </span>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className='space-y-4'>
+            <FieldGroup>
               {authState === 'signup' ? (
                 <>
                   <form.Field
                     name='name'
                     children={(field) => (
                       <Field>
-                        <FieldLabel htmlFor={field.name}>Full Name</FieldLabel>
+                        <FieldLabel
+                          htmlFor={field.name}
+                          className='text-sm font-medium'>
+                          Full Name
+                        </FieldLabel>
                         <Input
                           type='text'
                           id={field.name}
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder='Ikenna Okoro'
+                          placeholder='e.g. Will Smith'
+                          autoComplete='name'
+                          className='h-11'
                           required
                         />
                         <FieldInfo field={field} />
                       </Field>
                     )}
                   />
-                  {/* <form.Field
-                    name='date_of_birth'
-                    children={(field) => (
-                      <Field>
-                        <DatePicker field={field} />
-                        <FieldInfo field={field} />
-                      </Field>
-                    )}
-                  /> */}
                 </>
               ) : null}
               <form.Field
                 name='email'
                 children={(field) => (
                   <Field>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <FieldLabel
+                      htmlFor={field.name}
+                      className='text-sm font-medium'>
+                      Email
+                    </FieldLabel>
                     <Input
                       id={field.name}
-                      icon={<Mail />}
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       type='email'
                       placeholder='email@example.com'
+                      autoComplete='email'
+                      className='h-11'
                       required
                     />
                     <FieldInfo field={field} />
@@ -187,27 +215,51 @@ export default function AuthPage({
                 name='password'
                 children={(field) => (
                   <Field>
-                    <div className='flex items-center'>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                      <div className='ml-auto flex gap-2'>
+                    <div className='flex items-center justify-between'>
+                      <FieldLabel
+                        htmlFor={field.name}
+                        className='text-sm font-medium'>
+                        Password
+                      </FieldLabel>
+                    </div>
+                    <div className='relative'>
+                      <Input
+                        id={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder='••••••••'
+                        autoComplete={
+                          authState === 'signup'
+                            ? 'new-password'
+                            : 'current-password'
+                        }
+                        className='h-11 pr-10'
+                        required
+                      />
+                      <Button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        variant='ghost'
+                        size='icon'
+                        className='absolute right-0 top-0 h-11 w-11 hover:bg-transparent text-muted-foreground'>
+                        {showPassword ? (
+                          <EyeOff className='size-4' />
+                        ) : (
+                          <Eye className='size-4' />
+                        )}
+                      </Button>
+                    </div>
+                    {authState === 'signin' && (
+                      <div className='flex justify-end mt-1'>
                         <Link
                           to='/auth/forgot-password'
-                          className='text-sm underline-offset-4 hover:underline'>
-                          Forgot your password?
+                          className='text-xs font-medium text-primary hover:text-primary/80 hover:underline'>
+                          Forgot password?
                         </Link>
                       </div>
-                    </div>
-                    <Input
-                      id={field.name}
-                      hasIcon
-                      icon={<Lock />}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder='••••••••'
-                      required
-                    />
+                    )}
                     <FieldInfo field={field} />
                   </Field>
                 )}
@@ -226,67 +278,63 @@ export default function AuthPage({
                   }}
                   children={(field) => (
                     <Field>
-                      <div className='flex items-center'>
-                        <FieldLabel htmlFor={field.name}>
-                          Confirm Password
-                        </FieldLabel>
-
-                        <Button
-                          type='button'
-                          onClick={() => setShowPassword(!showPassword)}
-                          variant='ghost'
-                          size='icon'
-                          className='ml-auto size-7'>
-                          {showPassword ? (
-                            <EyeOff className='size-4' />
-                          ) : (
-                            <Eye className='size-4' />
-                          )}
-                        </Button>
+                      <FieldLabel
+                        htmlFor={field.name}
+                        className='text-sm font-medium'>
+                        Confirm Password
+                      </FieldLabel>
+                      <div className='relative'>
+                        <Input
+                          id={field.name}
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder='••••••••'
+                          className='h-11'
+                          required
+                        />
                       </div>
-                      <Input
-                        hasIcon
-                        icon={<Lock />}
-                        id={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder='••••••••'
-                        required
-                      />
                       <FieldInfo field={field} />
                     </Field>
                   )}
                 />
               ) : null}
-              <Field>
+
+              <div className='pt-2'>
                 <form.Subscribe
                   selector={(state) => [state.canSubmit, state.isSubmitting]}
                   children={([canSubmit, isSubmitting]) => (
-                    <Button type='submit' size={'lg'} disabled={!canSubmit}>
-                      {isSubmitting ? <Spinner /> : null}
-                      {authState === 'signin' ? ' Sign in' : 'Create account'}
+                    <Button
+                      type='submit'
+                      size={'lg'}
+                      disabled={!canSubmit}
+                      className='w-full h-11 text-base font-semibold shadow-md active:scale-[0.98] transition-transform'>
+                      {isSubmitting ? <Spinner className='mr-2' /> : null}
+                      {authState === 'signin' ? 'Sign in' : 'Create account'}
                     </Button>
                   )}
                 />
-                <FieldDescription className='text-center'>
-                  <Button variant='ghost' onClick={toggleAuthState}>
-                    {authState === 'signin'
-                      ? "Don't have an account? Sign up"
-                      : 'Already have an account? Sign in'}
-                  </Button>
-                </FieldDescription>
-              </Field>
+              </div>
+
+              <div className='text-center'>
+                <span className='text-sm text-muted-foreground'>
+                  {authState === 'signin'
+                    ? "Don't have an account? "
+                    : 'Already have an account? '}
+                </span>
+                <Button
+                  variant='link'
+                  className='p-0 h-auto font-semibold text-primary'
+                  onClick={toggleAuthState}
+                  type='button'>
+                  {authState === 'signin' ? 'Sign up' : 'Sign in'}
+                </Button>
+              </div>
             </FieldGroup>
           </form>
         </CardContent>
       </Card>
-      <FieldDescription className='px-6 text-center'>
-        By clicking continue, you agree to our{' '}
-        <Link to='/'>Terms of Service</Link> and{' '}
-        <Link to='/'>Privacy Policy</Link>.
-      </FieldDescription>
     </div>
   )
 }

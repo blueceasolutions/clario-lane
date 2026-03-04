@@ -11,6 +11,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/components'
+import { SeoHead } from '@/components/shared'
 import { Trophy, Target, Users, ArrowRight, Timer, Star } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useQuery } from '@tanstack/react-query'
@@ -75,6 +76,10 @@ export function RouteComponent() {
       exit={{ y: -40, opacity: 0 }}
       transition={{ type: 'spring' }}
       className='space-y-6'>
+      <SeoHead
+        title='Challenges'
+        description='Compete with others and complete daily reading challenges.'
+      />
       {/* Active Challenges */}
       <section>
         <div className='flex items-center justify-between mb-4'>

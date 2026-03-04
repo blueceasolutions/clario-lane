@@ -1,0 +1,62 @@
+npm warn Unknown user config "public-hoist-pattern". This will stop working in the next major version of npm.
+rolldown-vite v7.1.14 building for production...
+[2Ktransforming...[32m✓[39m 3888 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mregisterSW.js                       [39m[1m[2m    0.13 kB[22m[22m
+[2mdist/[22m[32mmanifest.webmanifest                [39m[1m[2m    0.36 kB[22m[22m
+[2mdist/[22m[32mindex.html                          [39m[1m[2m    0.75 kB[22m[22m[2m │ gzip:   0.43 kB[22m
+[2mdist/[22m[2massets/[22m[35mindex-bgyDP2C6.css           [39m[1m[2m  160.07 kB[22m[22m[2m │ gzip:  24.12 kB[22m
+[2mdist/[22m[2massets/[22m[36msettings-BuglcFdf.js         [39m[1m[2m    0.07 kB[22m[22m[2m │ gzip:   0.08 kB[22m
+[2mdist/[22m[2massets/[22m[36mbrowser-YZ1Dvaj5.js          [39m[1m[2m    0.15 kB[22m[22m[2m │ gzip:   0.13 kB[22m
+[2mdist/[22m[2massets/[22m[36m_practiceId-BMBC1OrT.js      [39m[1m[2m    0.23 kB[22m[22m[2m │ gzip:   0.20 kB[22m
+[2mdist/[22m[2massets/[22m[36mpractice-DFD01OS0.js         [39m[1m[2m    0.26 kB[22m[22m[2m │ gzip:   0.21 kB[22m
+[2mdist/[22m[2massets/[22m[36m_practiceId-C2BexduD.js      [39m[1m[2m    0.29 kB[22m[22m[2m │ gzip:   0.24 kB[22m
+[2mdist/[22m[2massets/[22m[36m_practiceId-CaM49p-P.js      [39m[1m[2m    0.29 kB[22m[22m[2m │ gzip:   0.24 kB[22m
+[2mdist/[22m[2massets/[22m[36mpricing-DQRrFkQ5.js          [39m[1m[2m    0.46 kB[22m[22m[2m │ gzip:   0.34 kB[22m
+[2mdist/[22m[2massets/[22m[36mauth-CA2PG987.js             [39m[1m[2m    1.06 kB[22m[22m[2m │ gzip:   0.57 kB[22m
+[2mdist/[22m[2massets/[22m[36mdashboard-DLCiNfqx.js        [39m[1m[2m    1.09 kB[22m[22m[2m │ gzip:   0.59 kB[22m
+[2mdist/[22m[2massets/[22m[36mforgot-password-CZzQB3rm.js  [39m[1m[2m    1.64 kB[22m[22m[2m │ gzip:   0.83 kB[22m
+[2mdist/[22m[2massets/[22m[36monboarding-DB-8HvNA.js       [39m[1m[2m    1.91 kB[22m[22m[2m │ gzip:   0.95 kB[22m
+[2mdist/[22m[2massets/[22m[36mreset-password-mnifCbaX.js   [39m[1m[2m    2.56 kB[22m[22m[2m │ gzip:   1.04 kB[22m
+[2mdist/[22m[2massets/[22m[36monboarding-VQSHsz4U.js       [39m[1m[2m    3.95 kB[22m[22m[2m │ gzip:   1.99 kB[22m
+[2mdist/[22m[2massets/[22m[36mauth-CKMWMT63.js             [39m[1m[2m    6.31 kB[22m[22m[2m │ gzip:   2.40 kB[22m
+[2mdist/[22m[2massets/[22m[36mroutes-NKn_O5zG.js           [39m[1m[2m   27.53 kB[22m[22m[2m │ gzip:   9.55 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-Be9eVhTP.js            [39m[1m[33m1,666.25 kB[39m[22m[2m │ gzip: 509.26 kB[22m
+[plugin builtin:reporter] [1m[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✗ Build failed in 3.41s
+
+PWA v1.2.0
+mode      generateSW
+precache  33 entries (2050.23 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-8c29f6e4.js
+error during build:
+Build failed with 1 error:
+
+Error: [vite]: Rolldown failed to resolve import "react-is" from "/Users/giprim/Codes/Bluecea/clariolane/node_modules/recharts/es6/util/ReactUtils.js".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+    at viteLog (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/chunks/dep-ySrR9pW8.js:33266:57)
+    at file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/chunks/dep-ySrR9pW8.js:33304:73
+    at onwarn (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/@vitejs/plugin-react/dist/index.js:55:7)
+    at file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/chunks/dep-ySrR9pW8.js:33304:28
+    at onRollupLog (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/chunks/dep-ySrR9pW8.js:33299:63)
+    at onLog (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/chunks/dep-ySrR9pW8.js:33065:4)
+    at file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/rolldown/dist/shared/src-DkvlJJsC.mjs:321:26
+    at logger (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/rolldown/dist/shared/src-DkvlJJsC.mjs:312:3)
+    at onLog (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/rolldown/dist/shared/src-DkvlJJsC.mjs:3585:32)
+    at normalizeErrors (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/rolldown/dist/shared/src-DkvlJJsC.mjs:2157:18)
+    at handleOutputErrors (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/rolldown/dist/shared/src-DkvlJJsC.mjs:2892:34)
+    at transformToRollupOutput (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/rolldown/dist/shared/src-DkvlJJsC.mjs:2886:2)
+    at RolldownBuild.write (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/rolldown/dist/shared/src-DkvlJJsC.mjs:4093:10)
+    at async buildEnvironment (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/chunks/dep-ySrR9pW8.js:33173:64)
+    at async Object.build (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/chunks/dep-ySrR9pW8.js:33577:19)
+    at async Object.buildApp (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/chunks/dep-ySrR9pW8.js:33574:153)
+    at async CAC.<anonymous> (file:///Users/giprim/Codes/Bluecea/clariolane/node_modules/vite/dist/node/cli.js:641:3)

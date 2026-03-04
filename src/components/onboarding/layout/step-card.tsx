@@ -28,21 +28,21 @@ export function StepCard({
         className={cn(
           'relative overflow-hidden border-border/40 shadow-xl bg-white/80 dark:bg-zinc-900/60 backdrop-blur-xl',
           'transition-all duration-300',
-          className
+          className,
         )}>
         {/* Subtle top gradient line */}
         <div className='absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-primary/0 via-primary/50 to-primary/0 opacity-50' />
 
-        <div className='p-8 space-y-6'>
+        <div className='p-4 md:p-6 space-y-6'>
           {(title || description) && (
             <div className='text-center space-y-2 mb-8'>
               {title && (
-                <h2 className='text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-br from-foreground to-foreground/70'>
+                <h2 className='text-xl md:text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-br from-foreground to-foreground/70'>
                   {title}
                 </h2>
               )}
               {description && (
-                <p className='text-muted-foreground text-lg max-w-lg mx-auto leading-relaxed'>
+                <p className='text-muted-foreground text-base md:text-lg max-w-lg mx-auto leading-relaxed'>
                   {description}
                 </p>
               )}

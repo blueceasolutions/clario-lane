@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { MessageCircle, Settings as SettingsIcon, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { FeedbackModal } from './FeedbackModal'
@@ -15,6 +15,7 @@ export function FloatingActionButton() {
   const [isOpen, setIsOpen] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
   const { session: userSession, user } = useRouteContext({ from: '__root__' })
+  const ref = useRef<HTMLDivElement>(null)
 
   const menuItems = [
     {
@@ -50,6 +51,18 @@ export function FloatingActionButton() {
     }
   }, [userSession, user])
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   if (!userSession) {
     return null
   }
@@ -57,7 +70,9 @@ export function FloatingActionButton() {
   return (
     <>
       {/* Floating Action Button */}
-      <div className='fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3'>
+      <div
+        ref={ref}
+        className='fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3'>
         {/* Menu Items */}
         <AnimatePresence>
           {isOpen && (

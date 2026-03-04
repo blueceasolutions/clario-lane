@@ -1,4 +1,4 @@
-# ClarioLane Gamification Blueprint
+# Clariolane Gamification Blueprint
 
 ## 1. Core Game Mechanics
 The core loop revolves around **consistent reading practice** and **measurable improvement** in speed/comprehension.

@@ -16,14 +16,14 @@ export function ChunkSizeSlider() {
         value={[chunkSize]}
         onValueChange={(value) => setChunkSize(value[0])}
         min={1}
-        max={20}
+        max={15}
         step={1}
         disabled={isPlaying}
         className='w-full'
       />
       <div className='flex justify-between text-xs text-muted-foreground'>
         <span>1 word</span>
-        <span>20 words</span>
+        <span>15 words</span>
       </div>
     </div>
   )

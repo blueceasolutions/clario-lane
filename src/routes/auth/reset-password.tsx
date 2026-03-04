@@ -19,7 +19,7 @@ import { type FormEvent, useState } from 'react'
 import { toast } from 'sonner'
 import { supabaseService } from '~supabase/clientServices'
 import { z } from 'zod'
-import { Eye, EyeOff, Lock } from 'lucide-react'
+import { ArrowLeft, Eye, EyeOff, Lock } from 'lucide-react'
 
 export const Route = createFileRoute('/auth/reset-password')({
   component: ResetPasswordPage,
@@ -70,31 +70,57 @@ function ResetPasswordPage() {
   }
 
   return (
-    <div>
-      <Card className='w-full '>
-        <CardHeader className='text-center'>
-          <CardTitle className='text-xl'>Set new password</CardTitle>
-          <CardDescription>Enter your new password below</CardDescription>
+    <div className='flex flex-col gap-6'>
+      <Card className='w-full max-w-md mx-auto border-none shadow-xl rounded-2xl bg-transparent md:bg-white/80 md:dark:bg-zinc-900/80 backdrop-blur-xl'>
+        <CardHeader className='text-center space-y-2 pb-6 px-0 md:px-6'>
+          <div className='mx-auto bg-primary/10 w-12 h-12 rounded-xl flex items-center justify-center mb-2'>
+            <Lock className='w-6 h-6 text-primary' />
+          </div>
+          <CardTitle className='text-2xl font-bold tracking-tight'>
+            Set new password
+          </CardTitle>
+          <CardDescription className='text-base'>
+            Enter your new password below to update your account
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
+        <CardContent className='px-0 md:px-6'>
+          <form onSubmit={handleSubmit} className='space-y-4'>
             <FieldGroup>
               <form.Field
                 name='password'
                 children={(field) => (
                   <Field>
-                    <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
-                    <Input
-                      id={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      hasIcon
-                      icon={<Lock />}
-                      placeholder='••••••••'
-                    />
+                    <div className='flex items-center justify-between'>
+                      <FieldLabel
+                        htmlFor={field.name}
+                        className='text-sm font-medium'>
+                        New Password
+                      </FieldLabel>
+                    </div>
+                    <div className='relative'>
+                      <Input
+                        id={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        placeholder='••••••••'
+                        className='h-11 pr-10'
+                      />
+                      <Button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        variant='ghost'
+                        size='icon'
+                        className='absolute right-0 top-0 h-11 w-11 hover:bg-transparent text-muted-foreground'>
+                        {showPassword ? (
+                          <EyeOff className='size-4' />
+                        ) : (
+                          <Eye className='size-4' />
+                        )}
+                      </Button>
+                    </div>
                     <FieldInfo field={field} />
                   </Field>
                 )}
@@ -103,52 +129,50 @@ function ResetPasswordPage() {
                 name='confirmPassword'
                 children={(field) => (
                   <Field>
-                    <div className='flex items-center'>
-                      <FieldLabel htmlFor={field.name}>
-                        Confirm Password
-                      </FieldLabel>
-                      <Button
-                        type='button'
-                        onClick={() => setShowPassword(!showPassword)}
-                        variant='ghost'
-                        size='icon'
-                        className='ml-auto size-7'>
-                        {showPassword ? (
-                          <EyeOff className='size-4' />
-                        ) : (
-                          <Eye className='size-4' />
-                        )}
-                      </Button>
+                    <FieldLabel
+                      htmlFor={field.name}
+                      className='text-sm font-medium'>
+                      Confirm Password
+                    </FieldLabel>
+                    <div className='relative'>
+                      <Input
+                        id={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        placeholder='••••••••'
+                        className='h-11'
+                      />
                     </div>
-                    <Input
-                      id={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      hasIcon
-                      icon={<Lock />}
-                      placeholder='••••••••'
-                    />
                     <FieldInfo field={field} />
                   </Field>
                 )}
               />
-              <Field>
+              <div className='pt-2'>
                 <form.Subscribe
                   selector={(state) => [state.canSubmit, state.isSubmitting]}
                   children={([canSubmit]) => (
-                    <Button type='submit' disabled={!canSubmit || isSubmitting}>
-                      {isSubmitting ? <Spinner /> : 'Update Password'}
+                    <Button
+                      type='submit'
+                      disabled={!canSubmit || isSubmitting}
+                      className='w-full h-11 text-base font-semibold shadow-md active:scale-[0.98] transition-transform'
+                      size='lg'>
+                      {isSubmitting ? (
+                        <Spinner className='mr-2' />
+                      ) : (
+                        'Update Password'
+                      )}
                     </Button>
                   )}
                 />
-              </Field>
-              <div className='text-center text-sm'>
+              </div>
+              <div className='text-center'>
                 <Link
                   to='/auth'
-                  className='font-medium text-primary hover:underline'>
+                  className='text-sm font-medium text-primary hover:text-primary/80 hover:underline flex items-center justify-center gap-2'>
+                  <ArrowLeft className='w-4 h-4' />
                   Back to Sign In
                 </Link>
               </div>

@@ -59,7 +59,7 @@ export function NotificationSetup({ onContinue, isLoading }: Props) {
   ]
 
   return (
-    <div className='max-w-4xl mx-auto grid lg:grid-cols-2 gap-8 items-start'>
+    <div className='max-w-2xl lg:max-w-4xl mx-auto grid lg:grid-cols-2 gap-8 items-start'>
       <StepCard
         title='Stay on Track'
         description='Consistency is key to improving reading speed. Choose how we can help you.'>
@@ -128,7 +128,7 @@ export function NotificationSetup({ onContinue, isLoading }: Props) {
             ))}
           </ul>
 
-          <div className='mt-auto pt-8'>
+          <div className='mt-auto pt-8 hidden md:block'>
             <Button
               disabled={isLoading}
               size='lg'
@@ -144,6 +144,22 @@ export function NotificationSetup({ onContinue, isLoading }: Props) {
           </div>
         </div>
       </motion.div>
+
+      <div className='md:hidden w-full fixed bottom-0 left-0 right-0 z-50 md:relative md:bottom-auto md:left-auto md:right-auto bg-gradient-to-t from-background/50 via-background/5 to-transparent backdrop-blur-sm'>
+        <div className='py-4 px-4 pt-6 md:p-0'>
+          <Button
+            size='xl'
+            onClick={onContinue}
+            className='w-full bg-white text-primary hover:bg-white/90 shadow-xl border-0 font-bold tracking-wide'>
+            Create Account & Begin
+            {isLoading ? (
+              <Loader2 className='ml-2 w-4 h-4 animate-spin' />
+            ) : (
+              <ChevronRight className='ml-2 w-4 h-4' />
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }

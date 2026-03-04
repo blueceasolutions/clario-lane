@@ -34,7 +34,7 @@ export function ReadingExercise({
   const { updateProfile, ...userProfile } = useOnboardingStore()
   const { passage } = usePracticeStore()
   const [stage, setStage] = useState<'reading' | 'questions' | 'results'>(
-    'reading'
+    'reading',
   )
   const [startTime, setStartTime] = useState(0)
   const [endTime, setEndTime] = useState(0)
@@ -81,10 +81,10 @@ export function ReadingExercise({
     const wpm = Math.round(wordCount / timeInMinutes)
 
     const correctAnswers = answers.filter(
-      (answer, idx) => answer === passage.questions[idx].correctIndex
+      (answer, idx) => answer === passage.questions[idx].correctIndex,
     ).length
     const currentComprehensionScore = Math.round(
-      (correctAnswers / passage.questions.length) * 100
+      (correctAnswers / passage.questions.length) * 100,
     )
 
     const xpEarned =
@@ -105,6 +105,7 @@ export function ReadingExercise({
       passage_id: passage.id,
       exercise_id: 'speed_reading', // TODO: Get real exercise ID
       wpm,
+      next_wpm: userProfile.current_wpm!,
       comprehension: currentComprehensionScore,
       duration: Math.round((endTime - startTime) / 1000),
       total_words: wordCount,
@@ -249,10 +250,10 @@ export function ReadingExercise({
     const wordCount = passage.text.split(' ').length
     const wpm = Math.round(wordCount / timeInMinutes)
     const correctAnswers = answers.filter(
-      (answer, idx) => answer === passage.questions[idx].correctIndex
+      (answer, idx) => answer === passage.questions[idx].correctIndex,
     ).length
     const comprehension = Math.round(
-      (correctAnswers / passage.questions.length) * 100
+      (correctAnswers / passage.questions.length) * 100,
     )
     const improvement = wpm - userProfile.baseline_wpm!
 

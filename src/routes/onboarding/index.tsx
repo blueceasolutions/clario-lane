@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { AnimatePresence } from 'motion/react'
 import {
   Button,
@@ -8,38 +8,34 @@ import {
   OnboardingReadingTest,
   QuickDrill,
   Progress,
-  PendingPage,
   NotificationSetup,
+  OnboardingPending,
 } from '@/components'
 import { Card } from '@/components/ui/card'
-import PaystackPop from '@paystack/inline-js'
 
 import { useOnboardingFlow, useOnboardingStore } from '@/store'
 
 import Billing from '@/components/onboarding/billing'
-import type { Preferences, UserTable } from '@/types'
+import type { Preferences } from '@/types'
 import {
   fetchChallenges,
   fetchContentType,
   fetchGoals,
-  fetchPlans,
 } from '@/integration/queries'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { userMutation } from '@/integration'
-import { useCallback, useEffect } from 'react'
-import { supabaseService } from '~supabase/clientServices'
-import { clientEnv } from '@/config/env'
 import { toast } from 'sonner'
+import { useSubscription } from '@/hooks'
 
 export const Route = createFileRoute('/onboarding/')({
   component: RouteComponent,
-  pendingComponent: PendingPage,
+  pendingComponent: OnboardingPending,
   beforeLoad: ({ context }) => {
     const { user, session } = context
     if (!session) throw redirect({ to: '/auth' })
     if (!user) return context
     if (user?.onboarding_completed && user.is_subscribed)
-      throw redirect({ to: '/dashboard' })
+      throw redirect({ to: '/dashboard/practice' })
   },
   loader: ({ context: { session } }) => {
     if (!session) return
@@ -50,8 +46,6 @@ export const Route = createFileRoute('/onboarding/')({
   },
 })
 
-const paystackPop = new PaystackPop()
-
 function RouteComponent() {
   const { updateProfile, ...onboarding } = useOnboardingStore()
   const { current_step, total_steps, update } = useOnboardingFlow()
@@ -60,7 +54,6 @@ function RouteComponent() {
   const { data: goals } = useQuery(fetchGoals)
   const { data: challenges } = useQuery(fetchChallenges)
   const { data: contentType } = useQuery(fetchContentType)
-  const { data: plans } = useQuery(fetchPlans)
 
   const { mutateAsync: createMutateAsync, isPending } =
     useMutation(userMutation)
@@ -73,17 +66,7 @@ function RouteComponent() {
     })
   }
 
-  const onSubscribe = useCallback(
-    (amount: number, plan: string) => {
-      paystackPop.newTransaction({
-        key: clientEnv.VITE_PAYSTACK_PUBLIC_KEY,
-        email: onboarding.email,
-        amount,
-        planCode: plan,
-      })
-    },
-    [onboarding.email]
-  )
+  const { onSubscribe } = useSubscription()
 
   const handleSubmission = async () => {
     createMutateAsync({
@@ -102,19 +85,6 @@ function RouteComponent() {
       update({ current_step: current_step + 1 })
     }
   }
-  const route = useRouter()
-
-  useEffect(() => {
-    const handleConfirmSubscription = (payload: UserTable) => {
-      if (payload.email === onboarding.email && payload.is_subscribed) {
-        route.navigate({ to: '/dashboard' })
-      }
-    }
-    const channel = supabaseService.channel(handleConfirmSubscription)
-    return () => {
-      supabaseService.sp.removeChannel(channel)
-    }
-  }, [onboarding.email, route])
 
   const canProceed = () => {
     switch (current_step) {
@@ -135,13 +105,12 @@ function RouteComponent() {
     return (
       <NotificationSetup isLoading={isPending} onContinue={handleSubmission} />
     )
-  if (current_step === 6)
-    return <Billing plans={plans || []} onSubscribe={onSubscribe} />
+  if (current_step === 6) return <Billing onSubscribe={onSubscribe} />
 
   return (
-    <Card className='w-full mx-auto mt-10 lg:mt-20 max-w-3xl  p-8'>
+    <Card className=' bg-transparent border-0 shadow-none w-full max-w-3xl mx-auto md:mt-20 md:bg-card md:shadow-lg md:p-8 '>
       {/* Progress Bar */}
-      <div className='mb-8'>
+      <div className='md:mb-8 mb-4'>
         <div className='flex justify-between mb-2 text-sm text-muted-foreground'>
           <span>
             Step {current_step + 1} of {total_steps}
@@ -153,9 +122,11 @@ function RouteComponent() {
 
       {/* Welcome Message */}
       {current_step === 0 && (
-        <div className='mb-6 text-center'>
-          <h2 className='mb-2'>Welcome, {onboarding.name}! 👋</h2>
-          <p className='text-muted-foreground'>
+        <div className='mb-4 text-center'>
+          <h2 className='mb-1 font-extralight text-2xl'>
+            Welcome, {onboarding.name}! 👋
+          </h2>
+          <p className='text-muted-foreground text-sm'>
             Let's personalize your learning journey
           </p>
         </div>
@@ -187,14 +158,16 @@ function RouteComponent() {
       </AnimatePresence>
 
       {/* Navigation */}
-      <div className='flex gap-4 mt-8'>
-        <Button
-          size={'lg'}
-          onClick={handleNext}
-          disabled={!canProceed()}
-          className='flex-1'>
-          {current_step === total_steps - 1 ? 'Complete' : 'Next'}
-        </Button>
+      <div className='w-full fixed bottom-0 left-0 right-0 z-50 md:relative md:bottom-auto md:left-auto md:right-auto bg-gradient-to-t from-background/50 via-background/5 to-transparent backdrop-blur-sm'>
+        <div className='py-4 px-4 pt-6 md:p-0'>
+          <Button
+            size={'xl'}
+            onClick={handleNext}
+            disabled={!canProceed()}
+            className='w-full'>
+            {current_step === total_steps - 1 ? 'Complete' : 'Next'}
+          </Button>
+        </div>
       </div>
     </Card>
   )

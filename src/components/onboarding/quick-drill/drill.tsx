@@ -25,7 +25,7 @@ export function Drill({ currentIndex }: Props) {
             <div className='h-full w-px bg-primary absolute' />
           </div>
 
-          <h2 className='text-5xl md:text-7xl font-black tracking-tight text-center bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/70'>
+          <h2 className='text-5xl p-8  md:text-7xl font-black tracking-tight text-center bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/70'>
             {currentWord}
           </h2>
         </Card>

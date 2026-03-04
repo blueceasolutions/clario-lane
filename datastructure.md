@@ -1,4 +1,4 @@
-# ClarioLane
+# Clariolane
 
 ### User Info
 
@@ -35,7 +35,7 @@ export type UserProfileType = {
 
 type Passage = {
   id: string,
-  tags: string[], // ['fiction, news']
+  tags: string[],
   text: string,
   title: string,
   difficulty: 'Easy' | 'Medium' | 'Hard',

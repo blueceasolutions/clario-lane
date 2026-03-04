@@ -23,7 +23,7 @@ interface VictoryModalProps {
 }
 
 export function VictoryModal({
-  isOpen,
+  // isOpen,
   onClose,
   xpGained,
   wordsRead,
@@ -41,7 +41,7 @@ export function VictoryModal({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={false} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-md dark:bg-zinc-900 dark:border-zinc-800 max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle className='text-center text-2xl font-bold flex flex-col items-center gap-2 dark:text-zinc-100 wrap-break-word'>

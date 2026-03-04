@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS feedback (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   category TEXT NOT NULL CHECK (category IN ('bug', 'feature', 'general')),
   message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'reviewed', 'resolved')),
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
   updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL

@@ -112,6 +112,7 @@ export const practiced_session = z.object({
   total_questions: z.number(),
   start_time: z.number(),
   elapsed_time: z.number(),
+  next_wpm: z.number(),
 });
 
 export type practiced_session = z.infer<typeof practiced_session>;

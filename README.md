@@ -1,6 +1,6 @@
-# ClarioLane
+# Clariolane
 
-ClarioLane is a comprehensive reading improvement platform designed to enhance reading speed, comprehension, and efficiency through scientifically proven techniques.
+Clariolane is a comprehensive reading improvement platform designed to enhance reading speed, comprehension, and efficiency through scientifically proven techniques.
 
 ## Reading Practice Modes
 

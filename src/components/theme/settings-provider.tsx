@@ -1,6 +1,8 @@
 import { useEffect, type ReactNode } from 'react'
 import { useSettingsStore } from '@/store'
 import { useRouteContext } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { fetchPreferences } from '@/integration/queries/fetchPreferences'
 
 type SettingsProviderProps = {
   children: ReactNode
@@ -14,22 +16,38 @@ const fontFamilyMap = {
 }
 
 export function SettingsProvider({ children }: SettingsProviderProps) {
-  const { fontFace, fontSizeScale, theme, fetchPreferences } =
-    useSettingsStore()
+  const { fontFace, fontSizeScale, theme, syncPreferences } = useSettingsStore()
   const context = useRouteContext({ from: '__root__' })
   const user = context.user
 
-  // Fetch preferences on mount for authenticated users
+  const { data: preferences } = useQuery(fetchPreferences(user?.id))
+
+  // Sync preferences from server to store
   useEffect(() => {
-    if (user?.id) {
-      fetchPreferences(user.id)
+    if (preferences) {
+      syncPreferences(preferences)
     }
-  }, [user?.id, fetchPreferences])
+  }, [preferences, syncPreferences])
 
   // Apply theme class to document root
   useEffect(() => {
     const root = document.documentElement
     root.classList.remove('light', 'dark', 'sepia')
+
+    if (theme === 'auto') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+      const applySystemTheme = () => {
+        root.classList.remove('light', 'dark', 'sepia')
+        root.classList.add(mediaQuery.matches ? 'dark' : 'light')
+      }
+
+      applySystemTheme()
+
+      mediaQuery.addEventListener('change', applySystemTheme)
+      return () => mediaQuery.removeEventListener('change', applySystemTheme)
+    }
+
     root.classList.add(theme)
   }, [theme])
 

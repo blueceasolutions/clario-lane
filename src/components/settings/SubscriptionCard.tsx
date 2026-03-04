@@ -5,19 +5,26 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui'
 
 import { enableOrDisableSubscriptionToggleMutation } from '@/integration/mutations/subscriptionMutation'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Link } from '@tanstack/react-router'
-import { supabaseService } from '~supabase/clientServices'
+import { fetchNextSubscriptionDate, fetchUserProfile } from '@/integration'
+import { useMemo } from 'react'
 
 export function SubscriptionCard() {
-  const { data: user, refetch } = useQuery({
-    queryKey: ['user'],
-    queryFn: async () => await supabaseService.getUser(),
-  })
+  const { data: user, refetch } = useQuery(fetchUserProfile)
+
+  const { data } = useQuery(fetchNextSubscriptionDate)
 
   const { mutate, isPending } = useMutation({
     ...enableOrDisableSubscriptionToggleMutation,
@@ -31,39 +38,66 @@ export function SubscriptionCard() {
   })
 
   const isSubscribed = user?.is_subscribed
+  const isSubscriptionExpired = useMemo(
+    () => new Date(data?.next_subscription_date) < new Date(),
+    [data],
+  )
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className='bg-transparent border-0 shadow-none md:shadow-sm md:bg-card md:border'>
+      <CardHeader className='p-0 md:px-6'>
         <CardTitle>Subscription Plan</CardTitle>
         <CardDescription>
           Manage your subscription and billing information.
         </CardDescription>
       </CardHeader>
-      <CardContent className='space-y-4'>
+      <CardContent className='space-y-4 p-0 md:px-6 '>
         {isPending ? (
           <div className='bg-muted h-20 w-full animate-pulse rounded-lg' />
         ) : (
-          <div className='flex items-center justify-between rounded-lg border p-4'>
+          <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between md:border-t md:pt-4'>
             <div className='space-y-0.5'>
               <div className='font-medium'>
-                {isSubscribed ? 'Active Plan' : 'Free Tier / Cancelled'}
+                {isSubscriptionExpired ? 'Expired' : 'Active'}
               </div>
               <div className='text-sm text-muted-foreground'>
-                {isSubscribed
-                  ? 'You are currently on the active plan.'
-                  : 'Your subscription is not active.'}
+                {isSubscriptionExpired
+                  ? 'Your subscription is expired.'
+                  : 'Your subscription is active.'}
               </div>
             </div>
+
             {isSubscribed ? (
-              <Button
-                variant='outline'
-                onClick={() => mutate('disable')}
-                disabled={isPending}>
-                {isPending ? 'Cancelling...' : 'Cancel Subscription'}
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant='outline' size={'lg'} disabled={isPending}>
+                    {isPending ? 'Cancelling...' : 'Cancel Subscription'}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Cancel Subscription</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to cancel your subscription? You
+                      will lose access to premium features at the end of your
+                      current billing period.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className='flex justify-end space-x-2'>
+                    <DialogClose asChild>
+                      <Button variant='outline'>Back</Button>
+                    </DialogClose>
+                    <Button
+                      variant='destructive'
+                      onClick={() => mutate('disable')}
+                      disabled={isPending}>
+                      {isPending ? 'Cancelling...' : 'Yes, Cancel Subscription'}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             ) : (
-              <Button asChild disabled={isPending}>
+              <Button size={'lg'} asChild disabled={isPending}>
                 <Link to='/pricing'>Upgrade Plan</Link>
               </Button>
             )}

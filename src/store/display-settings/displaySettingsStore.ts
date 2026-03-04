@@ -15,7 +15,7 @@ type DisplaySettingsActions = {
 
 const initialState: DisplaySettings = {
   fontFamily: "Inter",
-  fontSize: 48,
+  fontSize: 2.4,
 };
 
 export const useDisplaySettingsStore = create<

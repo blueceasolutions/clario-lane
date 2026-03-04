@@ -91,12 +91,20 @@ export function Results() {
         </motion.div>
 
         <Button
-          size='lg'
+          size='xl'
           onClick={onContinue}
-          className='w-full h-12 text-lg font-medium'>
+          className='hidden md:block w-full h-12 text-lg font-medium'>
           Continue to Quick Drill
         </Button>
       </StepCard>
+
+      <div className='md:hidden w-full fixed bottom-0 left-0 right-0 z-50 md:relative md:bottom-auto md:left-auto md:right-auto bg-gradient-to-t from-background/50 via-background/5 to-transparent backdrop-blur-sm'>
+        <div className='py-4 px-4 pt-6 md:p-0'>
+          <Button size='xl' onClick={onContinue} className='w-full'>
+            Continue to Quick Drill
+          </Button>
+        </div>
+      </div>
 
       <ConfettiComponent
         particleCount={onboarding.baseline_comprehension! * 2}

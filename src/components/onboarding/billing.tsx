@@ -1,25 +1,22 @@
-import { useState } from 'react'
-import PricingCard from '@/components/pricingCard'
-import { Switch } from '..'
+import { PricingCard, BillingPendingPage } from '@/components'
 
-import type { PlanObject } from '@/types'
-
-const features = [
-  'Unlimited speed reading exercises',
-  'Personalized AI coaching',
-  'Detailed progress analytics',
-  'Daily reading goals & reminders',
-  'Access to advanced RSVP training',
-  'Focus building exercises',
-]
+import { useQuery } from '@tanstack/react-query'
+import { fetchPlans } from '@/integration'
+import { FEATURES } from '@/lib'
 
 type Props = {
-  plans: PlanObject[]
   onSubscribe: (amount: number, plan: string) => void
 }
 
-export default function Billing({ plans, onSubscribe }: Props) {
-  const [interval, setInterval] = useState<'mo' | 'yr'>('mo')
+export default function Billing({ onSubscribe }: Props) {
+  const { data: plans, isLoading } = useQuery(fetchPlans)
+
+  if (isLoading)
+    return (
+      <div className='max-w-md mx-auto w-full'>
+        <BillingPendingPage />
+      </div>
+    )
 
   return (
     <div className='max-w-md mx-auto w-full'>
@@ -30,32 +27,15 @@ export default function Billing({ plans, onSubscribe }: Props) {
         </p>
       </header>
 
-      <div className=' hidden items-center gap-2 mb-6'>
-        <span className={interval === 'mo' ? `font-bold text-primary` : ''}>
-          Monthly
-        </span>
-        <Switch
-          checked={interval === 'yr'}
-          onCheckedChange={(checked) => setInterval(checked ? 'yr' : 'mo')}
-        />
-        <span className={interval === 'yr' ? `font-bold text-primary` : ''}>
-          Yearly
-        </span>
-
-        <div className='ml-auto text-sm text-muted-foreground'>
-          Billed {interval === 'mo' ? 'monthly' : 'annually'}
-        </div>
-      </div>
-
       <div className='flex justify-center gap-6 flex-wrap'>
-        {plans.map((plan) => (
+        {plans?.map((plan) => (
           <PricingCard
             title={plan.name}
             price={plan.amount}
             currency={plan.currency}
             frequency={plan.interval}
             description={plan.description}
-            features={features}
+            features={FEATURES}
             badge={plan.interval}
             ctaLabel='Start'
             onCta={() => onSubscribe(plan.amount, plan.planCode)}

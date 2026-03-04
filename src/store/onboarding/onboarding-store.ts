@@ -6,10 +6,7 @@ import type {
   OnboardingType,
 } from "./onboarding-store-type";
 
-export const useOnboardingStore = create<
-  OnboardingType & OnboardingContextType
->((set) => ({
-  updateProfile: (update) => set((state) => ({ ...state, ...update })),
+const initialState: OnboardingType = {
   goals: [],
   onboarding_completed: false,
   content_type: [],
@@ -22,15 +19,27 @@ export const useOnboardingStore = create<
   baseline_wpm: 0,
   email: "",
   name: "",
+};
+export const useOnboardingStore = create<
+  OnboardingType & OnboardingContextType
+>((set) => ({
+  ...initialState,
+  updateProfile: (update) => set((state) => ({ ...state, ...update })),
+  reset: () => set(initialState),
 }));
 
-export const useOnboardingFlow = create<
-  OnboardingFlowType & OnboardingFlowActionType
->((set) => ({
+const initialFlowState: OnboardingFlowType = {
   current_step: 0,
   total_steps: 7,
   reading_test_stage: "intro",
   reading_time: 0,
   start_time: 0,
+};
+
+export const useOnboardingFlow = create<
+  OnboardingFlowType & OnboardingFlowActionType
+>((set) => ({
+  ...initialFlowState,
   update: (update) => set((state) => ({ ...state, ...update })),
+  reset: () => set(initialFlowState),
 }));

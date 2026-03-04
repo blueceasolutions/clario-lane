@@ -3,7 +3,7 @@ import { WordChunkingTraining } from '@/components/exercises'
 import { usePracticeStore } from '@/store'
 
 export const Route = createFileRoute(
-  '/dashboard/practice/wordchunking/$practiceId'
+  '/dashboard/practice/wordchunking/$practiceId',
 )({
   component: WordChunkingPractice,
   onLeave: () => usePracticeStore.getState().reset(),
@@ -11,7 +11,7 @@ export const Route = createFileRoute(
 
 function WordChunkingPractice() {
   return (
-    <div className='container mx-auto p-6'>
+    <div className='container mx-auto md:p-6'>
       <WordChunkingTraining />
     </div>
   )

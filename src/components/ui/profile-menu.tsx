@@ -9,62 +9,91 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Skeleton,
 } from '@/components/'
-import { useLogout } from '@/hooks'
-import type { Session } from '@supabase/supabase-js'
+import { useAuth } from '@/context/auth-provider'
 import { Link } from '@tanstack/react-router'
+import { LayoutDashboard, LogOut, Settings } from 'lucide-react'
+import { useState } from 'react'
 
-type Props = {
-  session: Session
-}
+export function ProfileMenu() {
+  const [open, setOpen] = useState(false)
+  const { session, logout, user } = useAuth()
 
-export function ProfileMenu(props: Props) {
-  const { user_metadata } = props.session.user
-  const name = user_metadata.displayName || user_metadata.full_name
+  if (!session) return <Skeleton className='h-8 w-8 rounded-full' />
+
+  const { user_metadata } = session.user
+  const name =
+    user?.name || user_metadata.displayName || user_metadata.full_name
   const picture = user_metadata.avatar_url || user_metadata.picture || undefined
   const fallbackInitials = name
-    .split(' ')
+    ?.split(' ')
     .map((n: string) => n[0])
     .join('')
     .slice(0, 2)
-  const logout = useLogout()
+
+  const onOpenChanged = () => {
+    setOpen((prev) => !prev)
+  }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={onOpenChanged} open={open}>
       <DropdownMenuTrigger asChild>
-        <Avatar className='transition hover:scale-105 focus:scale-90 active:scale-90'>
-          <AvatarImage src={picture} alt={name} />
-          <AvatarFallback className='uppercase'>
+        <Avatar className='h-9 w-9 cursor-pointer transition-transform hover:scale-105 focus:scale-95 active:scale-95 ring-2 ring-transparent hover:ring-primary/20'>
+          <AvatarImage src={picture} alt={name} className='object-cover' />
+          <AvatarFallback className='uppercase bg-primary/10 text-primary font-medium text-xs'>
             {fallbackInitials}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='w-56' align='start'>
-        <DropdownMenuLabel className='font-semibold'>
-          {name || 'My Account'}
+      <DropdownMenuContent
+        className='w-56 rounded-xl p-1 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-white/20 dark:border-white/10 shadow-xl'
+        align='end'
+        sideOffset={8}>
+        <DropdownMenuLabel className='font-normal p-3'>
+          <div className='flex flex-col space-y-1'>
+            <p className='text-sm font-semibold leading-none text-foreground'>
+              {name}
+            </p>
+            <p className='text-xs leading-none text-muted-foreground truncate'>
+              {session.user.email}
+            </p>
+          </div>
         </DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link to='/dashboard' className='w-full h-full'>
-              Dashboard
+        <DropdownMenuSeparator className='bg-border/50' />
+        <DropdownMenuGroup className='p-1'>
+          <DropdownMenuItem
+            asChild
+            className='rounded-lg focus:bg-primary/10 focus:text-primary cursor-pointer'>
+            <Link
+              onClick={() => setOpen(false)}
+              to='/dashboard'
+              className='flex w-full items-center gap-2 px-2 py-2 text-sm font-medium'>
+              <LayoutDashboard className='h-4 w-4' />
+              <span>Dashboard</span>
             </Link>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem>
-            <Link to='/dashboard/settings'>Billing</Link>
-          </DropdownMenuItem> */}
-          <DropdownMenuItem>
-            <Link to='/dashboard/settings' className='w-full h-full'>
-              Settings
+          <DropdownMenuItem
+            asChild
+            className='rounded-lg focus:bg-primary/10 focus:text-primary cursor-pointer'>
+            <Link
+              onClick={() => setOpen(false)}
+              to='/dashboard/settings'
+              className='flex w-full items-center gap-2 px-2 py-2 text-sm font-medium'>
+              <Settings className='h-4 w-4' />
+              <span>Settings</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        {/* <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link to='/dashboard'>Support</Link>
-        </DropdownMenuItem> */}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout} variant='destructive'>
-          Log out
+        <DropdownMenuSeparator className='bg-border/50' />
+        <DropdownMenuItem
+          onClick={() => {
+            setOpen(false)
+            logout()
+          }}
+          className='rounded-lg text-red-600 dark:text-red-400 focus:bg-red-50 dark:focus:bg-red-950/20 focus:text-red-600 dark:focus:text-red-400 cursor-pointer p-2 m-1 gap-2'>
+          <LogOut className='h-4 w-4 text-inherit' />
+          <span className='font-medium text-inherit'>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

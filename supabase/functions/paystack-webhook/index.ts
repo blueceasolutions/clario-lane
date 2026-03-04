@@ -1,11 +1,14 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { Hono } from "npm:hono";
+import "@supabase/functions-js/edge-runtime.d.ts";
+import { Hono } from "hono";
 import crypto from "node:crypto";
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
 import type { Database } from "../../supabase_types.ts";
 import { corsMiddleware } from "../_shared/cors-middleware.ts";
 
 const app = new Hono();
+
+const affiliateUrl =
+  "https://cpmdmwcmesrfsjealzoj.supabase.co/functions/v1/conversion-webhook";
 
 // Apply CORS middleware globally
 app.use("/*", corsMiddleware);
@@ -15,6 +18,32 @@ const supabase_service_key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const secret = Deno.env.get("PAYSTACK_SECRET_KEY")!;
 
 const supabaseAdmin = createClient<Database>(supabaseUrl, supabase_service_key);
+
+async function invokeSendEmail(type: string, email: string, data: any) {
+  const functionUrl = `${supabaseUrl}/functions/v1/send-email`;
+  console.log(`Invoking send-email: ${functionUrl} for ${type}`);
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${supabase_service_key}`,
+      },
+      body: JSON.stringify({ type, email, data }),
+    });
+
+    if (!response.ok) {
+      console.error(
+        `Failed to send email: ${response.status} ${await response.text()}`,
+      );
+    } else {
+      console.log("Email sent successfully");
+    }
+  } catch (err) {
+    console.error("Error invoking send-email:", err);
+  }
+}
 
 // POST /paystack-webhook - Handle Paystack webhooks
 app.post("/paystack-webhook", async (c) => {
@@ -31,6 +60,21 @@ app.post("/paystack-webhook", async (c) => {
       return c.json({ success: false, message: "Not authorized" }, 401);
     }
 
+    if (payload) {
+      console.log("Payload:", payload);
+      fetch(`${affiliateUrl}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }).then((res) => {
+        console.log("Webhook response:", res);
+      }).catch((err) => {
+        console.error("Error invoking webhook:", err);
+      });
+    }
+
     // Find user by email
     const { data: customer, error: customerError } = await supabaseAdmin
       .from("users")
@@ -41,13 +85,49 @@ app.post("/paystack-webhook", async (c) => {
     if (customerError || !customer) {
       return c.json({ success: false, message: "User not found" }, 400);
     }
-
     if (payload.event === "charge.success") {
       // Update user subscription status
       await supabaseAdmin.from("users").update({ is_subscribed: true }).eq(
         "id",
         customer.id,
       );
+
+      // Send subscription created email
+      // Assuming 'customer' object from Supabase has 'name', if not we might need to fetch it or use email.
+      // The 'users' table has a 'name' column.
+      const { data: userData } = await supabaseAdmin.from("users").select(
+        "name",
+      ).eq("id", customer.id).single();
+
+      await invokeSendEmail(
+        "SUBSCRIPTION_CREATED",
+        payload.data.customer.email,
+        {
+          name: userData?.name || "Customer",
+          planName: payload.data.plan?.name,
+        },
+      );
+
+      // Assign Weekly Quest with 7-day expiration
+      const { data: weeklyQuests } = await supabaseAdmin
+        .from("quests")
+        .select("id")
+        .eq("type", "weekly")
+        .limit(1);
+
+      if (weeklyQuests && weeklyQuests.length > 0) {
+        const questId = weeklyQuests[0].id;
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
+
+        await supabaseAdmin.from("user_quests").upsert({
+          user_id: customer.id,
+          quest_id: questId,
+          expires_at: expiresAt.toISOString(),
+          current_value: 0,
+          is_completed: false,
+        }, { onConflict: "user_id, quest_id" });
+      }
     }
 
     if (
@@ -58,6 +138,18 @@ app.post("/paystack-webhook", async (c) => {
       await supabaseAdmin.from("users").update({ is_subscribed: false }).eq(
         "id",
         customer.id,
+      );
+
+      const { data: userData } = await supabaseAdmin.from("users").select(
+        "name",
+      ).eq("id", customer.id).single();
+
+      await invokeSendEmail(
+        "SUBSCRIPTION_CANCELLED",
+        payload.data.customer.email,
+        {
+          name: userData?.name || "Customer",
+        },
       );
     }
 

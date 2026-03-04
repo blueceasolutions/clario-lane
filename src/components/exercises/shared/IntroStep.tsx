@@ -10,24 +10,24 @@ interface IntroStepProps {
 
 export function IntroStep({ title, children, onContinue }: IntroStepProps) {
   return (
-    <div className='flex items-center justify-center min-h-[50vh] p-4'>
+    <div className='flex items-center justify-center min-h-[50vh] '>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className='bg-card border border-border rounded-xl p-8 max-w-2xl w-full shadow-sm text-center space-y-8'>
+        className='rounded-xl p-4 lg:p-8 max-w-2xl w-full text-center space-y-4'>
         <div className='space-y-4'>
-          <h2 className='text-3xl font-bold tracking-tight text-foreground'>
+          <h2 className='lg:text-3xl md:text-2xl text-xl font-bold tracking-tight text-foreground'>
             {title}
           </h2>
-          <div className='text-lg text-muted-foreground leading-relaxed'>
+          <div className='text-base lg:text-lg md:text-md text-muted-foreground leading-relaxed'>
             {children}
           </div>
         </div>
 
-        <div className='pt-4'>
+        <div className='pt-2 md:pt-4 lg:pt-4'>
           <Button
-            size='lg'
+            size='xl'
             onClick={onContinue}
             className='w-full sm:w-auto px-8'>
             Start Training

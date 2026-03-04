@@ -9,7 +9,7 @@ export const Route = createFileRoute('/dashboard/practice/')({
   component: RouteComponent,
   loader: async ({ context }) => {
     const practices = (await context.queryClient.fetchQuery(
-      fetchPractices
+      fetchPractices,
     )) as Practice[]
     return { practices }
   },
@@ -20,7 +20,7 @@ export function RouteComponent() {
 
   return (
     <motion.div>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
         {practices ? (
           practices.map((practice, index) => (
             <StartPracticeCard
@@ -34,6 +34,12 @@ export function RouteComponent() {
             <p>No practice available</p>
           </div>
         )}
+      </div>
+
+      <div className='mt-8'>
+        <p className='text-center text-muted-foreground/80 text-sm font-semibold'>
+          Select a mode to begin your daily practice
+        </p>
       </div>
     </motion.div>
   )
