@@ -543,7 +543,7 @@ Always remove `SSH` at `0.0.0.0` out of `Security Group Inbound Rules`.
 2. User's(e.g `root` or `guddy`) `Public Key` will be in the Server's Authorized_Keys and the User's(e.g `root` or `guddy`) `Private Key` will be in GitHub Secrets. 
 3. For normal local machine `SSH`, the User's `Public Key` will be added the the Server's `/$USER/.ssh/authorized_keys` file, so that the machines's `Private Key` unlocks the `Public Key` in the Server.
 
-### SETTING UP AN OFFCIAL/CUSTOM MAIL FOR CLARIOLANE
+### SETTING UP AN OFFICIAL/CUSTOM MAIL FOR CLARIOLANE
 Choosing the right email addresses for Clariolane is a great step toward building a professional brand.
 So we need an official/corporate/custom private mail for `info` and `support` purposes.
 1. `Use a Custom Domain:` Avoid using `clariolane@gmail.com`. Having `@clariolane.com` instantly builds trust with customers.
