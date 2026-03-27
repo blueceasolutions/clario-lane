@@ -8,7 +8,7 @@ export const fetchPractices = queryOptions({
   staleTime: "static",
   queryFn: async (): Promise<Practice[] | null> => {
     const { data } = await supabaseService.sp.functions.invoke(
-      "/practice",
+      "practice",
       {
         method: "GET",
       },

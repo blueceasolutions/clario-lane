@@ -1,7 +1,7 @@
-import { cors } from "npm:hono/cors";
+import { cors } from 'hono/cors'
 
 export const corsMiddleware = cors({
-  origin: "*",
-  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowHeaders: ["authorization", "x-client-info", "apikey", "content-type"],
-});
+  origin: '*',
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['authorization', 'x-client-info', 'apikey', 'content-type'],
+})
