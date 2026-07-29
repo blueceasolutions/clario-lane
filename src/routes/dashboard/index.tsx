@@ -21,7 +21,7 @@ export const Route = createFileRoute('/dashboard/')({
   pendingComponent: OverviewPending,
 })
 
-export function RouteComponent() {
+function RouteComponent() {
   const { data: userProfile } = useQuery(fetchUserProfile)
   const { data } = useQuery(fetchPracticeSessions(userProfile?.id))
 
@@ -97,7 +97,7 @@ export function RouteComponent() {
       )}
 
       {/* Hero Banner */}
-      <div className='relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 p-8 text-white shadow-lg'>
+      <div className='relative overflow-hidden rounded-2xl bg-linear-to-r from-purple-600 to-indigo-600 p-8 text-white shadow-lg'>
         <div className='relative z-10 flex flex-col md:flex-row items-center justify-between gap-6'>
           <div className='space-y-2 text-center md:text-left'>
             <h2 className='text-3xl font-bold tracking-tight'>

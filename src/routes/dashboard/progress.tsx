@@ -25,7 +25,7 @@ export const Route = createFileRoute('/dashboard/progress')({
   component: RouteComponent,
 })
 
-export function RouteComponent() {
+function RouteComponent() {
   const { data: userProfile, isLoading } = useQuery(fetchUserProfile)
 
   const { data: sessions } = useQuery(
@@ -36,7 +36,7 @@ export function RouteComponent() {
 
   if (isLoading || !userProfile) {
     return (
-      <div className='flex items-center justify-center min-h-[400px]'>
+      <div className='flex items-center justify-center min-h-100'>
         <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
       </div>
     )
@@ -157,7 +157,7 @@ export function RouteComponent() {
         {!isLoadingGamification ? (
           <AchievementsGrid />
         ) : (
-          <div className='h-[300px] flex items-center justify-center border rounded-lg bg-gray-50 dark:bg-zinc-900/50 dark:border-zinc-800'>
+          <div className='h-75 flex items-center justify-center border rounded-lg bg-gray-50 dark:bg-zinc-900/50 dark:border-zinc-800'>
             <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
           </div>
         )}

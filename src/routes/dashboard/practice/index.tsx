@@ -15,7 +15,7 @@ export const Route = createFileRoute('/dashboard/practice/')({
   },
 })
 
-export function RouteComponent() {
+function RouteComponent() {
   const { practices } = Route.useLoaderData()
 
   return (

@@ -9,50 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
-import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
-import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
-import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
-import { Route as DashboardProgressRouteImport } from './routes/dashboard/progress'
-import { Route as DashboardPracticeRouteImport } from './routes/dashboard/practice'
-import { Route as DashboardChallengesRouteImport } from './routes/dashboard/challenges'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardChallengesRouteImport } from './routes/dashboard/challenges'
+import { Route as DashboardPracticeRouteImport } from './routes/dashboard/practice'
+import { Route as DashboardProgressRouteImport } from './routes/dashboard/progress'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
+import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as DashboardPracticeIndexRouteImport } from './routes/dashboard/practice/index'
-import { Route as DashboardPracticeWordchunkingPracticeIdRouteImport } from './routes/dashboard/practice/wordchunking/$practiceId'
-import { Route as DashboardPracticeTeleprompterPracticeIdRouteImport } from './routes/dashboard/practice/teleprompter/$practiceId'
 import { Route as DashboardPracticeSpeedreadingPracticeIdRouteImport } from './routes/dashboard/practice/speedreading/$practiceId'
+import { Route as DashboardPracticeTeleprompterPracticeIdRouteImport } from './routes/dashboard/practice/teleprompter/$practiceId'
+import { Route as DashboardPracticeWordchunkingPracticeIdRouteImport } from './routes/dashboard/practice/wordchunking/$practiceId'
 
-const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
-  id: '/terms-of-service',
-  path: '/terms-of-service',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -60,49 +40,34 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => OnboardingRoute,
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardRoute,
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
+  id: '/terms-of-service',
+  path: '/terms-of-service',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthRoute,
-} as any)
-const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardProgressRoute = DashboardProgressRouteImport.update({
-  id: '/progress',
-  path: '/progress',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardPracticeRoute = DashboardPracticeRouteImport.update({
-  id: '/practice',
-  path: '/practice',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardChallengesRoute = DashboardChallengesRouteImport.update({
-  id: '/challenges',
-  path: '/challenges',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
@@ -110,15 +75,50 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardChallengesRoute = DashboardChallengesRouteImport.update({
+  id: '/challenges',
+  path: '/challenges',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPracticeRoute = DashboardPracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardProgressRoute = DashboardProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OnboardingRoute,
+} as any)
 const DashboardPracticeIndexRoute = DashboardPracticeIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardPracticeRoute,
 } as any)
-const DashboardPracticeWordchunkingPracticeIdRoute =
-  DashboardPracticeWordchunkingPracticeIdRouteImport.update({
-    id: '/wordchunking/$practiceId',
-    path: '/wordchunking/$practiceId',
+const DashboardPracticeSpeedreadingPracticeIdRoute =
+  DashboardPracticeSpeedreadingPracticeIdRouteImport.update({
+    id: '/speedreading/$practiceId',
+    path: '/speedreading/$practiceId',
     getParentRoute: () => DashboardPracticeRoute,
   } as any)
 const DashboardPracticeTeleprompterPracticeIdRoute =
@@ -127,10 +127,10 @@ const DashboardPracticeTeleprompterPracticeIdRoute =
     path: '/teleprompter/$practiceId',
     getParentRoute: () => DashboardPracticeRoute,
   } as any)
-const DashboardPracticeSpeedreadingPracticeIdRoute =
-  DashboardPracticeSpeedreadingPracticeIdRouteImport.update({
-    id: '/speedreading/$practiceId',
-    path: '/speedreading/$practiceId',
+const DashboardPracticeWordchunkingPracticeIdRoute =
+  DashboardPracticeWordchunkingPracticeIdRouteImport.update({
+    id: '/wordchunking/$practiceId',
+    path: '/wordchunking/$practiceId',
     getParentRoute: () => DashboardPracticeRoute,
   } as any)
 
@@ -274,39 +274,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms-of-service': {
-      id: '/terms-of-service'
-      path: '/terms-of-service'
-      fullPath: '/terms-of-service'
-      preLoaderRoute: typeof TermsOfServiceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy-policy': {
-      id: '/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof PrivacyPolicyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -316,67 +288,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/onboarding/': {
-      id: '/onboarding/'
-      path: '/'
-      fullPath: '/onboarding/'
-      preLoaderRoute: typeof OnboardingIndexRouteImport
-      parentRoute: typeof OnboardingRoute
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRoute
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms-of-service': {
+      id: '/terms-of-service'
+      path: '/terms-of-service'
+      fullPath: '/terms-of-service'
+      preLoaderRoute: typeof TermsOfServiceRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/': {
       id: '/auth/'
       path: '/'
       fullPath: '/auth/'
       preLoaderRoute: typeof AuthIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/dashboard/settings': {
-      id: '/dashboard/settings'
-      path: '/settings'
-      fullPath: '/dashboard/settings'
-      preLoaderRoute: typeof DashboardSettingsRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/progress': {
-      id: '/dashboard/progress'
-      path: '/progress'
-      fullPath: '/dashboard/progress'
-      preLoaderRoute: typeof DashboardProgressRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/practice': {
-      id: '/dashboard/practice'
-      path: '/practice'
-      fullPath: '/dashboard/practice'
-      preLoaderRoute: typeof DashboardPracticeRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/challenges': {
-      id: '/dashboard/challenges'
-      path: '/challenges'
-      fullPath: '/dashboard/challenges'
-      preLoaderRoute: typeof DashboardChallengesRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
       parentRoute: typeof AuthRoute
     }
     '/auth/forgot-password': {
@@ -386,6 +337,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/challenges': {
+      id: '/dashboard/challenges'
+      path: '/challenges'
+      fullPath: '/dashboard/challenges'
+      preLoaderRoute: typeof DashboardChallengesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/practice': {
+      id: '/dashboard/practice'
+      path: '/practice'
+      fullPath: '/dashboard/practice'
+      preLoaderRoute: typeof DashboardPracticeRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/progress': {
+      id: '/dashboard/progress'
+      path: '/progress'
+      fullPath: '/dashboard/progress'
+      preLoaderRoute: typeof DashboardProgressRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/onboarding/': {
+      id: '/onboarding/'
+      path: '/'
+      fullPath: '/onboarding/'
+      preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
     '/dashboard/practice/': {
       id: '/dashboard/practice/'
       path: '/'
@@ -393,11 +393,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPracticeIndexRouteImport
       parentRoute: typeof DashboardPracticeRoute
     }
-    '/dashboard/practice/wordchunking/$practiceId': {
-      id: '/dashboard/practice/wordchunking/$practiceId'
-      path: '/wordchunking/$practiceId'
-      fullPath: '/dashboard/practice/wordchunking/$practiceId'
-      preLoaderRoute: typeof DashboardPracticeWordchunkingPracticeIdRouteImport
+    '/dashboard/practice/speedreading/$practiceId': {
+      id: '/dashboard/practice/speedreading/$practiceId'
+      path: '/speedreading/$practiceId'
+      fullPath: '/dashboard/practice/speedreading/$practiceId'
+      preLoaderRoute: typeof DashboardPracticeSpeedreadingPracticeIdRouteImport
       parentRoute: typeof DashboardPracticeRoute
     }
     '/dashboard/practice/teleprompter/$practiceId': {
@@ -407,11 +407,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPracticeTeleprompterPracticeIdRouteImport
       parentRoute: typeof DashboardPracticeRoute
     }
-    '/dashboard/practice/speedreading/$practiceId': {
-      id: '/dashboard/practice/speedreading/$practiceId'
-      path: '/speedreading/$practiceId'
-      fullPath: '/dashboard/practice/speedreading/$practiceId'
-      preLoaderRoute: typeof DashboardPracticeSpeedreadingPracticeIdRouteImport
+    '/dashboard/practice/wordchunking/$practiceId': {
+      id: '/dashboard/practice/wordchunking/$practiceId'
+      path: '/wordchunking/$practiceId'
+      fullPath: '/dashboard/practice/wordchunking/$practiceId'
+      preLoaderRoute: typeof DashboardPracticeWordchunkingPracticeIdRouteImport
       parentRoute: typeof DashboardPracticeRoute
     }
   }

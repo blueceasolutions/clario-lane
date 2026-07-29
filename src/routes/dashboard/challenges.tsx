@@ -21,7 +21,7 @@ export const Route = createFileRoute('/dashboard/challenges')({
   component: RouteComponent,
 })
 
-export function RouteComponent() {
+function RouteComponent() {
   const { data: challenges } = useQuery(fetchChallenges)
 
   // Mock leaderboard data (keep for now as no backend endpoint)
