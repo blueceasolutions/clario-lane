@@ -75,7 +75,8 @@ Findings from a codebase audit on 2026-08-04. Each item includes the evidence fo
 
 - [ ] **28 occurrences of `: any` / `as any` in `src/`** despite `strict: true` in [tsconfig.app.json](tsconfig.app.json). Worth an audit pass to see which are load-bearing (e.g. third-party type gaps) vs. avoidable.
 
-- [ ] **Loosely-typed Hono handlers in edge functions.** [supabase/functions/practice/index.ts:1](supabase/functions/practice/index.ts#L1) opens with `// deno-lint-ignore-file no-explicit-any` and every route handler is typed `(c: any)`, discarding Hono's built-in request/response type safety.
+- [x] **Loosely-typed Hono handlers in edge functions.** [supabase/functions/practice/index.ts:1](supabase/functions/practice/index.ts#L1) opens with `// deno-lint-ignore-file no-explicit-any` and every route handler is typed `(c: any)`, discarding Hono's built-in request/response type safety.
+  **Done:** Gave the `Hono` instance a proper `Env` generic (`Variables: { supabase: SupabaseClient<Database>; user: User }`) matching what the auth middleware actually `c.set()`s, dropped every `(c: any)`/`(c: any, next: any)` annotation in favor of Hono's inference, and removed the now-unneeded `deno-lint-ignore-file no-explicit-any` pragma. `c.get("supabase")`/`c.get("user")` are now properly typed at every call site instead of `any`. Verified with `deno check`/`deno lint` (both clean, 0 errors). Checked the other five edge functions too — only `practice/index.ts` had this pattern; the rest already avoid explicit `any` on their handlers.
 
 ---
 

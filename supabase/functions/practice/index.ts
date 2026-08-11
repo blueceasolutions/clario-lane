@@ -1,13 +1,19 @@
-// deno-lint-ignore-file no-explicit-any
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { Hono } from "hono";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "../../supabase_types.ts";
 import { corsMiddleware } from "../_shared/cors-middleware.ts";
 import { logError } from "../_shared/log-error.ts";
 
-const app = new Hono();
+type Env = {
+  Variables: {
+    supabase: SupabaseClient<Database>;
+    user: User;
+  };
+};
+
+const app = new Hono<Env>();
 
 // Apply CORS middleware globally
 app.use("/*", corsMiddleware);
@@ -32,7 +38,7 @@ const sessionSchema = z.object({
 type SessionData = z.infer<typeof sessionSchema>;
 
 // Middleware to create request-scoped Supabase client
-app.use("/practice/*", async (c: any, next: any) => {
+app.use("/practice/*", async (c, next) => {
   const authHeader = c.req.header("Authorization");
 
   if (!authHeader) {
@@ -64,7 +70,7 @@ app.use("/practice/*", async (c: any, next: any) => {
 });
 
 // GET /practice - Get all exercises
-app.get("/practice", async (c: any) => {
+app.get("/practice", async (c) => {
   const supabaseClient = c.get("supabase");
   const user = c.get("user");
 
@@ -91,7 +97,7 @@ app.get("/practice", async (c: any) => {
 });
 
 // GET /practice/passage - Get a random passage
-app.get("/practice/passage", async (c: any) => {
+app.get("/practice/passage", async (c) => {
   const supabaseClient = c.get("supabase");
   const user = c.get("user");
 
@@ -143,7 +149,7 @@ app.get("/practice/passage", async (c: any) => {
 });
 
 // POST /practice/session - Create a session
-app.post("/practice/session", async (c: any) => {
+app.post("/practice/session", async (c) => {
   const supabaseClient = c.get("supabase");
   const user = c.get("user");
 
