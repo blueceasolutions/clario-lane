@@ -3,6 +3,7 @@ import { Hono } from 'hono'
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../../supabase_types.ts'
 import { corsMiddleware } from '../_shared/cors-middleware.ts'
+import { logError } from '../_shared/log-error.ts'
 import console from 'node:console'
 
 const app = new Hono()
@@ -69,7 +70,7 @@ app.get('/subscription/plans', async (c) => {
 
     return c.json(plan)
   } catch (error) {
-    console.error(error)
+    await logError(error, { function: 'subscription', step: 'list_plans' })
     return c.json([])
   }
 })
@@ -91,7 +92,10 @@ app.post('/subscription/initialize', async (c) => {
     const data = await response.json()
     return c.json(data)
   } catch (error) {
-    console.error('Error initializing subscription:', error)
+    await logError(error, {
+      function: 'subscription',
+      step: 'initialize_subscription',
+    })
     return c.json(
       { success: false, message: 'Failed to initialize subscription' },
       500,
@@ -144,7 +148,7 @@ app.post('/subscription/toggle', async (c) => {
       return c.json({ success: false, message: 'No subscription found' }, 404)
     }
 
-    const payload: any = subscriptionPayload[0].payload?.data
+    const payload: any = (subscriptionPayload[0].payload as any)?.data
 
     // Extract subscription code and token from payload
     // deno-lint-ignore no-explicit-any
@@ -152,9 +156,9 @@ app.post('/subscription/toggle', async (c) => {
     const email_token = payload.email_token
 
     if (!subscriptionCode || !email_token) {
-      console.error(
-        'Missing subscription code or email token in payload',
-        payload,
+      await logError(
+        new Error('Missing subscription code or email token in payload'),
+        { function: 'subscription', step: 'toggle_subscription', userId: user.id },
       )
       return c.json(
         {
@@ -197,7 +201,7 @@ app.post('/subscription/toggle', async (c) => {
 
     return c.json({ success: true, message: successMessage })
   } catch (error) {
-    console.error('Error cancelling subscription:', error)
+    await logError(error, { function: 'subscription', step: 'toggle_subscription' })
     if (error instanceof Error) {
       return c.json({ success: false, message: error.message }, 500)
     }
@@ -247,7 +251,7 @@ app.get('/subscription/next-subscription-date', async (c) => {
       return c.json({ success: true, message: 'No subscription found' }, 200)
     }
 
-    const payload: any = data[0].payload?.data
+    const payload: any = (data[0].payload as any)?.data
     const nextPaymentDate = payload?.next_payment_date
 
     return c.json({
@@ -256,7 +260,10 @@ app.get('/subscription/next-subscription-date', async (c) => {
       data: { nextPaymentDate },
     })
   } catch (error) {
-    console.error('Error checking subscription health:', error)
+    await logError(error, {
+      function: 'subscription',
+      step: 'check_subscription_health',
+    })
     return c.json(
       { success: false, message: 'Failed to check subscription health' },
       500,

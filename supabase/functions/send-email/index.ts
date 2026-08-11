@@ -1,6 +1,7 @@
 import '@supabase/functions-js/edge-runtime.d.ts'
 import { Hono } from 'hono'
 import { corsMiddleware } from '../_shared/cors-middleware.ts'
+import { logError } from '../_shared/log-error.ts'
 import {
   getFeedbackSubmittedEmail,
   getPasswordChangedEmail,
@@ -87,15 +88,19 @@ app.post('/send-email', async (c) => {
     })
 
     if (!res.ok) {
-      const error = await res.text()
-      console.error('Resend API Error:', error)
+      const errorText = await res.text()
+      await logError(new Error(`Resend API error: ${errorText}`), {
+        function: 'send-email',
+        step: 'call_resend_api',
+        emailType: type,
+      })
       return c.json({ success: false, message: 'Failed to send email' }, 500)
     }
 
     const result = await res.json()
     return c.json({ success: true, id: result.id })
   } catch (error) {
-    console.error('Error sending email:', error)
+    await logError(error, { function: 'send-email', step: 'send_email' })
     return c.json({ success: false, message: 'Internal server error' }, 500)
   }
 })

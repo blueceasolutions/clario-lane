@@ -1,5 +1,7 @@
 {
   "imports": {
-    "hono": "jsr:@hono/hono"
+    "hono": "jsr:@hono/hono",
+    "@sentry/deno": "npm:@sentry/deno@^8",
+    "hono/cors": "jsr:@hono/hono/cors"
   }
 }

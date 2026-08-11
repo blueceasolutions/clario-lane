@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { JSDOM } from "jsdom";
 import DOMPurify from "dompurify";
 import { corsMiddleware } from "../_shared/cors-middleware.ts";
+import { logError } from "../_shared/log-error.ts";
 import type { Database } from "../../supabase_types.ts";
 
 const app = new Hono();
@@ -154,6 +155,7 @@ app.get("/feedback", async (c) => {
       });
     }
   } catch (error) {
+    await logError(error, { function: "feedback", step: "list_feedback" });
     const message = error instanceof Error ? error.message : "Unknown error";
     return c.json({ error: message }, 400);
   }
@@ -181,6 +183,11 @@ app.get("/feedback/:id", async (c) => {
 
     return c.json({ ...feedback, user });
   } catch (error) {
+    await logError(error, {
+      function: "feedback",
+      step: "get_feedback_by_id",
+      feedbackId: c.req.param("id"),
+    });
     const message = error instanceof Error ? error.message : "Unknown error";
     return c.json({ error: message }, 400);
   }
@@ -206,6 +213,7 @@ app.post("/feedback", async (c) => {
     if (error) throw error;
     return c.json(data, 201);
   } catch (error) {
+    await logError(error, { function: "feedback", step: "create_feedback" });
     const message = error instanceof Error ? error.message : "Unknown error";
     return c.json({ error: message }, 400);
   }
@@ -236,6 +244,7 @@ app.put("/feedback", async (c) => {
     if (error) throw error;
     return c.json(data);
   } catch (error) {
+    await logError(error, { function: "feedback", step: "update_feedback" });
     const message = error instanceof Error ? error.message : "Unknown error";
     return c.json({ error: message }, 400);
   }
@@ -257,6 +266,7 @@ app.delete("/feedback", async (c) => {
     if (error) throw error;
     return c.json({ message: "Deleted successfully" });
   } catch (error) {
+    await logError(error, { function: "feedback", step: "delete_feedback" });
     const message = error instanceof Error ? error.message : "Unknown error";
     return c.json({ error: message }, 400);
   }

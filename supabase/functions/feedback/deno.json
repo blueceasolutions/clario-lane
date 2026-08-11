@@ -4,6 +4,8 @@
     "hono": "jsr:@hono/hono",
     "@supabase/supabase-js": "npm:@supabase/supabase-js@^2.39.7",
     "jsdom": "npm:jsdom@^24.0.0",
-    "dompurify": "npm:dompurify@^3.0.9"
+    "dompurify": "npm:dompurify@^3.0.9",
+    "@sentry/deno": "npm:@sentry/deno@^8",
+    "hono/cors": "jsr:@hono/hono/cors"
   }
 }

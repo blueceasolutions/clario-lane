@@ -17,9 +17,10 @@ Findings from a codebase audit on 2026-08-04. Each item includes the evidence fo
   **Recommendation:** Replace with a single bulk upsert (SQL `INSERT ... ON CONFLICT` from a CTE/JOIN across all quests at once), ideally folded into the same transactional RPC from the item above.
   **Done:** Folded into `record_practice_session()` above — a single `INSERT ... SELECT ... ON CONFLICT` over a `quest_progress` CTE joins all quests against `user_quests` in one statement instead of looping.
 
-- [ ] **Errors are swallowed into a generic message with no observability.** (all `supabase/functions/*/index.ts` catch blocks, e.g. `{ success: false, message: "Something went wrong" }`)
+- [x] **Errors are swallowed into a generic message with no observability.** (all `supabase/functions/*/index.ts` catch blocks, e.g. `{ success: false, message: "Something went wrong" }`)
   Only `console.error` is used — there's no error-tracking/APM integration anywhere in the repo (no Sentry, no structured logging). When something breaks in production (e.g. the saga above fails halfway), there's no way to know which step failed or for which user without manually digging through Supabase function logs.
   **Recommendation:** Add a lightweight error-tracking integration (e.g. Sentry's Deno/edge SDK) and include enough context (user id, step name) in logged errors to debug production incidents.
+  **Done:** Added [supabase/functions/_shared/log-error.ts](supabase/functions/_shared/log-error.ts) and wired it into every catch block across all six edge functions. It always emits one structured JSON line (function, step, user id where available, message, stack) to `console.error` — searchable in the Supabase log explorer today, no setup required — and additionally reports to Sentry once a `SENTRY_DSN` secret is set (`supabase secrets set SENTRY_DSN=...`), via a dynamically-imported `npm:@sentry/deno@^8` so nothing changes for any function until that secret exists. While wiring this up and verifying every function still type-checks (`deno check`), also found and fixed: a pre-existing `hono/cors` import-map gap that broke `deno check` for every function (added `"hono/cors": "jsr:@hono/hono/cors"` to each `deno.json`), and two pre-existing type errors in `supabase/functions/subscription/index.ts` unrelated to this change.
 
 ---
 

@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "../../supabase_types.ts";
 import { corsMiddleware } from "../_shared/cors-middleware.ts";
+import { logError } from "../_shared/log-error.ts";
 
 const app = new Hono();
 
@@ -34,14 +35,20 @@ async function invokeSendEmail(type: string, email: string, data: any) {
     });
 
     if (!response.ok) {
-      console.error(
-        `Failed to send email: ${response.status} ${await response.text()}`,
+      await logError(
+        new Error(`send-email responded ${response.status}: ${await response.text()}`),
+        { function: "paystack-webhook", step: "invoke_send_email", type, email },
       );
     } else {
       console.log("Email sent successfully");
     }
   } catch (err) {
-    console.error("Error invoking send-email:", err);
+    await logError(err, {
+      function: "paystack-webhook",
+      step: "invoke_send_email",
+      type,
+      email,
+    });
   }
 }
 
@@ -71,7 +78,10 @@ app.post("/paystack-webhook", async (c) => {
       }).then((res) => {
         console.log("Webhook response:", res);
       }).catch((err) => {
-        console.error("Error invoking webhook:", err);
+        logError(err, {
+          function: "paystack-webhook",
+          step: "forward_affiliate_webhook",
+        });
       });
     }
 
@@ -173,7 +183,7 @@ app.post("/paystack-webhook", async (c) => {
 
     return c.json({ success: true, message: "Webhook processed" }, 200);
   } catch (error) {
-    console.error("Webhook error:", error);
+    await logError(error, { function: "paystack-webhook", step: "handle_webhook" });
     return c.json({ success: false, message: "Internal server error" }, 500);
   }
 });

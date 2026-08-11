@@ -3,6 +3,8 @@
     "@supabase/functions-js/edge-runtime.d.ts": "jsr:@supabase/functions-js/edge-runtime.d.ts",
     "hono": "jsr:@hono/hono",
     "@supabase/supabase-js": "npm:@supabase/supabase-js@^2.39.7",
-    "zod": "npm:zod@^3.21.4"
+    "zod": "npm:zod@^3.21.4",
+    "@sentry/deno": "npm:@sentry/deno@^8",
+    "hono/cors": "jsr:@hono/hono/cors"
   }
 }

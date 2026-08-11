@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "../../supabase_types.ts";
 import { corsMiddleware } from "../_shared/cors-middleware.ts";
+import { logError } from "../_shared/log-error.ts";
 
 const app = new Hono();
 
@@ -65,6 +66,7 @@ app.use("/practice/*", async (c: any, next: any) => {
 // GET /practice - Get all exercises
 app.get("/practice", async (c: any) => {
   const supabaseClient = c.get("supabase");
+  const user = c.get("user");
 
   try {
     const { data, error } = await supabaseClient.from("exercises").select("*");
@@ -76,7 +78,11 @@ app.get("/practice", async (c: any) => {
       message: "Successfully retrieved",
     });
   } catch (error) {
-    console.error(error);
+    await logError(error, {
+      function: "practice",
+      step: "list_exercises",
+      userId: user?.id,
+    });
     return c.json(
       { success: false, data: null, message: "Failed to retrieve exercises" },
       500,
@@ -87,6 +93,7 @@ app.get("/practice", async (c: any) => {
 // GET /practice/passage - Get a random passage
 app.get("/practice/passage", async (c: any) => {
   const supabaseClient = c.get("supabase");
+  const user = c.get("user");
 
   try {
     const { data: passageIds, error } = await supabaseClient
@@ -119,7 +126,11 @@ app.get("/practice/passage", async (c: any) => {
       message: "Successfully retrieved passage",
     });
   } catch (error) {
-    console.error("Error fetching passage:", error);
+    await logError(error, {
+      function: "practice",
+      step: "get_random_passage",
+      userId: user?.id,
+    });
     const message = error instanceof Error
       ? `Error fetching passage: ${error.message}`
       : "Error fetching passage";
@@ -198,9 +209,10 @@ app.post("/practice/session", async (c: any) => {
       },
     });
   } catch (error) {
-    console.error("Failed to record practice session", {
-      user_id: user.id,
-      error,
+    await logError(error, {
+      function: "practice",
+      step: "record_session",
+      userId: user?.id,
     });
     return c.json(
       { success: false, message: "Something went wrong" },
