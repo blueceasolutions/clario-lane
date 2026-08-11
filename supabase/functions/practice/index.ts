@@ -96,18 +96,44 @@ app.get("/practice", async (c) => {
   }
 });
 
-// GET /practice/passage - Get a random passage
+// GET /practice/passage - Get a random passage, preferring the user's
+// chosen content types (falling back to the full pool if they have no
+// preference set, or nothing matches it)
 app.get("/practice/passage", async (c) => {
   const supabaseClient = c.get("supabase");
   const user = c.get("user");
 
   try {
-    const { data: passageIds, error } = await supabaseClient
-      .from("passages")
-      .select("id");
+    const { data: userRow } = await supabaseClient
+      .from("users")
+      .select("content_type")
+      .eq("id", user.id)
+      .single();
 
-    if (error) {
-      throw new Error(error.message);
+    const preferredTags = (userRow?.content_type ?? []).filter(
+      (tag) => tag && tag !== "mixed",
+    );
+
+    let passageIds: Array<{ id: string }> | null = null;
+
+    if (preferredTags.length > 0) {
+      const { data, error } = await supabaseClient
+        .from("passages")
+        .select("id")
+        .overlaps("tags", preferredTags);
+
+      if (error) throw new Error(error.message);
+      passageIds = data;
+    }
+
+    // No preference, or nothing matched it: fall back to the full pool
+    if (!passageIds || passageIds.length === 0) {
+      const { data, error } = await supabaseClient
+        .from("passages")
+        .select("id");
+
+      if (error) throw new Error(error.message);
+      passageIds = data;
     }
 
     if (!passageIds || passageIds.length === 0) {

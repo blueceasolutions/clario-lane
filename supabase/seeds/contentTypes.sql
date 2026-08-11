@@ -1,5 +1,5 @@
 insert into content_types (content, description) values
-('fictions', 'fantasy, mystery, romance, thriller, sci-fi etc.'),
+('fiction', 'fantasy, mystery, romance, thriller, sci-fi etc.'),
 ('non-fiction', 'biography, self-help, cookbooks, history books'),
 ('science', 'physics, biology, chemistry, astronomy'),
 ('history', 'world wars, ancient civilizations, medieval times'),

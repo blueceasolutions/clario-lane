@@ -521,8 +521,8 @@ export type Database = {
           badges: string | null;
           baseline_comprehension: number | null;
           baseline_wpm: number | null;
-          challenges: string | null;
-          content_type: string | null;
+          challenges: string[] | null;
+          content_type: string[] | null;
           created_at: string | null;
           current_comprehension_score: number | null;
           current_wpm: number | null;
@@ -530,7 +530,7 @@ export type Database = {
           display_settings: Json | null;
           email: string;
           focus_score: number | null;
-          goals: string | null;
+          goals: string[] | null;
           id: string;
           is_subscribed: boolean | null;
           last_active_date: string | null;
@@ -551,8 +551,8 @@ export type Database = {
           badges?: string | null;
           baseline_comprehension?: number | null;
           baseline_wpm?: number | null;
-          challenges?: string | null;
-          content_type?: string | null;
+          challenges?: string[] | null;
+          content_type?: string[] | null;
           created_at?: string | null;
           current_comprehension_score?: number | null;
           current_wpm?: number | null;
@@ -560,7 +560,7 @@ export type Database = {
           display_settings?: Json | null;
           email: string;
           focus_score?: number | null;
-          goals?: string | null;
+          goals?: string[] | null;
           id: string;
           is_subscribed?: boolean | null;
           last_active_date?: string | null;
@@ -581,8 +581,8 @@ export type Database = {
           badges?: string | null;
           baseline_comprehension?: number | null;
           baseline_wpm?: number | null;
-          challenges?: string | null;
-          content_type?: string | null;
+          challenges?: string[] | null;
+          content_type?: string[] | null;
           created_at?: string | null;
           current_comprehension_score?: number | null;
           current_wpm?: number | null;
@@ -590,7 +590,7 @@ export type Database = {
           display_settings?: Json | null;
           email?: string;
           focus_score?: number | null;
-          goals?: string | null;
+          goals?: string[] | null;
           id?: string;
           is_subscribed?: boolean | null;
           last_active_date?: string | null;

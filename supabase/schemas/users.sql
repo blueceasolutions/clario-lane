@@ -9,9 +9,9 @@ create table if not exists users (
     next_wpm numeric default 0,
     total_sessions numeric default 0,
     total_time_spent numeric default 0, -- in seconds
-    goals text default '{}',
-    content_type text default 'mixed', -- e.g., 'fiction', 'non-fiction', 'mixed'
-    challenges text default '{}', -- JSON array of challenge IDs
+    goals text[] default '{}', -- onboarding goal selections
+    content_type text[] default '{}', -- preferred passage categories, matched against passages.tags
+    challenges text[] default '{}', -- onboarding challenge selections
     current_comprehension_score numeric default 0,
     onboarding_completed boolean default false,
     achievements text default '{}', -- JSON array of achievement IDs
