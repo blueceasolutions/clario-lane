@@ -51,11 +51,12 @@ Findings from a codebase audit on 2026-08-04. Each item includes the evidence fo
 
 ## 🟡 Database & Migrations Hygiene
 
-- [ ] **8 of 37 migrations are "fix" migrations correcting earlier ones**, several touching the *same* bug repeatedly:
+- [x] **8 of 37 migrations are "fix" migrations correcting earlier ones**, several touching the *same* bug repeatedly:
   - `achievement_id` ambiguity fixed 3 separate times: `20251203062637_fix_achievement_permissions.sql`, `20251208000000_fix_ambiguous_achievement_id.sql`, `20251212065703_fix_achievement_id_ambiguity_again.sql`, `20260202180000_fix_ambiguous_achievement_id_final.sql`
   - `user_stats` RLS policy added/fixed/restored/re-fixed 4 times across `20251203230000`, `20251208000001`, `20251212065251`, `20260202170000`
   This pattern strongly suggests migrations are being written and pushed directly without a local test pass first.
   **Recommendation:** Adopt the `supabase start` local dev loop + `supabase db diff` before pushing any migration touching RLS or function signatures. The repo already has `supabase/schemas/` as a declarative source of truth — lean into the declarative-schema + diff workflow fully rather than hand-writing incremental patches. Now that the schema has stabilized, consider a one-time squash of the migration history.
+  **Done:** Added [supabase/README.md](supabase/README.md) documenting the `schemas/` → `supabase db diff` → local `db reset` loop, and committed the `supabase:start`/`supabase:stop`/`supabase:reset`/`dev:supabase` npm scripts that were already sitting uncommitted in `package.json` (they're exactly this workflow — just wired them up properly). This session's own DB work leaned on exactly this: `supabase/schemas/` had also drifted from the actual migration history independent of this TODO item (`z_gamification_functions.sql` still had the pre-fix ambiguous `achievement_id` signature, silently reintroducing the bug in a fresh `db diff`/rebuild even though every real migration had long since fixed it) — see the `record_practice_session` commit. **Not done:** the one-time migration squash. That's explicitly a "consider," and doing it safely means coordinating against whatever's actually recorded in `supabase_migrations.schema_migrations` on the deployed project, which isn't something I can verify without a live project connection (no Docker/linked project available in this environment) — left as a deliberate follow-up in the README rather than guessed at.
 
 ---
 
