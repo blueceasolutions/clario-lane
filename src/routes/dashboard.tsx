@@ -1,10 +1,25 @@
-import { DashboardPending, LevelUpModal, VictoryModal } from '@/components'
+import { lazy, Suspense } from 'react'
+import { DashboardPending } from '@/components'
 import { SeoHead } from '@/components/shared'
 
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { AnimatePresence } from 'motion/react'
 import { fetchNextSubscriptionDate } from '@/integration'
 import { useGamificationStore } from '@/store/gamification/useGamificationStore'
+
+// canvas-confetti pulls a non-trivial vendor chunk in; lazy-loading these
+// modals keeps it out of every page's initial bundle, loading only once a
+// dashboard route actually mounts.
+const LevelUpModal = lazy(() =>
+  import('@/components/gamification/LevelUpModal').then((m) => ({
+    default: m.LevelUpModal,
+  })),
+)
+const VictoryModal = lazy(() =>
+  import('@/components/gamification/VictoryModal').then((m) => ({
+    default: m.VictoryModal,
+  })),
+)
 
 export const Route = createFileRoute('/dashboard')({
   component: RouteComponent,
@@ -55,18 +70,20 @@ function RouteComponent() {
       {/* <Copyright /> */}
 
       {/* Global Gamification Modals */}
-      {victoryModal.data && (
-        <VictoryModal
-          isOpen={victoryModal.isOpen}
-          onClose={closeVictoryModal}
-          {...victoryModal.data}
+      <Suspense fallback={null}>
+        {victoryModal.data && (
+          <VictoryModal
+            isOpen={victoryModal.isOpen}
+            onClose={closeVictoryModal}
+            {...victoryModal.data}
+          />
+        )}
+        <LevelUpModal
+          isOpen={levelUpModal.isOpen}
+          onClose={closeLevelUpModal}
+          newLevel={levelUpModal.newLevel}
         />
-      )}
-      <LevelUpModal
-        isOpen={levelUpModal.isOpen}
-        onClose={closeLevelUpModal}
-        newLevel={levelUpModal.newLevel}
-      />
+      </Suspense>
     </div>
   )
 }

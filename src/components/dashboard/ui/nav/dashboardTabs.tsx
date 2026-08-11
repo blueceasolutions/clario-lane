@@ -1,5 +1,5 @@
 import { Link, useLocation } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { BookOpen, TrendingUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 

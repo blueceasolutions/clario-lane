@@ -1,4 +1,13 @@
-import { Button, Card, ConfettiComponent } from '@/components'
+import { lazy, Suspense } from 'react'
+import { Button, Card } from '@/components'
+
+// react-confetti-boom pulls a non-trivial vendor chunk in; only load it for
+// this exercise-results screen instead of every page's initial bundle.
+const ConfettiComponent = lazy(() =>
+  import('@/components/ui/confetti').then((m) => ({
+    default: m.ConfettiComponent,
+  })),
+)
 import { TrendingDown, TrendingUp } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { usePracticeStore } from '@/store'
@@ -116,10 +125,12 @@ export const Results = () => {
         </Card>
       </div>
 
-      <ConfettiComponent
-        particleCount={comprehension * 6}
-        effectCount={Math.round(comprehension / 20)}
-      />
+      <Suspense fallback={null}>
+        <ConfettiComponent
+          particleCount={comprehension * 6}
+          effectCount={Math.round(comprehension / 20)}
+        />
+      </Suspense>
     </>
   )
 }

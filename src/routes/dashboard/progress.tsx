@@ -1,13 +1,25 @@
+import { lazy, Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import {
   StatsOverview,
-  ProgressCharts,
-  ActivityChart,
   MilestonesCard,
 } from '@/components/dashboard/progress'
 import { SeoHead } from '@/components/shared'
 import { AchievementsGrid } from '@/components/gamification'
 import { useGamification } from '@/hooks'
+
+// recharts pulls a large vendor chunk in; only load it once this route
+// actually renders instead of on every page's initial bundle.
+const ProgressCharts = lazy(() =>
+  import('@/components/dashboard/progress/ProgressCharts').then((m) => ({
+    default: m.ProgressCharts,
+  })),
+)
+const ActivityChart = lazy(() =>
+  import('@/components/dashboard/progress/ActivityChart').then((m) => ({
+    default: m.ActivityChart,
+  })),
+)
 
 import { motion } from 'motion/react'
 import { useQuery } from '@tanstack/react-query'
@@ -147,10 +159,12 @@ function RouteComponent() {
       <StatsOverview userProfile={userProfile} />
 
       {/* Charts */}
-      <ProgressCharts weeklyProgress={weeklyProgress} />
+      <Suspense fallback={null}>
+        <ProgressCharts weeklyProgress={weeklyProgress} />
 
-      {/* Session Activity */}
-      <ActivityChart sessionData={sessionData} />
+        {/* Session Activity */}
+        <ActivityChart sessionData={sessionData} />
+      </Suspense>
 
       <div className='grid md:grid-cols-2 gap-6'>
         {/* Badges/Achievements */}

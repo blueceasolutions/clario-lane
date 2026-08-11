@@ -22,7 +22,10 @@ export * from "./badge";
 export * from "./avatar";
 export * from "./pending-page";
 export * from "./slider";
-export * from "./confetti";
+// NOT re-exported: "./confetti" (react-confetti-boom). Barrel-exporting it
+// pulls that vendor code into every page that imports anything from
+// '@/components', including the public landing page. Import directly from
+// '@/components/ui/confetti', ideally via React.lazy().
 export * from "./profile-menu";
 export * from "./dropdown-menu";
 export * from "./theme-toggle";

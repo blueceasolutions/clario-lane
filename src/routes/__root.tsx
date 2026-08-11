@@ -5,9 +5,6 @@ import {
   useLocation,
   useRouter,
 } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
 import { QueryClient } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import Navbar from '@/components/navbar'
@@ -15,14 +12,17 @@ import { AuthProvider } from '@/context/auth-provider'
 import { HelmetProvider } from 'react-helmet-async'
 import { SeoHead } from '@/components/shared'
 
-import {
-  Footer,
-  SettingsProvider,
-  FloatingActionButton,
-  RootPending,
-  Copyright,
-  ReferralModal,
-} from '@/components'
+// Importing directly rather than from the '@/components' barrel: that
+// barrel's `export *` chain (via ./dashboard and ./gamification) transitively
+// reaches recharts- and canvas-confetti-using components. __root.tsx wraps
+// every route including the public landing page, so pulling those in here
+// put ~450KB of chart/confetti vendor code in the eagerly-loaded bundle.
+import { Footer } from '@/components/footer'
+import { SettingsProvider } from '@/components/theme/settings-provider'
+import { FloatingActionButton } from '@/components/feedback/FloatingActionButton'
+import { RootPending } from '@/components/Skeletons/root-pending'
+import { Copyright } from '@/components/copyright'
+import { ReferralModal } from '@/components/referral-modal'
 import type { Session } from '@supabase/supabase-js'
 import type { UserTable } from '@/types'
 import {
@@ -38,6 +38,25 @@ type RootRouteContext = {
 }
 
 import { fetchSession, fetchUserProfile } from '@/integration'
+
+// Dev-only tooling: import.meta.env.PROD is a compile-time constant, so
+// production builds dead-code-eliminate the dynamic import() entirely
+// rather than relying on these packages' own NODE_ENV no-op behavior.
+const TanStackRouterDevtools = import.meta.env.PROD
+  ? () => null
+  : React.lazy(() =>
+      import('@tanstack/react-router-devtools').then((res) => ({
+        default: res.TanStackRouterDevtools,
+      })),
+    )
+
+const ReactQueryDevtools = import.meta.env.PROD
+  ? () => null
+  : React.lazy(() =>
+      import('@tanstack/react-query-devtools').then((res) => ({
+        default: res.ReactQueryDevtools,
+      })),
+    )
 
 export const Route = createRootRouteWithContext<RootRouteContext>()({
   component: RootComponent,
@@ -152,8 +171,10 @@ function RootComponent() {
             {hideFooterRoutes ? <Copyright /> : <Footer />}
             <ReferralModal />
             <Toaster position='top-center' richColors />
-            <TanStackRouterDevtools position='bottom-left' />
-            <ReactQueryDevtools position='bottom' initialIsOpen={false} />
+            <React.Suspense fallback={null}>
+              <TanStackRouterDevtools position='bottom-left' />
+              <ReactQueryDevtools position='bottom' initialIsOpen={false} />
+            </React.Suspense>
           </SettingsProvider>
         </AuthProvider>
       </HelmetProvider>

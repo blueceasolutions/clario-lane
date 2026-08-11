@@ -2,5 +2,7 @@ export { DailyGoalRing } from "./DailyGoalRing";
 export { StreakCounter } from "./StreakCounter";
 export { LevelProgressBar } from "./LevelProgressBar";
 export * from "./AchievementsGrid";
-export * from "./VictoryModal";
-export * from "./LevelUpModal";
+// NOT re-exported: "./VictoryModal", "./LevelUpModal" (canvas-confetti).
+// Barrel-exporting them pulls that vendor code into every page that imports
+// anything from '@/components', including the public landing page. Import
+// directly from their own files, ideally via React.lazy().

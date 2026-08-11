@@ -1,6 +1,6 @@
+import { lazy, Suspense } from 'react'
 import {
   OverviewStats,
-  ProgressChart,
   GoalTrackerCard,
   OverviewPending,
   DailyGoalRing,
@@ -15,6 +15,14 @@ import { useClaimQuest, useGamification } from '@/hooks'
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import { fetchPracticeSessions, fetchUserProfile } from '@/integration/queries'
+
+// recharts pulls a large vendor chunk in; only load it once this route
+// actually renders instead of on every page's initial bundle.
+const ProgressChart = lazy(() =>
+  import('@/components/dashboard/overview/progress-chart').then((m) => ({
+    default: m.ProgressChart,
+  })),
+)
 
 export const Route = createFileRoute('/dashboard/')({
   component: RouteComponent,
@@ -122,12 +130,14 @@ function RouteComponent() {
         <div className='absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-black/10 rounded-full blur-3xl pointer-events-none' />
       </div>
       {/* Progress Chart */}
-      <ProgressChart
-        title='Reading speed'
-        xDataKey='wpm'
-        yDataKey='session'
-        progressData={readingSpeedData}
-      />
+      <Suspense fallback={null}>
+        <ProgressChart
+          title='Reading speed'
+          xDataKey='wpm'
+          yDataKey='session'
+          progressData={readingSpeedData}
+        />
+      </Suspense>
 
       <div className='grid md:grid-cols-2 gap-6'>
         {/* Today's Tasks */}

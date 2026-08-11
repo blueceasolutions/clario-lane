@@ -1,9 +1,17 @@
+import { lazy, Suspense } from 'react'
 import { Award, Sparkles, Target, TrendingUp, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
-import { ConfettiComponent } from '@/components/ui/confetti'
 import { useOnboardingFlow, useOnboardingStore } from '@/store'
 import { StepCard } from '../layout'
+
+// react-confetti-boom pulls a non-trivial vendor chunk in; only load it for
+// the one onboarding step that actually shows it.
+const ConfettiComponent = lazy(() =>
+  import('@/components/ui/confetti').then((m) => ({
+    default: m.ConfettiComponent,
+  })),
+)
 
 export function Results() {
   const onboarding = useOnboardingStore()
@@ -106,10 +114,12 @@ export function Results() {
         </div>
       </div>
 
-      <ConfettiComponent
-        particleCount={onboarding.baseline_comprehension! * 2}
-        effectCount={1}
-      />
+      <Suspense fallback={null}>
+        <ConfettiComponent
+          particleCount={onboarding.baseline_comprehension! * 2}
+          effectCount={1}
+        />
+      </Suspense>
     </>
   )
 }
