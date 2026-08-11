@@ -4,3 +4,5 @@ export * from "./constants";
 export * from "./currency-formatter";
 export * from "./badges";
 export * from "./getContinent";
+export * from "./practiceTiming";
+export * from "./adaptiveWpm";

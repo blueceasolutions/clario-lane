@@ -3,7 +3,7 @@ import { Button, Card } from '@/components'
 import { CheckCircle, XCircle } from 'lucide-react'
 import { usePracticeStore, useAppStore } from '@/store'
 import { useGamificationStore } from '@/store/gamification/useGamificationStore'
-import { PracticeStep, READING_SPEED_RANGE } from '@/lib'
+import { PracticeStep, calculateNextWpm } from '@/lib'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   fetchPassageKey,
@@ -120,23 +120,7 @@ export function ComprehensionQuiz() {
       const correctAnswers = answers.filter((a) => a).length
       const comprehension = (correctAnswers / questions.length) * 100
 
-      const tenPercent = Math.round(wpm * 0.1)
-      let nextWpm = wpm
-
-      if (comprehension >= 80) {
-        nextWpm = wpm + tenPercent
-      } else if (comprehension < 60) {
-        nextWpm = wpm - tenPercent
-      }
-
-      // Ensure we don't go below MIN or above MAX
-      if (nextWpm > READING_SPEED_RANGE.MAX) {
-        nextWpm = READING_SPEED_RANGE.MAX
-      } else if (nextWpm < READING_SPEED_RANGE.MIN) {
-        nextWpm = READING_SPEED_RANGE.MIN
-      }
-
-      const actualNextWpm = nextWpm
+      const actualNextWpm = calculateNextWpm(wpm, comprehension)
 
       const payload = {
         correctAnswers,

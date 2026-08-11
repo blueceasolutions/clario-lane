@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPassage } from "@/integration";
 import { usePracticeStore } from "@/store";
+import { elapsedProgressPercent, estimatedDurationSeconds, splitIntoWords } from "@/lib";
 
 export type TeleprompterReaderProps = {
   onPause?: () => void;
@@ -31,8 +32,8 @@ export const useTeleprompterReader = ({
   const { isLoading } = useQuery(fetchPassage);
 
   // Calculate total estimated duration based on WPM and word count
-  const wordCount = passage?.text?.split(/\s+/).length || 0;
-  const estimatedDuration = wordCount > 0 ? (wordCount / wpm) * 60 : 0;
+  const wordCount = splitIntoWords(passage?.text).length;
+  const estimatedDuration = estimatedDurationSeconds(wordCount, wpm);
 
   // Update estimated duration in store
   useEffect(() => {
@@ -50,10 +51,7 @@ export const useTeleprompterReader = ({
 
   // Calculate and update progress
   useEffect(() => {
-    const progress = estimatedDuration > 0
-      ? Math.min((elapsedTime / estimatedDuration) * 100, 100)
-      : 0;
-    setProgress(progress);
+    setProgress(elapsedProgressPercent(elapsedTime, estimatedDuration));
   }, [elapsedTime, estimatedDuration, setProgress]);
 
   // Set start time when starting

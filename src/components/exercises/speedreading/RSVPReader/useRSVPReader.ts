@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPassage } from "@/integration";
 import { usePracticeStore } from "@/store";
+import { advanceIndex, indexProgressPercent, msPerWord, splitIntoWords } from "@/lib";
 
 export type RSVPReaderProps = {
   onPause?: () => void;
@@ -32,9 +33,7 @@ export const useRSVPReader = ({ onPause }: RSVPReaderProps) => {
 
   // Split passage text into words
   useEffect(() => {
-    const wordArray = passage?.text?.split(/\s+/).filter((word) =>
-      word.length > 0
-    ) || [];
+    const wordArray = splitIntoWords(passage?.text);
     setWords(wordArray);
     setLoading(isLoading);
     setWordsRead(wordArray.length);
@@ -42,8 +41,7 @@ export const useRSVPReader = ({ onPause }: RSVPReaderProps) => {
 
   // Update progress based on current index
   useEffect(() => {
-    const progress = words.length > 0 ? (currentIndex / words.length) * 100 : 0;
-    setProgress(progress);
+    setProgress(indexProgressPercent(currentIndex, words.length));
   }, [currentIndex, words.length, setProgress]);
 
   // Set start time when playing starts
@@ -56,19 +54,13 @@ export const useRSVPReader = ({ onPause }: RSVPReaderProps) => {
   // Handle word progression and timer
   useEffect(() => {
     if (isPlaying) {
-      const msPerWord = (60 / wpm) * 1000;
-
       intervalRef.current = setInterval(() => {
         setCurrentIndex((prev) => {
-          const next = prev + 1;
-          // Stop playing when complete
-          if (next >= words.length) {
-            setIsPlaying(false);
-            return words.length; // Set to end
-          }
-          return next;
+          const { index, isComplete } = advanceIndex(prev, 1, words.length);
+          if (isComplete) setIsPlaying(false);
+          return index;
         });
-      }, msPerWord);
+      }, msPerWord(wpm));
 
       timerRef.current = setInterval(() => {
         setElapsedTime((prev) => prev + 0.1);

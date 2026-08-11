@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPassage } from "@/integration";
 import { usePracticeStore } from "@/store";
+import { advanceIndex, indexProgressPercent, msPerChunk, splitIntoWords } from "@/lib";
 
 export type WordChunkingReaderProps = {
   onPause?: () => void;
@@ -35,9 +36,7 @@ export const useWordChunkingReader = ({
 
   // Split passage text into words
   useEffect(() => {
-    const wordArray = passage?.text?.split(/\s+/).filter((word) =>
-      word.length > 0
-    ) || [];
+    const wordArray = splitIntoWords(passage?.text);
     setWords(wordArray);
     setLoading(isLoading);
     setWordsRead(wordArray.length);
@@ -45,8 +44,7 @@ export const useWordChunkingReader = ({
 
   // Update progress based on current index
   useEffect(() => {
-    const progress = words.length > 0 ? (currentIndex / words.length) * 100 : 0;
-    setProgress(progress);
+    setProgress(indexProgressPercent(currentIndex, words.length));
   }, [currentIndex, words.length, setProgress]);
 
   // Set start time when playing starts
@@ -59,21 +57,17 @@ export const useWordChunkingReader = ({
   // Handle chunk progression and timer (flash chunks, not individual words)
   useEffect(() => {
     if (isPlaying) {
-      const msPerWord = (60 / wpm) * 1000;
-      // Time to display each chunk = msPerWord * chunkSize
-      const msPerChunk = msPerWord * chunkSize;
-
       intervalRef.current = setInterval(() => {
         setCurrentIndex((prev) => {
-          const next = prev + chunkSize;
-          // Stop playing when complete
-          if (next >= words.length) {
-            setIsPlaying(false);
-            return words.length; // Set to end
-          }
-          return next;
+          const { index, isComplete } = advanceIndex(
+            prev,
+            chunkSize,
+            words.length,
+          );
+          if (isComplete) setIsPlaying(false);
+          return index;
         });
-      }, msPerChunk);
+      }, msPerChunk(wpm, chunkSize));
 
       timerRef.current = setInterval(() => {
         setElapsedTime((prev) => prev + 0.1);
