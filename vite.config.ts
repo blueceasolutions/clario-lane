@@ -44,7 +44,6 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
-        maximumFileSizeToCacheInBytes: 5000000, // Increased to 5MB to handle full-fidelity SVGs
       },
     }),
   ],
