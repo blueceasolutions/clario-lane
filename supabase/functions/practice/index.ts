@@ -30,37 +30,6 @@ const sessionSchema = z.object({
 
 type SessionData = z.infer<typeof sessionSchema>;
 
-function updateStreak(lastDate: string | null, currentStreak: number) {
-  const today = new Date();
-  const last = lastDate ? new Date(lastDate) : null;
-
-  const startOfToday = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-  );
-  const startOfLast = last
-    ? new Date(last.getFullYear(), last.getMonth(), last.getDate())
-    : null;
-
-  if (!last) {
-    return { streak: 1, date: startOfToday };
-  }
-
-  const diffDays = (startOfToday.getTime() - startOfLast!.getTime()) /
-    (1000 * 60 * 60 * 24);
-
-  if (diffDays === 0) {
-    return { streak: currentStreak, date: startOfToday };
-  }
-
-  if (diffDays === 1) {
-    return { streak: currentStreak + 1, date: startOfToday };
-  }
-
-  return { streak: 1, date: startOfToday };
-}
-
 // Middleware to create request-scoped Supabase client
 app.use("/practice/*", async (c: any, next: any) => {
   const authHeader = c.req.header("Authorization");
@@ -182,190 +151,57 @@ app.post("/practice/session", async (c: any) => {
 
     const vettedData: SessionData = validationResult.data;
 
-    const { data: userData, error } = await supabaseClient
-      .from("users")
-      .select("id, total_sessions, streak_days, last_active_date")
-      .eq("id", user.id)
-      .single();
-
-    if (error) throw error;
-    if (!userData) {
-      return c.json({ success: false, message: "User not found" }, 404);
-    }
-
-    // Get current user_stats
-    const { data: currentStats } = await supabaseClient
-      .from("user_stats")
-      .select("*")
-      .eq("user_id", user.id)
-      .single();
-
-    // Insert practice session
-    const res = await supabaseClient.from("practice_sessions").insert({
-      ...vettedData,
-      user_id: user.id,
-    });
-
-    if (res.error) throw res.error;
-
-    // Calculate XP for this session
-    const { data: xpData, error: xpError } = await supabaseClient.rpc(
-      "calculate_session_xp",
+    // All of session insert, XP/level/streak calculation, quest progress,
+    // avg-score recompute, and achievement unlocking happen atomically in a
+    // single Postgres transaction (see record_practice_session in
+    // supabase/schemas/zz_record_practice_session.sql). This replaces what
+    // used to be ~10+ sequential, non-atomic round trips with one RPC call.
+    const { data, error } = await supabaseClient.rpc(
+      "record_practice_session",
       {
-        words_read: Math.round(vettedData.total_words),
-        duration_seconds: Math.round(vettedData.duration),
-        comprehension_pct: vettedData.comprehension,
+        p_passage_id: vettedData.passage_id,
+        p_exercise_id: vettedData.exercise_id,
+        p_wpm: vettedData.wpm,
+        p_next_wpm: vettedData.next_wpm,
+        p_comprehension: vettedData.comprehension,
+        p_duration: vettedData.duration,
+        p_total_words: vettedData.total_words,
+        p_correct_answers: vettedData.correct_answers,
+        p_total_questions: vettedData.total_questions,
+        p_start_time: vettedData.start_time,
+        p_elapsed_time: vettedData.elapsed_time,
       },
     );
 
-    if (xpError) throw xpError;
-    const sessionXp = xpData as number;
-
-    // Calculate new totals
-    const newTotalXp = (currentStats?.xp || 0) + sessionXp;
-    const newTotalWords = Math.round(
-      (currentStats?.total_words_read || 0) + vettedData.total_words,
-    );
-    const newTotalTime = Math.round(
-      (currentStats?.total_time_seconds || 0) + vettedData.duration,
-    );
-
-    // Calculate new level
-    const { data: newLevel, error: levelError } = await supabaseClient.rpc(
-      "calculate_level",
-      { total_xp: newTotalXp },
-    );
-
-    if (levelError) throw levelError;
-
-    // Update streak
-    const streakTracker = updateStreak(
-      userData.last_active_date,
-      userData.streak_days!,
-    );
-
-    // Update user last_active_date and streak
-    await supabaseClient.from("users").update({
-      last_active_date: streakTracker.date.toISOString(),
-      streak_days: streakTracker.streak,
-      next_wpm: vettedData.next_wpm,
-    }).eq("id", user.id);
-
-    // Update user_stats via RPC to bypass RLS
-    const { error: statsError } = await supabaseClient.rpc(
-      "upsert_user_stats",
-      {
-        _user_id: user.id,
-        _xp: newTotalXp,
-        _level: newLevel as number,
-        _current_streak: streakTracker.streak,
-        _longest_streak: Math.max(
-          streakTracker.streak,
-          currentStats?.longest_streak || 0,
-        ),
-        _last_activity_date: streakTracker.date.toISOString().split("T")[0],
-        _total_words_read: newTotalWords,
-        _total_time_seconds: newTotalTime,
-      },
-    );
-
-    if (statsError) throw statsError;
-
-    // ---------------------------------------
-    // Update user quest progress based on session data
-    // Fetch all quests
-    const { data: allQuests, error: questsError } = await supabaseClient
-      .from("quests")
-      .select("id, type, target_metric, target_value");
-    if (questsError) throw questsError;
-
-    // Prepare upserts for user_quests
-    // Removed unused questUpserts mapping; progress will be handled in the loop below
-
-    // Process each quest upsert sequentially
-    for (const quest of allQuests) {
-      // Get existing progress
-      const { data: existing, error: _existingError } = await supabaseClient
-        .from("user_quests")
-        .select("current_value, is_completed")
-        .eq("user_id", user.id)
-        .eq("quest_id", quest.id)
-        .maybeSingle();
-
-      if (_existingError) throw _existingError;
-
-      const currentValue = existing?.current_value ?? 0;
-      const wasCompleted = existing?.is_completed ?? false;
-      let increment = 0;
-      switch (quest.target_metric) {
-        case "words":
-          increment = Math.round(vettedData.total_words);
-          break;
-        case "minutes":
-          increment = Math.round(vettedData.duration / 60);
-          break;
-        case "sessions":
-          increment = 1;
-          break;
-        case "wpm":
-          increment = vettedData.wpm >= quest.target_value
-            ? quest.target_value
-            : 0;
-          break;
-        default:
-          increment = 0;
+    if (error) {
+      if (error.code === "P0002") {
+        return c.json({ success: false, message: "User not found" }, 404);
       }
-      const newValue = currentValue + increment;
-      const isCompleted = newValue >= quest.target_value;
-      const upsertData = {
-        user_id: user.id,
-        quest_id: quest.id,
-        current_value: newValue,
-        is_completed: isCompleted,
-        updated_at: new Date().toISOString(),
-        claimed_at: wasCompleted && !isCompleted ? null : undefined,
-      };
-      await supabaseClient.from("user_quests").upsert(upsertData, {
-        onConflict: ["user_id", "quest_id"],
-      });
-    }
-    // ---------------------------------------
-
-    // Update average scores and total_sessions
-    const { error: avgError } = await supabaseClient.rpc(
-      "update_avg_scores",
-      { uid: user.id },
-    );
-
-    if (avgError) throw avgError;
-
-    // Check and unlock achievements
-    const { data: rawAchievements, error: achError } = await supabaseClient.rpc(
-      "check_and_unlock_achievements",
-      { uid: user.id },
-    );
-
-    if (achError) {
-      throw achError;
+      throw error;
     }
 
-    // Map out_achievement_id back to achievement_id for frontend compatibility
-    const newAchievements = rawAchievements?.map((a: any) => ({
-      achievement_id: a.out_achievement_id,
-      just_unlocked: a.just_unlocked,
-    })) || [];
+    const result = data as {
+      xp_gained: number;
+      new_level: number;
+      new_achievements: Array<
+        { achievement_id: string; just_unlocked: boolean }
+      >;
+    };
 
     return c.json({
       success: true,
       message: "Session successfully recorded",
       data: {
-        xp_gained: sessionXp,
-        new_level: newLevel,
-        new_achievements: newAchievements,
+        xp_gained: result.xp_gained,
+        new_level: result.new_level,
+        new_achievements: result.new_achievements,
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Failed to record practice session", {
+      user_id: user.id,
+      error,
+    });
     return c.json(
       { success: false, message: "Something went wrong" },
       500,

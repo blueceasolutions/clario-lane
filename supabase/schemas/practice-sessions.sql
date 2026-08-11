@@ -13,9 +13,16 @@ create table if not exists practice_sessions (
     total_questions numeric,
     start_time numeric,
     elapsed_time numeric,
+    xp_earned integer,
     created_at timestamptz default now(),
     updated_at timestamptz default now()
 );
+
+-- Dedup key: lets record_practice_session() treat a retried submission of the
+-- same session (same user/exercise/start_time) as idempotent instead of
+-- double-awarding XP.
+create unique index if not exists practice_sessions_user_exercise_start_key
+  on practice_sessions (user_id, exercise_id, start_time);
 
 -- Enable RLS
 alter table practice_sessions enable row level security;

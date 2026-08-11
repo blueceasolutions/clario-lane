@@ -297,6 +297,7 @@ export type Database = {
           updated_at: string | null;
           user_id: string | null;
           wpm: number;
+          xp_earned: number | null;
         };
         Insert: {
           comprehension: number;
@@ -314,6 +315,7 @@ export type Database = {
           updated_at?: string | null;
           user_id?: string | null;
           wpm: number;
+          xp_earned?: number | null;
         };
         Update: {
           comprehension?: number;
@@ -331,6 +333,7 @@ export type Database = {
           updated_at?: string | null;
           user_id?: string | null;
           wpm?: number;
+          xp_earned?: number | null;
         };
         Relationships: [
           {
@@ -628,6 +631,22 @@ export type Database = {
       };
       claim_quest: { Args: { quest_uuid: string }; Returns: Json };
       get_words_read_today: { Args: { uid: string }; Returns: number };
+      record_practice_session: {
+        Args: {
+          p_comprehension: number;
+          p_correct_answers: number;
+          p_duration: number;
+          p_elapsed_time: number;
+          p_exercise_id: string;
+          p_next_wpm: number;
+          p_passage_id: string;
+          p_start_time: number;
+          p_total_questions: number;
+          p_total_words: number;
+          p_wpm: number;
+        };
+        Returns: Json;
+      };
       update_avg_scores: { Args: { uid: string }; Returns: Json };
     };
     Enums: {
