@@ -8,6 +8,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   fetchPassageKey,
   fetchPracticeSessionsKey,
+  fetchPractices,
+  fetchSession,
   fetchUserProfileKey,
   fetchWordsReadTodayKey,
   sessionMutation,
@@ -16,7 +18,6 @@ import {
   fetchUserStats,
   fetchUserStatsKey,
 } from '@/integration/queries/fetchUserStats'
-import { supabaseService } from '~supabase/clientServices'
 
 import type { PassageResponse } from '@/types'
 import { useLocation } from '@tanstack/react-router'
@@ -92,25 +93,20 @@ export function ComprehensionQuiz() {
     const fetchExerciseId = async () => {
       const exerciseType = activePractice?.exercise || getExerciseFromPath()
       if (exerciseType) {
-        const { data, error } = await supabaseService.sp
-          .from('exercises')
-          .select('id')
-          .eq('exercise', exerciseType)
-          .single()
+        const practices = await queryClient.fetchQuery(fetchPractices)
+        const match = practices?.find((p) => p.exercise === exerciseType)
 
-        if (error) {
-          console.error('Failed to fetch exercise ID:', error)
+        if (!match) {
+          console.error('Failed to find exercise ID for', exerciseType)
           return
         }
 
-        if (data?.id) {
-          setExerciseUuid(data.id)
-        }
+        setExerciseUuid(match.id)
       }
     }
 
     fetchExerciseId()
-  }, [activePractice])
+  }, [activePractice, queryClient])
 
   const {
     stats: currentStats,
@@ -169,10 +165,8 @@ export function ComprehensionQuiz() {
             // Get user ID from current stats or auth
             let userId = currentStats?.user_id
             if (!userId) {
-              const {
-                data: { user },
-              } = await supabaseService.sp.auth.getUser()
-              userId = user?.id
+              const session = await queryClient.fetchQuery(fetchSession)
+              userId = session?.user?.id
             }
 
             if (userId) {

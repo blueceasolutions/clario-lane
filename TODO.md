@@ -65,12 +65,13 @@ Findings from a codebase audit on 2026-08-04. Each item includes the evidence fo
 - [ ] **Zero automated tests.** No `*.test.*`/`*.spec.*` files exist anywhere in `src`, no test runner is configured, and there's no `test` script in [package.json](package.json). This app computes XP/leveling/streak/comprehension-multiplier logic and handles Paystack subscription webhooks — exactly the kind of logic that regresses silently without tests.
   **Recommendation:** Add Vitest and start with the highest-value, easiest-to-break logic: XP/level calculation, streak calculation (`updateStreak` in [supabase/functions/practice/index.ts](supabase/functions/practice/index.ts)), and the RSVP/word-chunking timing math in `src/store/practice` and `src/components/exercises`.
 
-- [ ] **A few call sites bypass the integration/query layer** and call the Supabase client directly instead of going through `src/integration/queries`/`mutations`:
+- [x] **A few call sites bypass the integration/query layer** and call the Supabase client directly instead of going through `src/integration/queries`/`mutations`:
   - [src/components/exercises/shared/useSyncDisplaySettings.ts:17](src/components/exercises/shared/useSyncDisplaySettings.ts#L17)
   - [src/components/exercises/shared/ComprehensionQuiz.tsx:174](src/components/exercises/shared/ComprehensionQuiz.tsx#L174)
   - [src/hooks/use-claim-quest.ts:12](src/hooks/use-claim-quest.ts#L12)
   This is inconsistent with the rest of the app's data-fetching pattern (TanStack Query wrapping a dedicated queries/mutations layer) and makes it harder to apply uniform caching/error handling later.
   **Recommendation:** Route these through the existing `integration/queries`/`mutations` layer for consistency.
+  **Done:** Extracted `displaySettingsMutation` and `claimQuestMutation` into `src/integration/mutations/`, matching the existing `mutationOptions({ mutationKey, mutationFn })` pattern used by `sessionMutation`/`userMutation` (side-effect callbacks like the quest's `onSuccess` toast/invalidation stay at the call site, same as the existing convention — only the raw Supabase call moved). `useClaimQuest`'s stale `// @ts-ignore - claim_quest might not be in generated types yet` came out too: `claim_quest` was already in `supabase_types.ts`'s `Functions` map, so the ignore was dead weight. Also found and fixed a same-class violation in `ComprehensionQuiz.tsx` one call away from the cited line 174 (a direct `.from('exercises').select('id').eq('exercise', ...)` query at the old line 95) — routed through the already-existing, already-cached `fetchPractices` query instead of adding a new one.
 
 - [ ] **28 occurrences of `: any` / `as any` in `src/`** despite `strict: true` in [tsconfig.app.json](tsconfig.app.json). Worth an audit pass to see which are load-bearing (e.g. third-party type gaps) vs. avoidable.
 

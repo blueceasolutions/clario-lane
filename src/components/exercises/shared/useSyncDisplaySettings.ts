@@ -1,26 +1,7 @@
 import { useDisplaySettingsStore } from "@/store";
-import { supabaseService } from "~supabase/clientServices";
+import { displaySettingsMutation } from "@/integration";
 import { useEffect, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
-
-type DisplaySettingsPayload = {
-  display_settings: {
-    fontFamily: string;
-    fontSize: number;
-  };
-};
-
-const updateDisplaySettings = async (payload: DisplaySettingsPayload) => {
-  const { data, error } = await supabaseService.sp
-    .from("users")
-    .update(payload)
-    .eq("id", (await supabaseService.sp.auth.getUser()).data.user?.id || "")
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
-};
 
 /**
  * Hook to sync display settings to database
@@ -28,11 +9,11 @@ const updateDisplaySettings = async (payload: DisplaySettingsPayload) => {
  */
 export function useSyncDisplaySettings() {
   const { fontFamily, fontSize } = useDisplaySettingsStore();
-  // @ts-ignore
+  // @ts-expect-error - NodeJS.Timeout vs number mismatch between DOM and node lib types
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   const { mutate } = useMutation({
-    mutationFn: updateDisplaySettings,
+    ...displaySettingsMutation,
   });
 
   useEffect(() => {
