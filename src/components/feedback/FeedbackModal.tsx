@@ -8,7 +8,7 @@ import {
 import { Button, Textarea } from '@/components'
 import { Label } from '@/components/ui/label'
 import { useFeedback, type FeedbackCategory } from './useFeedback'
-import { MessageSquare, Bug, Lightbulb } from 'lucide-react'
+import { MessageSquare, Bug, Lightbulb, type LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface FeedbackModalProps {
@@ -16,7 +16,7 @@ interface FeedbackModalProps {
   onOpenChange: (open: boolean) => void
 }
 
-const CATEGORIES: { id: FeedbackCategory; label: string; icon: any }[] = [
+const CATEGORIES: { id: FeedbackCategory; label: string; icon: LucideIcon }[] = [
   { id: 'general', label: 'General', icon: MessageSquare },
   { id: 'bug', label: 'Bug', icon: Bug },
   { id: 'feature', label: 'Feature', icon: Lightbulb },

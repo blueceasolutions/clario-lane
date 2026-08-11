@@ -32,6 +32,10 @@ export const StartPracticeCard = ({
 
   return (
     <Link
+      // `route` is looked up at runtime from PRACTICE_ROUTES (keyed by the
+      // PRACTICES enum), so TanStack Router's literal-union `to` type can't
+      // verify it at compile time — this cast is load-bearing, not avoidable,
+      // short of enumerating every practice route by hand at each call site.
       to={`${route}/${practice.id}` as any}
       onClick={handleClick}
       className='block group'>

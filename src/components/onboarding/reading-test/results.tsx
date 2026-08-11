@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Award, Sparkles, Target, TrendingUp, Zap } from 'lucide-react'
+import { Award, Sparkles, Target, TrendingUp, Zap, type LucideIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { useOnboardingFlow, useOnboardingStore } from '@/store'
@@ -124,7 +124,17 @@ export function Results() {
   )
 }
 
-function StatCard({ icon: Icon, label, value, unit, color, bg, delay }: any) {
+type StatCardProps = {
+  icon: LucideIcon
+  label: string
+  value: number | string | undefined
+  unit: string
+  color: string
+  bg: string
+  delay: number
+}
+
+function StatCard({ icon: Icon, label, value, unit, color, bg, delay }: StatCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}

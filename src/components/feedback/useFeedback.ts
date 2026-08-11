@@ -20,7 +20,7 @@ export function useFeedback(onOpenChange: (open: boolean) => void) {
       }
 
       const { error } = await supabaseService.sp
-        .from("feedback" as any)
+        .from("feedback")
         .insert({
           user_id: userProfile.id,
           category,

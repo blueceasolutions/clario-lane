@@ -14,6 +14,7 @@ import {
   fetchWordsReadTodayKey,
   sessionMutation,
 } from '@/integration'
+import type { RecordedSessionResponse } from '@/integration/mutations/sessionMutation'
 import {
   fetchUserStats,
   fetchUserStatsKey,
@@ -161,7 +162,7 @@ export function ComprehensionQuiz() {
           next_wpm: actualNextWpm,
         },
         {
-          onSuccess: async (response: any) => {
+          onSuccess: async (response: RecordedSessionResponse | null) => {
             // Get user ID from current stats or auth
             let userId = currentStats?.user_id
             if (!userId) {
@@ -180,7 +181,7 @@ export function ComprehensionQuiz() {
                 useGamificationStore.getState()
 
               const newAchievementsWithTitles = newAchievementsData.map(
-                (na: any) => {
+                (na: RecordedSessionResponse['data']['new_achievements'][number]) => {
                   const ach = allAchievements.find(
                     (a) => a.id === na.achievement_id,
                   )
@@ -199,7 +200,7 @@ export function ComprehensionQuiz() {
                 response?.data?.new_level || newStats?.level || 1
               const currentXP = newStats?.xp || 0
               const isLevelUp =
-                response?.data?.new_level > (currentStats?.level || 1) ||
+                (response?.data?.new_level ?? 0) > (currentStats?.level || 1) ||
                 (newStats &&
                   currentStats &&
                   newStats.level > currentStats.level)

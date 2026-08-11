@@ -5,6 +5,12 @@ import { supabaseService } from "~supabase/clientServices";
 export type FontFace = "Inter" | "Dyslexie" | "Serif" | "Mono";
 export type Theme = "light" | "dark" | "sepia" | "auto";
 
+type UserPreferences = {
+  font_face: string;
+  font_size_scale: number;
+  theme: string;
+};
+
 type SettingsStore = {
   fontFace: FontFace;
   fontSizeScale: number;
@@ -12,7 +18,7 @@ type SettingsStore = {
   setFontFace: (fontFace: FontFace) => void;
   setFontSizeScale: (fontSizeScale: number) => void;
   setTheme: (theme: Theme) => void;
-  syncPreferences: (preferences: any) => void;
+  syncPreferences: (preferences: UserPreferences) => void;
 };
 
 export const useSettingsStore = create<SettingsStore>()(
