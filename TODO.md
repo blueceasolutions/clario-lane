@@ -74,8 +74,10 @@ Findings from a codebase audit on 2026-08-04. Each item includes the evidence fo
 
 ## ⚪ Housekeeping
 
-- [ ] **Remove `build_log.txt` from the repo.** It's a stray `pnpm build` log (62 lines) sitting at the repo root, and it's already stale/misleading — it documents a Rolldown/`react-is` resolution failure that no longer reproduces (confirmed via a fresh `npx vite build`, which now succeeds; `react-is` is already a direct dependency). Delete it and add `build_log.txt` to `.gitignore`.
-- [ ] **Verify `deno.lock` at the repo root is still the file Supabase Edge Runtime actually uses.** The Deno edge functions live under `supabase/functions/`; double-check this root-level lockfile isn't orphaned/stale relative to that directory.
+- [x] **Remove `build_log.txt` from the repo.** It's a stray `pnpm build` log (62 lines) sitting at the repo root, and it's already stale/misleading — it documents a Rolldown/`react-is` resolution failure that no longer reproduces (confirmed via a fresh `npx vite build`, which now succeeds; `react-is` is already a direct dependency). Delete it and add `build_log.txt` to `.gitignore`.
+  **Done:** removed, and `build_log.txt` added to `.gitignore`.
+- [x] **Verify `deno.lock` at the repo root is still the file Supabase Edge Runtime actually uses.** The Deno edge functions live under `supabase/functions/`; double-check this root-level lockfile isn't orphaned/stale relative to that directory.
+  **Done:** it's orphaned — removed. It's not authoritative for anything: the frontend locks dependencies via `pnpm-lock.yaml`, the only CI workflow ([.github/workflows/build-deploy.yaml](.github/workflows/build-deploy.yaml)) only runs `npm install`/`npm run build` and never touches Supabase functions, and Supabase Edge Functions resolve dependencies per-function from each `supabase/functions/*/deno.json` import map (wired up via `import_map` in [supabase/config.toml](supabase/config.toml)) with no root lockfile involved. The file's own contents confirmed this: it was a stale mix of pure frontend npm packages (`@radix-ui/*`, `@tanstack/react-router`, `vite-plugin-pwa`, etc. — deps `supabase/functions/` never imports) alongside a handful of edge-function deps, which only happens because running a bare `deno` CLI command (`check`/`lint`/`cache`) anywhere under the repo walks up and reuses whatever `deno.lock` it finds first — in this case the root one, left behind by some earlier one-off command. Added `deno.lock` to `.gitignore` so this doesn't silently reappear.
 
 ---
 

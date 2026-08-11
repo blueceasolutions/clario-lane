@@ -23,3 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 .env
+build_log.txt
+
+# Not authoritative for anything: the frontend locks via pnpm-lock.yaml, and
+# Supabase Edge Functions resolve per-function from supabase/functions/*/deno.json
+# (see config.toml `import_map` entries) with no committed root lockfile needed.
+# A root deno.lock only reappears here as a side effect of running `deno` CLI
+# commands (check/lint/cache) from the repo root or above supabase/functions/,
+# since Deno's lockfile discovery walks up looking for one to reuse.
+deno.lock
