@@ -29,6 +29,8 @@ import { Route as DashboardVocabularyRouteImport } from './routes/dashboard/voca
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as DashboardPracticeIndexRouteImport } from './routes/dashboard/practice/index'
 import { Route as DashboardPracticeBrowseRouteImport } from './routes/dashboard/practice/browse'
+import { Route as DashboardRaceIndexRouteImport } from './routes/dashboard/race/index'
+import { Route as DashboardRaceRaceIdRouteImport } from './routes/dashboard/race/$raceId'
 import { Route as DashboardPracticeSpeedreadingPracticeIdRouteImport } from './routes/dashboard/practice/speedreading/$practiceId'
 import { Route as DashboardPracticeTeleprompterPracticeIdRouteImport } from './routes/dashboard/practice/teleprompter/$practiceId'
 import { Route as DashboardPracticeWordchunkingPracticeIdRouteImport } from './routes/dashboard/practice/wordchunking/$practiceId'
@@ -133,6 +135,16 @@ const DashboardPracticeBrowseRoute = DashboardPracticeBrowseRouteImport.update({
   path: '/browse',
   getParentRoute: () => DashboardPracticeRoute,
 } as any)
+const DashboardRaceIndexRoute = DashboardRaceIndexRouteImport.update({
+  id: '/race/',
+  path: '/race/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardRaceRaceIdRoute = DashboardRaceRaceIdRouteImport.update({
+  id: '/race/$raceId',
+  path: '/race/$raceId',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPracticeSpeedreadingPracticeIdRoute =
   DashboardPracticeSpeedreadingPracticeIdRouteImport.update({
     id: '/speedreading/$practiceId',
@@ -172,7 +184,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/dashboard/practice/browse': typeof DashboardPracticeBrowseRoute
+  '/dashboard/race/$raceId': typeof DashboardRaceRaceIdRoute
   '/dashboard/practice/': typeof DashboardPracticeIndexRoute
+  '/dashboard/race/': typeof DashboardRaceIndexRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
   '/dashboard/practice/teleprompter/$practiceId': typeof DashboardPracticeTeleprompterPracticeIdRoute
   '/dashboard/practice/wordchunking/$practiceId': typeof DashboardPracticeWordchunkingPracticeIdRoute
@@ -193,7 +207,9 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/onboarding': typeof OnboardingIndexRoute
   '/dashboard/practice/browse': typeof DashboardPracticeBrowseRoute
+  '/dashboard/race/$raceId': typeof DashboardRaceRaceIdRoute
   '/dashboard/practice': typeof DashboardPracticeIndexRoute
+  '/dashboard/race': typeof DashboardRaceIndexRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
   '/dashboard/practice/teleprompter/$practiceId': typeof DashboardPracticeTeleprompterPracticeIdRoute
   '/dashboard/practice/wordchunking/$practiceId': typeof DashboardPracticeWordchunkingPracticeIdRoute
@@ -219,7 +235,9 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/dashboard/practice/browse': typeof DashboardPracticeBrowseRoute
+  '/dashboard/race/$raceId': typeof DashboardRaceRaceIdRoute
   '/dashboard/practice/': typeof DashboardPracticeIndexRoute
+  '/dashboard/race/': typeof DashboardRaceIndexRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
   '/dashboard/practice/teleprompter/$practiceId': typeof DashboardPracticeTeleprompterPracticeIdRoute
   '/dashboard/practice/wordchunking/$practiceId': typeof DashboardPracticeWordchunkingPracticeIdRoute
@@ -246,7 +264,9 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/onboarding/'
     | '/dashboard/practice/browse'
+    | '/dashboard/race/$raceId'
     | '/dashboard/practice/'
+    | '/dashboard/race/'
     | '/dashboard/practice/speedreading/$practiceId'
     | '/dashboard/practice/teleprompter/$practiceId'
     | '/dashboard/practice/wordchunking/$practiceId'
@@ -267,7 +287,9 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/onboarding'
     | '/dashboard/practice/browse'
+    | '/dashboard/race/$raceId'
     | '/dashboard/practice'
+    | '/dashboard/race'
     | '/dashboard/practice/speedreading/$practiceId'
     | '/dashboard/practice/teleprompter/$practiceId'
     | '/dashboard/practice/wordchunking/$practiceId'
@@ -292,7 +314,9 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/onboarding/'
     | '/dashboard/practice/browse'
+    | '/dashboard/race/$raceId'
     | '/dashboard/practice/'
+    | '/dashboard/race/'
     | '/dashboard/practice/speedreading/$practiceId'
     | '/dashboard/practice/teleprompter/$practiceId'
     | '/dashboard/practice/wordchunking/$practiceId'
@@ -450,6 +474,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPracticeBrowseRouteImport
       parentRoute: typeof DashboardPracticeRoute
     }
+    '/dashboard/race/': {
+      id: '/dashboard/race/'
+      path: '/race'
+      fullPath: '/dashboard/race/'
+      preLoaderRoute: typeof DashboardRaceIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/race/$raceId': {
+      id: '/dashboard/race/$raceId'
+      path: '/race/$raceId'
+      fullPath: '/dashboard/race/$raceId'
+      preLoaderRoute: typeof DashboardRaceRaceIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/practice/speedreading/$practiceId': {
       id: '/dashboard/practice/speedreading/$practiceId'
       path: '/speedreading/$practiceId'
@@ -518,6 +556,8 @@ interface DashboardRouteChildren {
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardVocabularyRoute: typeof DashboardVocabularyRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardRaceRaceIdRoute: typeof DashboardRaceRaceIdRoute
+  DashboardRaceIndexRoute: typeof DashboardRaceIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
@@ -528,6 +568,8 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardVocabularyRoute: DashboardVocabularyRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardRaceRaceIdRoute: DashboardRaceRaceIdRoute,
+  DashboardRaceIndexRoute: DashboardRaceIndexRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(

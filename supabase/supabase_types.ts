@@ -385,6 +385,79 @@ export type Database = {
         };
         Relationships: [];
       };
+      reading_race_results: {
+        Row: {
+          comprehension: number;
+          finished_at: string;
+          race_id: string;
+          user_id: string;
+          wpm: number;
+        };
+        Insert: {
+          comprehension: number;
+          finished_at?: string;
+          race_id: string;
+          user_id: string;
+          wpm: number;
+        };
+        Update: {
+          comprehension?: number;
+          finished_at?: string;
+          race_id?: string;
+          user_id?: string;
+          wpm?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "reading_race_results_race_id_fkey";
+            columns: ["race_id"];
+            isOneToOne: false;
+            referencedRelation: "reading_races";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      reading_races: {
+        Row: {
+          created_at: string;
+          creator_id: string;
+          id: string;
+          opponent_id: string | null;
+          passage_id: string;
+          room_code: string;
+          started_at: string | null;
+          status: string;
+        };
+        Insert: {
+          created_at?: string;
+          creator_id: string;
+          id?: string;
+          opponent_id?: string | null;
+          passage_id: string;
+          room_code: string;
+          started_at?: string | null;
+          status?: string;
+        };
+        Update: {
+          created_at?: string;
+          creator_id?: string;
+          id?: string;
+          opponent_id?: string | null;
+          passage_id?: string;
+          room_code?: string;
+          started_at?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "reading_races_passage_id_fkey";
+            columns: ["passage_id"];
+            isOneToOne: false;
+            referencedRelation: "passages";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       user_achievements: {
         Row: {
           achievement_id: string;
@@ -696,6 +769,7 @@ export type Database = {
         }[];
       };
       claim_quest: { Args: { quest_uuid: string }; Returns: Json };
+      create_race: { Args: never; Returns: Json };
       get_weekly_leaderboard: {
         Args: { limit_count?: number };
         Returns: {
@@ -706,6 +780,7 @@ export type Database = {
         }[];
       };
       get_words_read_today: { Args: { uid: string }; Returns: number };
+      join_race: { Args: { p_room_code: string }; Returns: Json };
       record_practice_session: {
         Args: {
           p_comprehension: number;

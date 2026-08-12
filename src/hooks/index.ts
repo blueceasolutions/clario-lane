@@ -3,5 +3,6 @@ export * from "./useActiveQuests";
 export * from "./useQuestProgress";
 export * from "./use-claim-quest";
 export * from "./use-buy-streak-freeze";
+export * from "./useRaceUpdates";
 export * from "./use-logout";
 export * from "./useSubscription";

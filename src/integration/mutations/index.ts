@@ -5,3 +5,4 @@ export * from "./displaySettingsMutation";
 export * from "./questMutation";
 export * from "./vocabularyReviewMutation";
 export * from "./streakFreezeMutation";
+export * from "./raceMutation";
