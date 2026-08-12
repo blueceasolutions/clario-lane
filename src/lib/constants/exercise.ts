@@ -1,11 +1,10 @@
-import { Brain, Eye, Target, TypeIcon, Zap } from "lucide-react";
+import { Brain, Target, TypeIcon, Zap } from "lucide-react";
 import { z } from "zod";
 
 export const PRACTICES = z.enum([
   "SPEED_READING",
   "TELEPROMPTER",
   "WORD_CHUNKING",
-  "PERIPHERAL_VISION",
 ]);
 
 export const READING_SPEED_RANGE = {
@@ -29,14 +28,12 @@ export const PRACTICE_ICONS: Record<PRACTICES, typeof TypeIcon> = {
   SPEED_READING: Zap,
   TELEPROMPTER: Brain,
   WORD_CHUNKING: Target,
-  PERIPHERAL_VISION: Eye,
 };
 
 export const PRACTICE_COLORS: Record<PRACTICES, string> = {
   SPEED_READING: "blue",
   TELEPROMPTER: "green",
   WORD_CHUNKING: "orange",
-  PERIPHERAL_VISION: "red",
 };
 
 export const Practice = z.object({
@@ -56,7 +53,6 @@ export const PRACTICE_ROUTES: Record<PRACTICES, string> = {
   SPEED_READING: "/dashboard/practice/speedreading",
   TELEPROMPTER: "/dashboard/practice/teleprompter",
   WORD_CHUNKING: "/dashboard/practice/wordchunking",
-  PERIPHERAL_VISION: "/dashboard/practice",
 } as const;
 
 export type PRACTICE_ROUTES =

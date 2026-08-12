@@ -32,7 +32,6 @@ type ReaderControlsProps = {
 const additionalControls: Record<PRACTICES, ReactNode | null> = {
   WORD_CHUNKING: <ChunkSizeSlider />,
   SPEED_READING: null,
-  PERIPHERAL_VISION: null,
   TELEPROMPTER: null,
 }
 
