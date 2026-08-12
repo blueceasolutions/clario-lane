@@ -180,6 +180,11 @@ begin
       q.target_value as target_value
     from quests q
     left join user_quests uq on uq.user_id = v_uid and uq.quest_id = q.id
+    -- Don't keep advancing (or newly completing) a quest whose window has
+    -- already closed -- matters most for limited-time (type = 'special')
+    -- quests, which have a real deadline rather than daily/weekly's
+    -- effectively-open-ended one.
+    where q.expires_at is null or q.expires_at > now()
   )
   insert into user_quests (user_id, quest_id, current_value, is_completed, updated_at, claimed_at)
   select

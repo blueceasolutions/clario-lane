@@ -13,7 +13,15 @@ export const fetchQuests = queryOptions({
       .select("*")
       .gt("expires_at", new Date().toISOString()); // Only fetch active quests
     if (error) throw error;
-    return data as Quest[];
+
+    // Limited-time (special) quests have an actual deadline worth
+    // surfacing above the standing daily/weekly rotation, not buried
+    // wherever they happen to sort otherwise.
+    return [...(data as Quest[])].sort((a, b) => {
+      if (a.type === "special" && b.type !== "special") return -1;
+      if (a.type !== "special" && b.type === "special") return 1;
+      return 0;
+    });
   },
 });
 

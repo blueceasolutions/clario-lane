@@ -24,3 +24,13 @@ insert into public.quests (type, description, target_metric, target_value, xp_re
 ('daily', 'Complete 1 Speed Reading Session', 'sessions', 1, 50, now() + interval '1 day'),
 ('weekly', 'Read for 60 minutes total', 'minutes', 60, 200, now() + interval '1 week')
 on conflict do nothing;
+
+-- Seasonal / limited-time quests (type = 'special'): a fixed end date
+-- rather than an interval offset from now(), since a season has an actual
+-- calendar deadline, not a rolling window that should shift every time the
+-- database is reset. Bigger targets and XP than the standing daily/weekly
+-- rotation, so they read as a real event worth coming back for.
+insert into public.quests (type, description, target_metric, target_value, xp_reward, expires_at) values
+('special', 'Late-Summer Reading Sprint: read 5,000 words before it ends', 'words', 5000, 1000, '2026-08-31 23:59:59+00'),
+('special', 'Late-Summer Reading Sprint: complete 10 sessions before it ends', 'sessions', 10, 500, '2026-08-31 23:59:59+00')
+on conflict do nothing;
