@@ -20,6 +20,11 @@ const ActivityChart = lazy(() =>
     default: m.ActivityChart,
   })),
 )
+const ComprehensionBreakdownChart = lazy(() =>
+  import('@/components/dashboard/progress/ComprehensionBreakdownChart').then(
+    (m) => ({ default: m.ComprehensionBreakdownChart }),
+  ),
+)
 
 import { motion } from 'motion/react'
 import { useQuery } from '@tanstack/react-query'
@@ -164,6 +169,9 @@ function RouteComponent() {
 
         {/* Session Activity */}
         <ActivityChart sessionData={sessionData} />
+
+        {/* Comprehension Breakdown */}
+        <ComprehensionBreakdownChart sessions={sessions ?? []} />
       </Suspense>
 
       <div className='grid md:grid-cols-2 gap-6'>

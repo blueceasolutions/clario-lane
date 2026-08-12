@@ -90,7 +90,11 @@ class SupabaseService {
   }
 
   async getPracticedSessions(userId?: string, limit: number = 6) {
-    const { data, error } = await this.sp.from("practice_sessions").select("*")
+    // Embeds the passage's tags/difficulty (null for custom-text sessions,
+    // which have no passages row) so callers can break comprehension down
+    // by topic/difficulty without a second round trip.
+    const { data, error } = await this.sp.from("practice_sessions")
+      .select("*, passages(tags, difficulty)")
       .eq("user_id", userId || "").order("created_at", { ascending: false })
       .limit(limit);
     if (error) {

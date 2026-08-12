@@ -10,3 +10,4 @@ export * from "./goalCopy";
 export * from "./passageFilters";
 export * from "./bionicReading";
 export * from "./vocabularyReview";
+export * from "./comprehensionBreakdown";
