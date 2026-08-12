@@ -9,6 +9,7 @@ export type RecordedSessionResponse = {
     xp_gained: number;
     new_level: number;
     new_achievements: Array<{ achievement_id: string; just_unlocked: boolean }>;
+    freeze_consumed: boolean;
   };
 };
 

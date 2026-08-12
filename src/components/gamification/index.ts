@@ -1,5 +1,9 @@
 export { DailyGoalRing } from "./DailyGoalRing";
-export { StreakCounter } from "./StreakCounter";
+export {
+  StreakCounter,
+  MAX_STREAK_FREEZES,
+  STREAK_FREEZE_COST_XP,
+} from "./StreakCounter";
 export { LevelProgressBar } from "./LevelProgressBar";
 export * from "./AchievementsGrid";
 // NOT re-exported: "./VictoryModal", "./LevelUpModal" (canvas-confetti).

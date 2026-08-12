@@ -8,6 +8,10 @@ create table if not exists public.user_stats (
   total_words_read bigint default 0 not null,
   total_time_seconds bigint default 0 not null,
   last_activity_date date,
+  -- Spent via buy_streak_freeze(); consumed automatically by
+  -- record_practice_session the next time exactly one day is missed,
+  -- instead of the streak resetting to 1.
+  streak_freezes int default 0 not null,
   created_at timestamptz default now() not null,
   updated_at timestamptz default now() not null
 );

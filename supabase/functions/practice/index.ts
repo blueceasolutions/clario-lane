@@ -263,6 +263,7 @@ app.post("/practice/session", async (c) => {
       new_achievements: Array<
         { achievement_id: string; just_unlocked: boolean }
       >;
+      freeze_consumed?: boolean;
     };
 
     return c.json({
@@ -272,6 +273,7 @@ app.post("/practice/session", async (c) => {
         xp_gained: result.xp_gained,
         new_level: result.new_level,
         new_achievements: result.new_achievements,
+        freeze_consumed: result.freeze_consumed ?? false,
       },
     });
   } catch (error) {

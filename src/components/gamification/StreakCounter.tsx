@@ -1,12 +1,27 @@
-import { Card, CardContent } from '@/components'
-import { Flame } from 'lucide-react'
+import { Button, Card, CardContent } from '@/components'
+import { Flame, Snowflake } from 'lucide-react'
 
 interface StreakCounterProps {
   currentStreak: number
   longestStreak?: number
+  streakFreezes?: number
+  onBuyFreeze?: () => void
+  canBuyFreeze?: boolean
+  isBuyingFreeze?: boolean
 }
 
-export function StreakCounter({ currentStreak }: StreakCounterProps) {
+// Mirrors buy_streak_freeze()'s v_cost/v_max_freezes -- display-only, the
+// RPC is the source of truth and enforces these server-side regardless.
+export const STREAK_FREEZE_COST_XP = 200
+export const MAX_STREAK_FREEZES = 2
+
+export function StreakCounter({
+  currentStreak,
+  streakFreezes = 0,
+  onBuyFreeze,
+  canBuyFreeze,
+  isBuyingFreeze,
+}: StreakCounterProps) {
   return (
     <Card className='bg-orange-50/50 dark:bg-orange-950/20 border-none shadow-sm relative overflow-hidden h-full'>
       <div className='absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-100/50 to-transparent rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none' />
@@ -21,7 +36,7 @@ export function StreakCounter({ currentStreak }: StreakCounterProps) {
           </div>
         </div>
 
-        <div className='mt-8'>
+        <div className='mt-8 flex items-end justify-between gap-4 flex-wrap'>
           <div className='flex items-baseline gap-2'>
             <span className='text-5xl font-bold text-gray-900 dark:text-white'>
               {currentStreak}
@@ -30,6 +45,28 @@ export function StreakCounter({ currentStreak }: StreakCounterProps) {
               day streak
             </span>
           </div>
+
+          {onBuyFreeze && (
+            <div className='flex flex-col items-end gap-1.5'>
+              {streakFreezes > 0 && (
+                <div className='flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 font-medium'>
+                  <Snowflake className='w-4 h-4' />
+                  {streakFreezes} freeze{streakFreezes === 1 ? '' : 's'} saved
+                </div>
+              )}
+              <Button
+                size='sm'
+                variant='outline'
+                disabled={!canBuyFreeze || isBuyingFreeze}
+                onClick={onBuyFreeze}
+                className='gap-1.5'>
+                <Snowflake className='w-3.5 h-3.5' />
+                {streakFreezes >= MAX_STREAK_FREEZES
+                  ? 'Freezes full'
+                  : `Buy freeze (${STREAK_FREEZE_COST_XP} XP)`}
+              </Button>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

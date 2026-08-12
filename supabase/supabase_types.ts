@@ -486,6 +486,7 @@ export type Database = {
           last_activity_date: string | null;
           level: number;
           longest_streak: number;
+          streak_freezes: number;
           total_time_seconds: number;
           total_words_read: number;
           updated_at: string;
@@ -498,6 +499,7 @@ export type Database = {
           last_activity_date?: string | null;
           level?: number;
           longest_streak?: number;
+          streak_freezes?: number;
           total_time_seconds?: number;
           total_words_read?: number;
           updated_at?: string;
@@ -510,6 +512,7 @@ export type Database = {
           last_activity_date?: string | null;
           level?: number;
           longest_streak?: number;
+          streak_freezes?: number;
           total_time_seconds?: number;
           total_words_read?: number;
           updated_at?: string;
@@ -672,6 +675,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      buy_streak_freeze: { Args: never; Returns: Json };
       calculate_level: { Args: { total_xp: number }; Returns: number };
       calculate_session_xp: {
         Args: {

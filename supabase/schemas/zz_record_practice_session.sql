@@ -45,6 +45,7 @@ declare
   v_diff_days int;
   v_new_streak int;
   v_new_longest_streak int;
+  v_freeze_consumed boolean := false;
   v_achievements jsonb;
 begin
   if v_uid is null then
@@ -110,7 +111,11 @@ begin
   v_new_total_words := coalesce(v_stats.total_words_read, 0) + round(p_total_words);
   v_new_total_time := coalesce(v_stats.total_time_seconds, 0) + round(p_duration);
 
-  -- Streak calculation (mirrors the removed updateStreak() in the edge function)
+  -- Streak calculation (mirrors the removed updateStreak() in the edge
+  -- function). A streak_freeze (bought via buy_streak_freeze()) absorbs
+  -- exactly one missed day: the streak continues instead of resetting, and
+  -- the freeze is spent. Missing two or more days still resets it -- a
+  -- freeze bridges one gap, not an indefinite absence.
   if v_user.last_active_date is null then
     v_new_streak := 1;
   else
@@ -119,6 +124,9 @@ begin
       v_new_streak := coalesce(v_user.streak_days, 0)::int;
     elsif v_diff_days = 1 then
       v_new_streak := coalesce(v_user.streak_days, 0)::int + 1;
+    elsif v_diff_days = 2 and coalesce(v_stats.streak_freezes, 0) > 0 then
+      v_new_streak := coalesce(v_user.streak_days, 0)::int + 1;
+      v_freeze_consumed := true;
     else
       v_new_streak := 1;
     end if;
@@ -136,10 +144,13 @@ begin
 
   insert into user_stats (
     user_id, xp, level, current_streak, longest_streak,
-    last_activity_date, total_words_read, total_time_seconds, updated_at
+    last_activity_date, total_words_read, total_time_seconds,
+    streak_freezes, updated_at
   ) values (
     v_uid, v_new_total_xp, v_new_level, v_new_streak, v_new_longest_streak,
-    v_today, v_new_total_words, v_new_total_time, now()
+    v_today, v_new_total_words, v_new_total_time,
+    coalesce(v_stats.streak_freezes, 0) - (case when v_freeze_consumed then 1 else 0 end),
+    now()
   )
   on conflict (user_id) do update set
     xp = excluded.xp,
@@ -149,6 +160,7 @@ begin
     last_activity_date = excluded.last_activity_date,
     total_words_read = excluded.total_words_read,
     total_time_seconds = excluded.total_time_seconds,
+    streak_freezes = excluded.streak_freezes,
     updated_at = now();
 
   -- Bulk quest-progress upsert: one statement across all quests instead of
@@ -196,7 +208,8 @@ begin
   return jsonb_build_object(
     'xp_gained', v_session_xp,
     'new_level', v_new_level,
-    'new_achievements', v_achievements
+    'new_achievements', v_achievements,
+    'freeze_consumed', v_freeze_consumed
   );
 end;
 $$;

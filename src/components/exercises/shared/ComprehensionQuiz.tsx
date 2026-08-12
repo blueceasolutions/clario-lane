@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Button, Card } from '@/components'
 import { CheckCircle, XCircle } from 'lucide-react'
+import { toast } from 'sonner'
 import { usePracticeStore, useAppStore } from '@/store'
 import { useGamificationStore } from '@/store/gamification/useGamificationStore'
 import { PracticeStep, calculateNextDifficulty, calculateNextWpm } from '@/lib'
@@ -184,6 +185,10 @@ export function ComprehensionQuiz() {
 
             if (userId && missedWords.length > 0) {
               captureVocabularyMisses({ userId, words: missedWords })
+            }
+
+            if (response?.data?.freeze_consumed) {
+              toast.info('A streak freeze saved your streak!')
             }
 
             if (userId) {

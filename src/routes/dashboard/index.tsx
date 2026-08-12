@@ -5,12 +5,14 @@ import {
   OverviewPending,
   DailyGoalRing,
   StreakCounter,
+  MAX_STREAK_FREEZES,
+  STREAK_FREEZE_COST_XP,
   QuestCard,
   Button,
 } from '@/components'
 import { SeoHead } from '@/components/shared'
 import { useQuery } from '@tanstack/react-query'
-import { useClaimQuest, useGamification } from '@/hooks'
+import { useBuyStreakFreeze, useClaimQuest, useGamification } from '@/hooks'
 
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { motion } from 'motion/react'
@@ -46,6 +48,9 @@ function RouteComponent() {
   }
 
   const { claimQuest } = useClaimQuest(userProfile?.id)
+  const { buyStreakFreeze, isBuyingStreakFreeze } = useBuyStreakFreeze(
+    userProfile?.id,
+  )
 
   const readingSpeedData = data?.length
     ? data?.map((practiced_session, index) => ({
@@ -98,7 +103,16 @@ function RouteComponent() {
       {!isLoadingGamification && stats && (
         <div className='grid md:grid-cols-3 gap-6'>
           <div className='md:col-span-2'>
-            <StreakCounter currentStreak={stats.current_streak} />
+            <StreakCounter
+              currentStreak={stats.current_streak}
+              streakFreezes={stats.streak_freezes}
+              onBuyFreeze={buyStreakFreeze}
+              canBuyFreeze={
+                stats.streak_freezes < MAX_STREAK_FREEZES &&
+                stats.xp >= STREAK_FREEZE_COST_XP
+              }
+              isBuyingFreeze={isBuyingStreakFreeze}
+            />
           </div>
           <div className='md:col-span-1'>
             <DailyGoalRing userId={userProfile.id} />
