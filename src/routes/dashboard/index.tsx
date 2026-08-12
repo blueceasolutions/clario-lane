@@ -15,6 +15,7 @@ import { useClaimQuest, useGamification } from '@/hooks'
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import { fetchPracticeSessions, fetchUserProfile } from '@/integration/queries'
+import { getGoalBannerCopy } from '@/lib'
 
 // recharts pulls a large vendor chunk in; only load it once this route
 // actually renders instead of on every page's initial bundle.
@@ -61,6 +62,7 @@ function RouteComponent() {
       100,
   )
   const improvement = userProfile.current_wpm! - userProfile.baseline_wpm!
+  const goalBannerCopy = getGoalBannerCopy(userProfile.goals)
 
   return (
     <motion.div
@@ -109,12 +111,9 @@ function RouteComponent() {
         <div className='relative z-10 flex flex-col md:flex-row items-center justify-between gap-6'>
           <div className='space-y-2 text-center md:text-left'>
             <h2 className='text-3xl font-bold tracking-tight'>
-              Ready to level up?
+              {goalBannerCopy.headline}
             </h2>
-            <p className='text-purple-100 max-w-lg'>
-              Improve your reading speed and comprehension with our proven
-              exercises. Just 15 minutes a day can make a huge difference.
-            </p>
+            <p className='text-purple-100 max-w-lg'>{goalBannerCopy.subtext}</p>
           </div>
           <Button
             size={'xl'}
