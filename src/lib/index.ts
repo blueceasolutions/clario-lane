@@ -8,3 +8,4 @@ export * from "./practiceTiming";
 export * from "./adaptiveWpm";
 export * from "./goalCopy";
 export * from "./passageFilters";
+export * from "./bionicReading";

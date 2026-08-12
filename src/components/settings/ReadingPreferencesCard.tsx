@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
   Slider,
+  Switch,
 } from '@/components/ui'
 import { useSettingsStore, type FontFace, type Theme } from '@/store'
 
@@ -19,9 +20,11 @@ export function ReadingPreferencesCard() {
     fontFace,
     fontSizeScale,
     theme,
+    bionicReading,
     setFontFace,
     setFontSizeScale,
     setTheme,
+    setBionicReading,
   } = useSettingsStore()
 
   return (
@@ -79,6 +82,22 @@ export function ReadingPreferencesCard() {
               <SelectItem value='sepia'>Sepia</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        <div className='flex items-center justify-between space-x-2 border-t pt-4'>
+          <Label
+            htmlFor='bionic-reading'
+            className='space-y-0.5 items-start flex flex-col'>
+            <span>Bionic Reading</span>
+            <span className='font-normal text-sm text-muted-foreground'>
+              Bold the first few letters of each word to guide your eyes.
+            </span>
+          </Label>
+          <Switch
+            id='bionic-reading'
+            checked={bionicReading}
+            onCheckedChange={setBionicReading}
+          />
         </div>
       </CardContent>
     </Card>

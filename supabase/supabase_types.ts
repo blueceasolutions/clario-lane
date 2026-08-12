@@ -413,6 +413,7 @@ export type Database = {
       };
       user_preferences: {
         Row: {
+          bionic_reading: boolean;
           created_at: string | null;
           font_face: string;
           font_size_scale: number;
@@ -421,6 +422,7 @@ export type Database = {
           user_id: string;
         };
         Insert: {
+          bionic_reading?: boolean;
           created_at?: string | null;
           font_face?: string;
           font_size_scale?: number;
@@ -429,6 +431,7 @@ export type Database = {
           user_id: string;
         };
         Update: {
+          bionic_reading?: boolean;
           created_at?: string | null;
           font_face?: string;
           font_size_scale?: number;

@@ -3,6 +3,7 @@ create table "public"."user_preferences" (
     "theme" text not null default 'light',
     "font_face" text not null default 'Inter',
     "font_size_scale" float not null default 100,
+    "bionic_reading" boolean not null default false,
     "created_at" timestamp with time zone default now(),
     "updated_at" timestamp with time zone default now(),
     primary key ("user_id")
