@@ -169,7 +169,12 @@ function RootComponent() {
             <Outlet />
             {isValidRoute ? null : <FloatingActionButton />}
             {hideFooterRoutes ? <Copyright /> : <Footer />}
-            <ReferralModal />
+            {/* Don't let the promo dialog pop up mid-exercise: it renders as a
+                blocking overlay, so if its timer lands during an active
+                reading/quiz it can cover the "Continue to Quiz"/submit
+                button and strand the user. Same isValidRoute gate already
+                used to hide the FAB on these routes. */}
+            {isValidRoute ? null : <ReferralModal />}
             <Toaster position='top-center' richColors />
             <React.Suspense fallback={null}>
               <TanStackRouterDevtools position='bottom-left' />
