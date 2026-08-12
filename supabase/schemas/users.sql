@@ -26,6 +26,7 @@ create table if not exists users (
     level numeric default 1,
     focus_score numeric default 0,
     is_subscribed boolean default false,
+    leaderboard_opt_in boolean not null default false, -- shows name + weekly XP on the opt-in leaderboard
     -- date_of_birth date,
     display_settings JSONB DEFAULT '{"fontFamily": "Inter", "fontSize": 48}',
     created_at timestamptz default now(),

@@ -10,7 +10,7 @@ export const fetchNotifications = (userId: string | undefined) =>
       if (!userId) return null;
       const { data, error } = await supabaseService.sp
         .from("users")
-        .select("daily_reminder, reminder_time, weekly_summary")
+        .select("daily_reminder, reminder_time, weekly_summary, leaderboard_opt_in")
         .eq("id", userId)
         .single();
 

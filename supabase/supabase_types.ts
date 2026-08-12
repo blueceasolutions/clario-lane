@@ -540,6 +540,7 @@ export type Database = {
           id: string;
           is_subscribed: boolean | null;
           last_active_date: string | null;
+          leaderboard_opt_in: boolean;
           level: number | null;
           name: string;
           next_difficulty: string | null;
@@ -571,6 +572,7 @@ export type Database = {
           id: string;
           is_subscribed?: boolean | null;
           last_active_date?: string | null;
+          leaderboard_opt_in?: boolean;
           level?: number | null;
           name: string;
           next_difficulty?: string | null;
@@ -602,6 +604,7 @@ export type Database = {
           id?: string;
           is_subscribed?: boolean | null;
           last_active_date?: string | null;
+          leaderboard_opt_in?: boolean;
           level?: number | null;
           name?: string;
           next_difficulty?: string | null;
@@ -693,6 +696,15 @@ export type Database = {
         }[];
       };
       claim_quest: { Args: { quest_uuid: string }; Returns: Json };
+      get_weekly_leaderboard: {
+        Args: { limit_count?: number };
+        Returns: {
+          name: string;
+          rank: number;
+          user_id: string;
+          weekly_xp: number;
+        }[];
+      };
       get_words_read_today: { Args: { uid: string }; Returns: number };
       record_practice_session: {
         Args: {

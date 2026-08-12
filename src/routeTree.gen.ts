@@ -21,6 +21,7 @@ import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-pas
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardChallengesRouteImport } from './routes/dashboard/challenges'
+import { Route as DashboardLeaderboardRouteImport } from './routes/dashboard/leaderboard'
 import { Route as DashboardPracticeRouteImport } from './routes/dashboard/practice'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard/progress'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
@@ -92,6 +93,11 @@ const DashboardChallengesRoute = DashboardChallengesRouteImport.update({
   path: '/challenges',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardLeaderboardRoute = DashboardLeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPracticeRoute = DashboardPracticeRouteImport.update({
   id: '/practice',
   path: '/practice',
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/dashboard/challenges': typeof DashboardChallengesRoute
+  '/dashboard/leaderboard': typeof DashboardLeaderboardRoute
   '/dashboard/practice': typeof DashboardPracticeRouteWithChildren
   '/dashboard/progress': typeof DashboardProgressRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/dashboard/challenges': typeof DashboardChallengesRoute
+  '/dashboard/leaderboard': typeof DashboardLeaderboardRoute
   '/dashboard/progress': typeof DashboardProgressRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vocabulary': typeof DashboardVocabularyRoute
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/dashboard/challenges': typeof DashboardChallengesRoute
+  '/dashboard/leaderboard': typeof DashboardLeaderboardRoute
   '/dashboard/practice': typeof DashboardPracticeRouteWithChildren
   '/dashboard/progress': typeof DashboardProgressRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/dashboard/challenges'
+    | '/dashboard/leaderboard'
     | '/dashboard/practice'
     | '/dashboard/progress'
     | '/dashboard/settings'
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/dashboard/challenges'
+    | '/dashboard/leaderboard'
     | '/dashboard/progress'
     | '/dashboard/settings'
     | '/dashboard/vocabulary'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/reset-password'
     | '/dashboard/challenges'
+    | '/dashboard/leaderboard'
     | '/dashboard/practice'
     | '/dashboard/progress'
     | '/dashboard/settings'
@@ -380,6 +392,13 @@ declare module '@tanstack/react-router' {
       path: '/challenges'
       fullPath: '/dashboard/challenges'
       preLoaderRoute: typeof DashboardChallengesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/leaderboard': {
+      id: '/dashboard/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/dashboard/leaderboard'
+      preLoaderRoute: typeof DashboardLeaderboardRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/practice': {
@@ -493,6 +512,7 @@ const DashboardPracticeRouteWithChildren =
 
 interface DashboardRouteChildren {
   DashboardChallengesRoute: typeof DashboardChallengesRoute
+  DashboardLeaderboardRoute: typeof DashboardLeaderboardRoute
   DashboardPracticeRoute: typeof DashboardPracticeRouteWithChildren
   DashboardProgressRoute: typeof DashboardProgressRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
@@ -502,6 +522,7 @@ interface DashboardRouteChildren {
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardChallengesRoute: DashboardChallengesRoute,
+  DashboardLeaderboardRoute: DashboardLeaderboardRoute,
   DashboardPracticeRoute: DashboardPracticeRouteWithChildren,
   DashboardProgressRoute: DashboardProgressRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,

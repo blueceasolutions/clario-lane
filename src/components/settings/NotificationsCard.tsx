@@ -11,7 +11,11 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabaseService } from '~supabase/clientServices'
 import { useRouteContext } from '@tanstack/react-router'
-import { fetchNotifications } from '@/integration/queries'
+import {
+  fetchNotifications,
+  fetchNotificationsKey,
+  fetchWeeklyLeaderboardKey,
+} from '@/integration/queries'
 
 export function NotificationsCard() {
   const userProfile = useRouteContext({ from: '__root__' }).user
@@ -29,6 +33,7 @@ export function NotificationsCard() {
         daily_reminder: boolean
         reminder_time: string
         weekly_summary: boolean
+        leaderboard_opt_in: boolean
       }>,
     ) => {
       if (!userProfile?.id) throw new Error('No user ID')
@@ -41,8 +46,11 @@ export function NotificationsCard() {
       if (error) throw error
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notification-settings'] })
+      queryClient.invalidateQueries({
+        queryKey: [fetchNotificationsKey, userProfile?.id],
+      })
       queryClient.invalidateQueries({ queryKey: ['user_profile'] })
+      queryClient.invalidateQueries({ queryKey: [fetchWeeklyLeaderboardKey] })
     },
   })
 
@@ -123,6 +131,24 @@ export function NotificationsCard() {
             checked={settings.weekly_summary ?? true}
             onCheckedChange={(checked) =>
               updateMutation.mutate({ weekly_summary: checked })
+            }
+          />
+        </div>
+
+        <div className='flex items-center justify-between space-x-2 border-t pt-4'>
+          <Label
+            htmlFor='leaderboard-opt-in'
+            className='space-y-0.5 items-start flex flex-col'>
+            <span className='block'>Weekly Leaderboard</span>
+            <span className='font-normal text-sm text-muted-foreground'>
+              Show your name and weekly XP on the opt-in leaderboard.
+            </span>
+          </Label>
+          <Switch
+            id='leaderboard-opt-in'
+            checked={settings.leaderboard_opt_in ?? false}
+            onCheckedChange={(checked) =>
+              updateMutation.mutate({ leaderboard_opt_in: checked })
             }
           />
         </div>

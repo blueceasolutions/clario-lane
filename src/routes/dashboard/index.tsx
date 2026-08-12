@@ -9,10 +9,13 @@ import {
   STREAK_FREEZE_COST_XP,
   QuestCard,
   Button,
+  Card,
+  CardContent,
 } from '@/components'
 import { SeoHead } from '@/components/shared'
 import { useQuery } from '@tanstack/react-query'
 import { useBuyStreakFreeze, useClaimQuest, useGamification } from '@/hooks'
+import { Trophy } from 'lucide-react'
 
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { motion } from 'motion/react'
@@ -119,6 +122,24 @@ function RouteComponent() {
           </div>
         </div>
       )}
+
+      {/* Weekly Leaderboard teaser */}
+      <Card>
+        <CardContent className='p-5 flex items-center justify-between gap-4 flex-wrap'>
+          <div className='flex items-center gap-3'>
+            <Trophy className='w-5 h-5 text-amber-500 shrink-0' />
+            <div>
+              <p className='font-medium'>Weekly Leaderboard</p>
+              <p className='text-sm text-muted-foreground'>
+                See how you rank against other opted-in readers.
+              </p>
+            </div>
+          </div>
+          <Button variant='outline' asChild>
+            <Link to='/dashboard/leaderboard'>View leaderboard</Link>
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Hero Banner */}
       <div className='relative overflow-hidden rounded-2xl bg-linear-to-r from-purple-600 to-indigo-600 p-8 text-white shadow-lg'>
