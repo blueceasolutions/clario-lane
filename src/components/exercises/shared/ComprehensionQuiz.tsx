@@ -6,7 +6,6 @@ import { useGamificationStore } from '@/store/gamification/useGamificationStore'
 import { PracticeStep, calculateNextWpm } from '@/lib'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  fetchPassageKey,
   fetchPracticeSessionsKey,
   fetchPractices,
   fetchSession,
@@ -20,7 +19,6 @@ import {
   fetchUserStatsKey,
 } from '@/integration/queries/fetchUserStats'
 
-import type { PassageResponse } from '@/types'
 import { useLocation } from '@tanstack/react-router'
 
 export function ComprehensionQuiz() {
@@ -31,6 +29,7 @@ export function ComprehensionQuiz() {
     wordsRead,
     startTime,
     elapsedTime,
+    isCustomPassage,
     setComprehension,
     setCorrectAnswers,
     setTotalQuestions,
@@ -38,7 +37,8 @@ export function ComprehensionQuiz() {
     setLoading,
     setNextWpm,
   } = usePracticeStore()
-  const questions = passage!.questions!
+  const questions = passage?.questions ?? []
+  const hasQuiz = questions.length > 0
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [answers, setAnswers] = useState<boolean[]>([])
@@ -59,10 +59,6 @@ export function ComprehensionQuiz() {
   }
 
   const queryClient = useQueryClient()
-
-  const passageResponse = queryClient.getQueryData([
-    fetchPassageKey,
-  ]) as PassageResponse
 
   const { mutate, status: mutationStatus } = useMutation({
     ...sessionMutation,
@@ -115,37 +111,43 @@ export function ComprehensionQuiz() {
     openLevelUpModal,
   } = useGamificationStore()
 
-  const handleNext = () => {
-    if (isLastQuestion) {
-      const correctAnswers = answers.filter((a) => a).length
-      const comprehension = (correctAnswers / questions.length) * 100
+  // Custom (user-pasted) passages have no comprehension questions -- give
+  // the benefit of the doubt (100%) rather than blocking the session on an
+  // assessment that doesn't exist, or fabricating one.
+  const submitSession = (correctAnswers: number, totalQuestions: number) => {
+    const comprehension = totalQuestions > 0
+      ? (correctAnswers / totalQuestions) * 100
+      : 100
 
-      const actualNextWpm = calculateNextWpm(wpm, comprehension)
+    const actualNextWpm = calculateNextWpm(wpm, comprehension)
 
-      const payload = {
-        correctAnswers,
-        totalQuestions: questions.length,
+    const payload = {
+      correctAnswers,
+      totalQuestions,
+      comprehension,
+      currentStep: PracticeStep.enum.Results,
+      loading: false,
+      nextWpm: actualNextWpm,
+    }
+
+    mutate(
+      {
         comprehension,
-        currentStep: PracticeStep.enum.Results,
-        loading: false,
-        nextWpm: actualNextWpm,
-      }
-
-      mutate(
-        {
-          comprehension,
-          correct_answers: correctAnswers,
-          duration: duration!,
-          elapsed_time: elapsedTime,
-          start_time: startTime,
-          total_questions: questions.length,
-          total_words: wordsRead!,
-          wpm: wpm,
-          exercise_id: exerciseUuid!,
-          passage_id: passageResponse?.id,
-          next_wpm: actualNextWpm,
-        },
-        {
+        correct_answers: correctAnswers,
+        duration: duration!,
+        elapsed_time: elapsedTime,
+        start_time: startTime,
+        total_questions: totalQuestions,
+        total_words: wordsRead!,
+        wpm: wpm,
+        exercise_id: exerciseUuid!,
+        // Custom passages were never persisted to the passages table, so
+        // there's no real id to reference -- passage_id is nullable for
+        // exactly this case.
+        passage_id: isCustomPassage ? null : passage?.id || null,
+        next_wpm: actualNextWpm,
+      },
+      {
           onSuccess: async (response: RecordedSessionResponse | null) => {
             // Get user ID from current stats or auth
             let userId = currentStats?.user_id
@@ -244,13 +246,37 @@ export function ComprehensionQuiz() {
             setLoading(false)
             setStep(payload.currentStep)
           },
-        },
-      )
+      },
+    )
+  }
+
+  const handleNext = () => {
+    if (isLastQuestion) {
+      const correctAnswers = answers.filter((a) => a).length
+      submitSession(correctAnswers, questions.length)
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
       setSelectedAnswer(null)
       setShowResult(false)
     }
+  }
+
+  // No quiz to take (custom passage) -- record the session as soon as we
+  // know which exercise this was, instead of showing an empty quiz.
+  useEffect(() => {
+    if (!hasQuiz && exerciseUuid && mutationStatus === 'idle') {
+      submitSession(0, 0)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasQuiz, exerciseUuid, mutationStatus])
+
+  if (!hasQuiz) {
+    return (
+      <div className='w-full max-w-2xl mx-auto flex flex-col items-center justify-center gap-3 py-24 text-center text-muted-foreground'>
+        <div className='h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent' />
+        <p>No quiz for custom text — recording your session…</p>
+      </div>
+    )
   }
 
   return (

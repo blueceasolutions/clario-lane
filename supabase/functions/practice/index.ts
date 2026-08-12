@@ -22,7 +22,9 @@ const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabase_anon_key = Deno.env.get("SUPABASE_ANON_KEY")!;
 
 const sessionSchema = z.object({
-  passage_id: z.string(),
+  // null for user-supplied (custom) passages, which are never persisted to
+  // the passages table
+  passage_id: z.string().nullable(),
   exercise_id: z.string(),
   wpm: z.number(),
   next_wpm: z.number(),

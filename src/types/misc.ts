@@ -102,7 +102,9 @@ export type PassageResponse = {
 };
 
 export const practiced_session = z.object({
-  passage_id: z.string(),
+  // null for user-supplied (custom) passages, which are never persisted to
+  // the passages table
+  passage_id: z.string().nullable(),
   exercise_id: z.string(),
   wpm: z.number(),
   comprehension: z.number(),

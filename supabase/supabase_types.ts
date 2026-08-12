@@ -639,7 +639,7 @@ export type Database = {
           p_elapsed_time: number;
           p_exercise_id: string;
           p_next_wpm: number;
-          p_passage_id: string;
+          p_passage_id: string | null;
           p_start_time: number;
           p_total_questions: number;
           p_total_words: number;

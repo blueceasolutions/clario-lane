@@ -20,6 +20,7 @@ export const useTeleprompterReader = ({
     passage,
     elapsedTime,
     startTime,
+    isCustomPassage,
     setElapsedTime,
     setStartTime,
     setProgress,
@@ -29,7 +30,9 @@ export const useTeleprompterReader = ({
     setWordsRead,
   } = usePracticeStore();
 
-  const { isLoading } = useQuery(fetchPassage);
+  // A custom (user-pasted) passage is already in the store -- don't
+  // overwrite it by fetching a random one.
+  const { isLoading } = useQuery({ ...fetchPassage, enabled: !isCustomPassage });
 
   // Calculate total estimated duration based on WPM and word count
   const wordCount = splitIntoWords(passage?.text).length;

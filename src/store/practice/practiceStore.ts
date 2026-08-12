@@ -26,6 +26,9 @@ export type PracticeStore = {
   estimatedDuration: number;
   chunkSize: number;
   exerciseType: PRACTICES;
+
+  // User-supplied passage state
+  isCustomPassage: boolean;
 };
 
 type PracticeStoreActions = {
@@ -57,6 +60,7 @@ type PracticeStoreActions = {
   setCorrectAnswers: (correctAnswers: number) => void;
   setTotalQuestions: (totalQuestions: number) => void;
   setComprehension: (comprehension: number) => void;
+  setCustomPassage: (text: string, title: string) => void;
 };
 
 const initialState: PracticeStore = {
@@ -76,6 +80,7 @@ const initialState: PracticeStore = {
   isPlaying: false,
   progress: 0,
   words: [],
+  isCustomPassage: false,
   currentIndex: 0,
   estimatedDuration: 0,
   chunkSize: 3,
@@ -93,6 +98,25 @@ export const usePracticeStore = create<PracticeStore & PracticeStoreActions>(
     setCorrectAnswers: (correctAnswers: number) => set({ correctAnswers }),
     setTotalQuestions: (totalQuestions: number) => set({ totalQuestions }),
     setComprehension: (comprehension: number) => set({ comprehension }),
+    setCustomPassage: (text: string, title: string) =>
+      set({
+        passage: {
+          id: "",
+          text,
+          title: title || "Custom Passage",
+          category: "Custom",
+          difficulty: "Medium",
+          questions: [],
+        },
+        isCustomPassage: true,
+        loading: false,
+        words: [],
+        currentIndex: 0,
+        progress: 0,
+        elapsedTime: 0,
+        startTime: 0,
+        isPlaying: false,
+      }),
 
     // Existing actions
     setStep: (step: PracticeStep) => set({ currentStep: step }),
