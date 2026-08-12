@@ -149,6 +149,12 @@ revoke execute on function public.send_daily_reminders() from public;
 -- Weekly summary: once a week (Monday, chosen arbitrarily -- there's no
 -- per-user day-of-week setting, only reminder_time), at the user's
 -- reminder_time hour, covering the trailing 7 days of practice_sessions.
+-- Also computes a WPM trend against the prior 7-day window and a
+-- highlight stat (best single-session WPM this week), so the digest shows
+-- direction and a specific standout moment, not just flat totals. Skips a
+-- user entirely if they had no sessions this week -- there's no trend or
+-- highlight to report, and a summary of all zeros reads as nagging rather
+-- than useful.
 create or replace function public.send_weekly_summaries()
 returns void
 language plpgsql
@@ -162,6 +168,9 @@ declare
   v_sessions int;
   v_words bigint;
   v_avg_wpm numeric;
+  v_prev_avg_wpm numeric;
+  v_best_wpm numeric;
+  v_best_wpm_date text;
 begin
   if v_functions_url is null or v_service_key is null then
     raise notice 'send_weekly_summaries: functions_url/service_role_key not set in vault yet, skipping';
@@ -185,6 +194,25 @@ begin
       where user_id = u.id
         and created_at >= now() - interval '7 days';
 
+    if v_sessions = 0 then
+      continue;
+    end if;
+
+    select coalesce(round(avg(wpm)), 0)
+      into v_prev_avg_wpm
+      from practice_sessions
+      where user_id = u.id
+        and created_at >= now() - interval '14 days'
+        and created_at < now() - interval '7 days';
+
+    select wpm, to_char(created_at, 'FMDay, FMMon FMDD')
+      into v_best_wpm, v_best_wpm_date
+      from practice_sessions
+      where user_id = u.id
+        and created_at >= now() - interval '7 days'
+      order by wpm desc
+      limit 1;
+
     perform net.http_post(
       url := v_functions_url || '/send-email',
       headers := jsonb_build_object(
@@ -199,6 +227,11 @@ begin
           'sessionsCompleted', v_sessions,
           'wordsRead', v_words,
           'avgWpm', v_avg_wpm,
+          -- 0 (rather than null) means "no prior week to compare against";
+          -- the email only renders a trend when this is > 0.
+          'prevAvgWpm', v_prev_avg_wpm,
+          'bestWpm', v_best_wpm,
+          'bestWpmDate', v_best_wpm_date,
           'streak', u.streak_days
         )
       )

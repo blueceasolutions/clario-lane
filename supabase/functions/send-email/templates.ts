@@ -109,7 +109,24 @@ export type WeeklySummaryStats = {
   sessionsCompleted: number;
   wordsRead: number;
   avgWpm: number;
+  // 0 means "no prior week of sessions to compare against" -- omit the
+  // trend line entirely in that case, rather than showing a misleading
+  // delta from zero.
+  prevAvgWpm: number;
+  bestWpm: number;
+  bestWpmDate: string;
   streak: number;
+};
+
+const wpmTrendLine = (avgWpm: number, prevAvgWpm: number) => {
+  if (prevAvgWpm <= 0) return "";
+  const delta = avgWpm - prevAvgWpm;
+  if (delta === 0) {
+    return `<span style="font-size:13px; color:#6b7280;">Same as last week</span>`;
+  }
+  const color = delta > 0 ? "#16a34a" : "#dc2626";
+  const arrow = delta > 0 ? "▲" : "▼";
+  return `<span style="font-size:13px; color:${color};">${arrow} ${delta > 0 ? "+" : ""}${delta} vs last week</span>`;
 };
 
 export const getWeeklySummaryEmail = (name: string, stats: WeeklySummaryStats) =>
@@ -127,12 +144,23 @@ export const getWeeklySummaryEmail = (name: string, stats: WeeklySummaryStats) =
     </tr>
     <tr>
       <td class="p" style="padding:8px 0;">Average speed</td>
-      <td class="p" style="text-align:right; font-weight:600;">${stats.avgWpm} WPM</td>
+      <td class="p" style="text-align:right;">
+        <div style="font-weight:600;">${stats.avgWpm} WPM</div>
+        ${wpmTrendLine(stats.avgWpm, stats.prevAvgWpm)}
+      </td>
     </tr>
     <tr>
       <td class="p" style="padding:8px 0;">Current streak</td>
       <td class="p" style="text-align:right; font-weight:600;">${stats.streak} days</td>
     </tr>
   </table>
+  ${
+    stats.bestWpm > 0
+      ? `
+  <div style="background-color:#f5f3ff; border-radius:8px; padding:16px; margin-bottom:16px;">
+    <p class="p" style="margin:0; color:#111827;"><strong>Highlight:</strong> your fastest session this week was ${stats.bestWpm} WPM, on ${stats.bestWpmDate}.</p>
+  </div>`
+      : ""
+  }
   <a href="https://clariolane.com/dashboard/progress" class="button">View Full Progress</a>
 `);

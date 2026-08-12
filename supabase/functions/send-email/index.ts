@@ -84,6 +84,9 @@ app.post('/send-email', async (c) => {
           sessionsCompleted: data?.sessionsCompleted || 0,
           wordsRead: data?.wordsRead || 0,
           avgWpm: data?.avgWpm || 0,
+          prevAvgWpm: data?.prevAvgWpm || 0,
+          bestWpm: data?.bestWpm || 0,
+          bestWpmDate: data?.bestWpmDate || '',
           streak: data?.streak || 0,
         } satisfies WeeklySummaryStats)
         break

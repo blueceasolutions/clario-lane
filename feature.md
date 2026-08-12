@@ -124,7 +124,14 @@ These aren't new ideas — they're places the product already asks the user for 
 
 ## Insights & analytics
 
-- [ ] **Weekly email digest** (ties directly into the reminder-infrastructure item above) — WPM trend, streak status, one highlight stat for the week.
+- [x] **Weekly email digest** (ties directly into the reminder-infrastructure item above) — WPM trend, streak status, one highlight stat for the week.
+  **Done:** Most of this already existed from the earlier "close the loop" work — `send_weekly_summaries()` (a Monday `pg_cron` job) already computed sessions/words/avg WPM/streak for the trailing 7 days and POSTed to `/send-email`, and the email template already rendered them in a table. Streak status was already covered; the genuinely missing pieces were the "trend" and "highlight" the brief asked for, since a flat weekly average has no sense of direction and there was nothing that read as a specific standout moment.
+
+  Added two more queries to `send_weekly_summaries()`: the same avg-WPM calculation over the *prior* 7-day window (for the trend), and the single best-session WPM this week with the day it happened (for the highlight). The email now shows a colored ▲/▼ delta next to average speed ("+30 vs last week") and a callout box ("Highlight: your fastest session this week was 280 WPM, on Tuesday, Aug 11") — pulled from `practice_sessions`, no new columns needed. The trend line is omitted entirely (not shown as "+200" or similar) when there's no prior week of sessions to compare against, rather than rendering a misleading delta from zero for a brand-new user.
+
+  Along the way, added a guard the original version didn't have: if a user had zero sessions this week, they're now skipped entirely rather than receiving a summary of all zeros — there's no trend or highlight to report, and re-reading the brief's actual goal (motivate/inform), an all-zero digest reads as nagging rather than useful and risks just training people to disable the toggle.
+
+  Verified the SQL computation directly against two weeks of seeded session data (confirmed correct trend delta and correct best-session/date selection), and verified the email template renders correctly for three scenarios (trend up, trend down, no-prior-week) via a standalone Deno script calling `getWeeklySummaryEmail` directly — deliberately did *not* trigger an actual send through the real `RESEND_API_KEY` present in local dev config, since that's a live third-party call with a real side effect and testing the template in isolation was sufficient to verify the change.
 - [ ] **Comprehension breakdown by question type or passage category**, not just an overall percentage. Helps a user see *what* is capping their comprehension, not just that it's low.
 - [ ] **"Best time of day" insight** — surface when a user's own session history shows the strongest WPM/comprehension combination, and nudge them to practice then.
 - [ ] **Exportable progress report (PDF/CSV).** Small effort, disproportionately useful for the "I need to prove I'm reading faster for work/school" segment of users.
