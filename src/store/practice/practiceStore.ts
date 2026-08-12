@@ -61,6 +61,7 @@ type PracticeStoreActions = {
   setTotalQuestions: (totalQuestions: number) => void;
   setComprehension: (comprehension: number) => void;
   setCustomPassage: (text: string, title: string) => void;
+  setSelectedPassage: (passage: Passage) => void;
 };
 
 const initialState: PracticeStore = {
@@ -109,6 +110,21 @@ export const usePracticeStore = create<PracticeStore & PracticeStoreActions>(
           questions: [],
         },
         isCustomPassage: true,
+        loading: false,
+        words: [],
+        currentIndex: 0,
+        progress: 0,
+        elapsedTime: 0,
+        startTime: 0,
+        isPlaying: false,
+      }),
+    // A real passage picked from the browse screen (src/routes/dashboard/practice/browse.tsx)
+    // -- unlike setCustomPassage, this has real quiz questions and a real
+    // id, so isCustomPassage stays false (normal quiz + passage_id flow).
+    setSelectedPassage: (passage: Passage) =>
+      set({
+        passage,
+        isCustomPassage: false,
         loading: false,
         words: [],
         currentIndex: 0,

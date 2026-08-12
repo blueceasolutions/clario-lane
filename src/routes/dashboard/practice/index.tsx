@@ -3,9 +3,9 @@ import { CustomPassageModal, StartPracticeCard } from '@/components'
 import { Button } from '@/components/ui/button'
 import { fetchPractices } from '@/integration'
 import type { Practice } from '@/lib'
-import { PenLine } from 'lucide-react'
+import { Library, PenLine } from 'lucide-react'
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 
 export const Route = createFileRoute('/dashboard/practice/')({
@@ -44,13 +44,21 @@ function RouteComponent() {
         <p className='text-center text-muted-foreground/80 text-sm font-semibold'>
           Select a mode to begin your daily practice
         </p>
-        <Button
-          variant='outline'
-          onClick={() => setCustomModalOpen(true)}
-          className='gap-2'>
-          <PenLine className='w-4 h-4' />
-          Practice with your own text
-        </Button>
+        <div className='flex flex-wrap items-center justify-center gap-3'>
+          <Button
+            variant='outline'
+            onClick={() => setCustomModalOpen(true)}
+            className='gap-2'>
+            <PenLine className='w-4 h-4' />
+            Practice with your own text
+          </Button>
+          <Button variant='outline' className='gap-2' asChild>
+            <Link to='/dashboard/practice/browse'>
+              <Library className='w-4 h-4' />
+              Browse passages
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <CustomPassageModal

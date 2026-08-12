@@ -22,7 +22,6 @@ export const useWordChunkingReader = ({
     words,
     startTime,
     chunkSize,
-    isCustomPassage,
     setWords,
     setCurrentIndex,
     setElapsedTime,
@@ -33,9 +32,9 @@ export const useWordChunkingReader = ({
     setWordsRead,
   } = usePracticeStore();
 
-  // A custom (user-pasted) passage is already in the store -- don't
-  // overwrite it by fetching a random one.
-  const { isLoading } = useQuery({ ...fetchPassage, enabled: !isCustomPassage });
+  // A passage was already pre-selected (browsed, or custom pasted text) --
+  // don't overwrite it by fetching a random one.
+  const { isLoading } = useQuery({ ...fetchPassage, enabled: !passage });
 
   // Split passage text into words
   useEffect(() => {

@@ -4,6 +4,7 @@ export * from "./fetchGoals";
 export * from "./fetchPlans";
 export * from "./fetchCountry";
 export * from "./fetchPassage";
+export * from "./fetchPassagesLibrary";
 export * from "./fetchPractices";
 export * from "./fetchWordsReadToday";
 export * from "./fetchNextSubscriptionDate";

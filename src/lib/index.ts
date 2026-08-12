@@ -7,3 +7,4 @@ export * from "./getContinent";
 export * from "./practiceTiming";
 export * from "./adaptiveWpm";
 export * from "./goalCopy";
+export * from "./passageFilters";

@@ -26,6 +26,7 @@ import { Route as DashboardProgressRouteImport } from './routes/dashboard/progre
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as DashboardPracticeIndexRouteImport } from './routes/dashboard/practice/index'
+import { Route as DashboardPracticeBrowseRouteImport } from './routes/dashboard/practice/browse'
 import { Route as DashboardPracticeSpeedreadingPracticeIdRouteImport } from './routes/dashboard/practice/speedreading/$practiceId'
 import { Route as DashboardPracticeTeleprompterPracticeIdRouteImport } from './routes/dashboard/practice/teleprompter/$practiceId'
 import { Route as DashboardPracticeWordchunkingPracticeIdRouteImport } from './routes/dashboard/practice/wordchunking/$practiceId'
@@ -115,6 +116,11 @@ const DashboardPracticeIndexRoute = DashboardPracticeIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardPracticeRoute,
 } as any)
+const DashboardPracticeBrowseRoute = DashboardPracticeBrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
+  getParentRoute: () => DashboardPracticeRoute,
+} as any)
 const DashboardPracticeSpeedreadingPracticeIdRoute =
   DashboardPracticeSpeedreadingPracticeIdRouteImport.update({
     id: '/speedreading/$practiceId',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/auth/': typeof AuthIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
+  '/dashboard/practice/browse': typeof DashboardPracticeBrowseRoute
   '/dashboard/practice/': typeof DashboardPracticeIndexRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
   '/dashboard/practice/teleprompter/$practiceId': typeof DashboardPracticeTeleprompterPracticeIdRoute
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/onboarding': typeof OnboardingIndexRoute
+  '/dashboard/practice/browse': typeof DashboardPracticeBrowseRoute
   '/dashboard/practice': typeof DashboardPracticeIndexRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
   '/dashboard/practice/teleprompter/$practiceId': typeof DashboardPracticeTeleprompterPracticeIdRoute
@@ -192,6 +200,7 @@ export interface FileRoutesById {
   '/auth/': typeof AuthIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
+  '/dashboard/practice/browse': typeof DashboardPracticeBrowseRoute
   '/dashboard/practice/': typeof DashboardPracticeIndexRoute
   '/dashboard/practice/speedreading/$practiceId': typeof DashboardPracticeSpeedreadingPracticeIdRoute
   '/dashboard/practice/teleprompter/$practiceId': typeof DashboardPracticeTeleprompterPracticeIdRoute
@@ -216,6 +225,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/dashboard/'
     | '/onboarding/'
+    | '/dashboard/practice/browse'
     | '/dashboard/practice/'
     | '/dashboard/practice/speedreading/$practiceId'
     | '/dashboard/practice/teleprompter/$practiceId'
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/onboarding'
+    | '/dashboard/practice/browse'
     | '/dashboard/practice'
     | '/dashboard/practice/speedreading/$practiceId'
     | '/dashboard/practice/teleprompter/$practiceId'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/dashboard/'
     | '/onboarding/'
+    | '/dashboard/practice/browse'
     | '/dashboard/practice/'
     | '/dashboard/practice/speedreading/$practiceId'
     | '/dashboard/practice/teleprompter/$practiceId'
@@ -393,6 +405,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPracticeIndexRouteImport
       parentRoute: typeof DashboardPracticeRoute
     }
+    '/dashboard/practice/browse': {
+      id: '/dashboard/practice/browse'
+      path: '/browse'
+      fullPath: '/dashboard/practice/browse'
+      preLoaderRoute: typeof DashboardPracticeBrowseRouteImport
+      parentRoute: typeof DashboardPracticeRoute
+    }
     '/dashboard/practice/speedreading/$practiceId': {
       id: '/dashboard/practice/speedreading/$practiceId'
       path: '/speedreading/$practiceId'
@@ -432,6 +451,7 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface DashboardPracticeRouteChildren {
+  DashboardPracticeBrowseRoute: typeof DashboardPracticeBrowseRoute
   DashboardPracticeIndexRoute: typeof DashboardPracticeIndexRoute
   DashboardPracticeSpeedreadingPracticeIdRoute: typeof DashboardPracticeSpeedreadingPracticeIdRoute
   DashboardPracticeTeleprompterPracticeIdRoute: typeof DashboardPracticeTeleprompterPracticeIdRoute
@@ -439,6 +459,7 @@ interface DashboardPracticeRouteChildren {
 }
 
 const DashboardPracticeRouteChildren: DashboardPracticeRouteChildren = {
+  DashboardPracticeBrowseRoute: DashboardPracticeBrowseRoute,
   DashboardPracticeIndexRoute: DashboardPracticeIndexRoute,
   DashboardPracticeSpeedreadingPracticeIdRoute:
     DashboardPracticeSpeedreadingPracticeIdRoute,
