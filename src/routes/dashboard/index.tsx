@@ -11,6 +11,7 @@ import {
   Button,
   Card,
   CardContent,
+  BestTimeInsightCard,
 } from '@/components'
 import { SeoHead } from '@/components/shared'
 import { useQuery } from '@tanstack/react-query'
@@ -140,6 +141,9 @@ function RouteComponent() {
           </Button>
         </CardContent>
       </Card>
+
+      {/* Best time of day to practice, once there's enough history to say */}
+      <BestTimeInsightCard userId={userProfile.id} />
 
       {/* Hero Banner */}
       <div className='relative overflow-hidden rounded-2xl bg-linear-to-r from-purple-600 to-indigo-600 p-8 text-white shadow-lg'>

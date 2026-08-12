@@ -6,3 +6,4 @@ export * from "./overview-stats";
 export * from "./goal-tracker";
 export * from "./overview-pending";
 export * from "./quest-card";
+export * from "./best-time-insight-card";
