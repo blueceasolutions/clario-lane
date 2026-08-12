@@ -1,5 +1,5 @@
 import { Link, useLocation } from '@tanstack/react-router'
-import { BookOpen } from 'lucide-react'
+import { BarChart3, BookOpen } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { Button, ProfileMenu } from './ui'
@@ -18,6 +18,7 @@ const Navbar = () => {
     const tabs = [
       { id: 'practice', label: 'Practice', icon: TrendingUp },
       { id: 'dashboard', label: 'Dashboard', icon: BookOpen },
+      { id: 'progress', label: 'Progress', icon: BarChart3 },
     ]
 
     const activeTab =
