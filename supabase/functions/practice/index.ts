@@ -35,6 +35,7 @@ const sessionSchema = z.object({
   total_questions: z.number(),
   start_time: z.number(),
   elapsed_time: z.number(),
+  next_difficulty: z.enum(["Easy", "Medium", "Hard"]).optional(),
 });
 
 type SessionData = z.infer<typeof sessionSchema>;
@@ -99,8 +100,10 @@ app.get("/practice", async (c) => {
 });
 
 // GET /practice/passage - Get a random passage, preferring the user's
-// chosen content types (falling back to the full pool if they have no
-// preference set, or nothing matches it)
+// chosen content types and their comprehension-adjusted difficulty
+// (next_difficulty, set by record_practice_session the same way next_wpm
+// is), relaxing each preference in turn if nothing matches, down to the
+// full pool if they have no preferences set at all
 app.get("/practice/passage", async (c) => {
   const supabaseClient = c.get("supabase");
   const user = c.get("user");
@@ -108,27 +111,55 @@ app.get("/practice/passage", async (c) => {
   try {
     const { data: userRow } = await supabaseClient
       .from("users")
-      .select("content_type")
+      .select("content_type, next_difficulty")
       .eq("id", user.id)
       .single();
 
     const preferredTags = (userRow?.content_type ?? []).filter(
       (tag) => tag && tag !== "mixed",
     );
+    const preferredDifficulty = userRow?.next_difficulty;
 
     let passageIds: Array<{ id: string }> | null = null;
 
-    if (preferredTags.length > 0) {
+    // Narrowest: matches both topic and the recommended difficulty.
+    if (preferredTags.length > 0 && preferredDifficulty) {
       const { data, error } = await supabaseClient
         .from("passages")
         .select("id")
-        .overlaps("tags", preferredTags);
+        .overlaps("tags", preferredTags)
+        .eq("difficulty", preferredDifficulty);
 
       if (error) throw new Error(error.message);
       passageIds = data;
     }
 
-    // No preference, or nothing matched it: fall back to the full pool
+    // Relax difficulty if that matched nothing (or there's no
+    // recommendation yet): topic-only, same as before this feature existed.
+    if (!passageIds || passageIds.length === 0) {
+      if (preferredTags.length > 0) {
+        const { data, error } = await supabaseClient
+          .from("passages")
+          .select("id")
+          .overlaps("tags", preferredTags);
+
+        if (error) throw new Error(error.message);
+        passageIds = data;
+      }
+    }
+
+    // Relax topic too: try the recommended difficulty on its own.
+    if ((!passageIds || passageIds.length === 0) && preferredDifficulty) {
+      const { data, error } = await supabaseClient
+        .from("passages")
+        .select("id")
+        .eq("difficulty", preferredDifficulty);
+
+      if (error) throw new Error(error.message);
+      passageIds = data;
+    }
+
+    // No preference, or nothing matched any of them: fall back to the full pool
     if (!passageIds || passageIds.length === 0) {
       const { data, error } = await supabaseClient
         .from("passages")
@@ -215,6 +246,7 @@ app.post("/practice/session", async (c) => {
         p_total_questions: vettedData.total_questions,
         p_start_time: vettedData.start_time,
         p_elapsed_time: vettedData.elapsed_time,
+        p_next_difficulty: vettedData.next_difficulty,
       },
     );
 

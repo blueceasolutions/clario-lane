@@ -1,4 +1,5 @@
 import { PRACTICES, PracticeStep, READING_SPEED_RANGE } from "@/lib";
+import type { Difficulty } from "@/lib";
 import type { Passage } from "@/types";
 import { create } from "zustand";
 import { toast } from "sonner";
@@ -14,6 +15,7 @@ export type PracticeStore = {
   startTime: number;
   elapsedTime: number;
   nextWpm: number;
+  nextDifficulty: Difficulty | null;
   currentStep: PracticeStep;
   passage: Passage | null;
   loading: boolean;
@@ -39,6 +41,7 @@ type PracticeStoreActions = {
   ) => void;
   setWpm: (wpm: number) => void;
   setNextWpm: (wpm: number) => void;
+  setNextDifficulty: (difficulty: Difficulty | null) => void;
   reset: () => void;
 
   // New reader actions
@@ -67,6 +70,7 @@ type PracticeStoreActions = {
 const initialState: PracticeStore = {
   wpm: READING_SPEED_RANGE.DEFAULT,
   nextWpm: 0,
+  nextDifficulty: null,
   currentStep: PracticeStep.enum.Intro,
   correctAnswers: 0,
   totalQuestions: 0,
@@ -141,6 +145,8 @@ export const usePracticeStore = create<PracticeStore & PracticeStoreActions>(
     ) => set(values),
     setWpm: (wpm: number) => set({ wpm }),
     setNextWpm: (nextWpm: number) => set({ nextWpm }),
+    setNextDifficulty: (nextDifficulty: Difficulty | null) =>
+      set({ nextDifficulty }),
     updateStore: (values: Partial<PracticeStore>) => set(values),
     reset: () => {
       const { exerciseType } = get();

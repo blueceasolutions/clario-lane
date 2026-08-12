@@ -539,6 +539,7 @@ export type Database = {
           last_active_date: string | null;
           level: number | null;
           name: string;
+          next_difficulty: string | null;
           next_wpm: number | null;
           onboarding_completed: boolean | null;
           reminder_time: string | null;
@@ -569,6 +570,7 @@ export type Database = {
           last_active_date?: string | null;
           level?: number | null;
           name: string;
+          next_difficulty?: string | null;
           next_wpm?: number | null;
           onboarding_completed?: boolean | null;
           reminder_time?: string | null;
@@ -599,6 +601,7 @@ export type Database = {
           last_active_date?: string | null;
           level?: number | null;
           name?: string;
+          next_difficulty?: string | null;
           next_wpm?: number | null;
           onboarding_completed?: boolean | null;
           reminder_time?: string | null;
@@ -641,6 +644,7 @@ export type Database = {
           p_duration: number;
           p_elapsed_time: number;
           p_exercise_id: string;
+          p_next_difficulty?: string;
           p_next_wpm: number;
           p_passage_id: string | null;
           p_start_time: number;

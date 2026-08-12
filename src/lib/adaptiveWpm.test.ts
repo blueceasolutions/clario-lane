@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateNextWpm } from "./adaptiveWpm";
+import { calculateNextDifficulty, calculateNextWpm } from "./adaptiveWpm";
 import { READING_SPEED_RANGE } from "./constants/exercise";
 
 describe("calculateNextWpm", () => {
@@ -39,5 +39,30 @@ describe("calculateNextWpm", () => {
     expect(calculateNextWpm(READING_SPEED_RANGE.MIN + 2, 0)).toBe(
       READING_SPEED_RANGE.MIN,
     );
+  });
+});
+
+describe("calculateNextDifficulty", () => {
+  it("steps up one level on strong comprehension (>= 80%)", () => {
+    expect(calculateNextDifficulty("Easy", 80)).toBe("Medium");
+    expect(calculateNextDifficulty("Medium", 100)).toBe("Hard");
+  });
+
+  it("steps down one level on weak comprehension (< 60%)", () => {
+    expect(calculateNextDifficulty("Hard", 59)).toBe("Medium");
+    expect(calculateNextDifficulty("Medium", 0)).toBe("Easy");
+  });
+
+  it("holds steady in the middle band [60, 80)", () => {
+    expect(calculateNextDifficulty("Medium", 60)).toBe("Medium");
+    expect(calculateNextDifficulty("Medium", 79)).toBe("Medium");
+  });
+
+  it("never exceeds Hard", () => {
+    expect(calculateNextDifficulty("Hard", 80)).toBe("Hard");
+  });
+
+  it("never drops below Easy", () => {
+    expect(calculateNextDifficulty("Easy", 0)).toBe("Easy");
   });
 });

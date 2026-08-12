@@ -3,7 +3,7 @@ import { Button, Card } from '@/components'
 import { CheckCircle, XCircle } from 'lucide-react'
 import { usePracticeStore, useAppStore } from '@/store'
 import { useGamificationStore } from '@/store/gamification/useGamificationStore'
-import { PracticeStep, calculateNextWpm } from '@/lib'
+import { PracticeStep, calculateNextDifficulty, calculateNextWpm } from '@/lib'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   fetchPracticeSessionsKey,
@@ -36,6 +36,7 @@ export function ComprehensionQuiz() {
     setStep,
     setLoading,
     setNextWpm,
+    setNextDifficulty,
   } = usePracticeStore()
   const questions = passage?.questions ?? []
   const hasQuiz = questions.length > 0
@@ -120,6 +121,10 @@ export function ComprehensionQuiz() {
       : 100
 
     const actualNextWpm = calculateNextWpm(wpm, comprehension)
+    const actualNextDifficulty = calculateNextDifficulty(
+      passage?.difficulty ?? 'Medium',
+      comprehension,
+    )
 
     const payload = {
       correctAnswers,
@@ -128,6 +133,7 @@ export function ComprehensionQuiz() {
       currentStep: PracticeStep.enum.Results,
       loading: false,
       nextWpm: actualNextWpm,
+      nextDifficulty: actualNextDifficulty,
     }
 
     mutate(
@@ -146,6 +152,7 @@ export function ComprehensionQuiz() {
         // exactly this case.
         passage_id: isCustomPassage ? null : passage?.id || null,
         next_wpm: actualNextWpm,
+        next_difficulty: actualNextDifficulty,
       },
       {
           onSuccess: async (response: RecordedSessionResponse | null) => {
@@ -232,6 +239,7 @@ export function ComprehensionQuiz() {
             setTotalQuestions(payload.totalQuestions)
             setComprehension(payload.comprehension)
             setNextWpm(payload.nextWpm)
+            setNextDifficulty(payload.nextDifficulty)
             setLoading(false)
             setStep(payload.currentStep)
           },
@@ -243,6 +251,7 @@ export function ComprehensionQuiz() {
             setTotalQuestions(payload.totalQuestions)
             setComprehension(payload.comprehension)
             setNextWpm(payload.nextWpm)
+            setNextDifficulty(payload.nextDifficulty)
             setLoading(false)
             setStep(payload.currentStep)
           },

@@ -115,6 +115,7 @@ export const practiced_session = z.object({
   start_time: z.number(),
   elapsed_time: z.number(),
   next_wpm: z.number(),
+  next_difficulty: z.enum(["Easy", "Medium", "Hard"]).optional(),
 });
 
 export type practiced_session = z.infer<typeof practiced_session>;

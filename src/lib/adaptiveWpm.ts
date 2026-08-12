@@ -22,3 +22,26 @@ export function calculateNextWpm(wpm: number, comprehensionPct: number): number 
 
   return nextWpm;
 }
+
+export type Difficulty = "Easy" | "Medium" | "Hard";
+
+export const DIFFICULTY_ORDER: Difficulty[] = ["Easy", "Medium", "Hard"];
+
+// Same comprehension signal as calculateNextWpm, applied to passage
+// difficulty instead of pace: step up a level on strong comprehension, step
+// down on weak comprehension, hold steady in between. Steps by one level at
+// a time (never jumps Easy -> Hard) and clamps at either end of the scale.
+export function calculateNextDifficulty(
+  difficulty: Difficulty,
+  comprehensionPct: number,
+): Difficulty {
+  const index = DIFFICULTY_ORDER.indexOf(difficulty);
+
+  if (comprehensionPct >= 80) {
+    return DIFFICULTY_ORDER[Math.min(index + 1, DIFFICULTY_ORDER.length - 1)];
+  }
+  if (comprehensionPct < 60) {
+    return DIFFICULTY_ORDER[Math.max(index - 1, 0)];
+  }
+  return difficulty;
+}

@@ -12,15 +12,22 @@ import { TrendingDown, TrendingUp } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { usePracticeStore } from '@/store'
 import { fetchPassage } from '@/integration'
+import { DIFFICULTY_ORDER } from '@/lib'
 import { useQuery } from '@tanstack/react-query'
 
 export const Results = () => {
-  const { wpm, comprehension, reset, nextWpm, setWpm } = usePracticeStore()
+  const { wpm, comprehension, reset, nextWpm, nextDifficulty, passage, setWpm } =
+    usePracticeStore()
   const route = useRouter()
   const { refetch } = useQuery(fetchPassage)
 
   const ers = Math.round((wpm * comprehension) / 100)
   const wpmChange = nextWpm ? nextWpm - wpm : 0
+  const difficultyChange =
+    passage && nextDifficulty
+      ? DIFFICULTY_ORDER.indexOf(nextDifficulty) -
+        DIFFICULTY_ORDER.indexOf(passage.difficulty)
+      : 0
 
   const onComplete = () => {
     route.navigate({ to: '/dashboard' })
@@ -86,14 +93,14 @@ export const Results = () => {
               <div>
                 <h3 className='text-lg'>Next Session</h3>
                 <p className='text-sm text-muted-foreground'>
-                  Recommended speed based on your performance
+                  Recommended speed and difficulty based on your performance
                 </p>
               </div>
               <div className='text-right'>
                 <div className='text-2xl'>{nextWpm} WPM</div>
                 {wpmChange !== 0 && (
                   <div
-                    className={`text-sm flex items-center gap-1 ${wpmChange > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    className={`text-sm flex items-center justify-end gap-1 ${wpmChange > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                     {wpmChange > 0 ? (
                       <>
                         <TrendingUp className='h-4 w-4' />+{wpmChange} WPM
@@ -104,6 +111,20 @@ export const Results = () => {
                         {wpmChange} WPM
                       </>
                     )}
+                  </div>
+                )}
+                {nextDifficulty && (
+                  <div
+                    className={`text-sm flex items-center justify-end gap-1 ${
+                      difficultyChange > 0
+                        ? 'text-green-600 dark:text-green-400'
+                        : difficultyChange < 0
+                          ? 'text-red-600 dark:text-red-400'
+                          : 'text-muted-foreground'
+                    }`}>
+                    {difficultyChange > 0 && <TrendingUp className='h-4 w-4' />}
+                    {difficultyChange < 0 && <TrendingDown className='h-4 w-4' />}
+                    {nextDifficulty} difficulty
                   </div>
                 )}
               </div>

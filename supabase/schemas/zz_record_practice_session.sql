@@ -22,7 +22,8 @@ create or replace function public.record_practice_session(
   p_correct_answers numeric,
   p_total_questions numeric,
   p_start_time numeric,
-  p_elapsed_time numeric
+  p_elapsed_time numeric,
+  p_next_difficulty text default null
 )
 returns jsonb
 language plpgsql
@@ -129,6 +130,7 @@ begin
      set last_active_date = v_today,
          streak_days = v_new_streak,
          next_wpm = p_next_wpm,
+         next_difficulty = coalesce(p_next_difficulty, next_difficulty),
          updated_at = now()
    where id = v_uid;
 
@@ -200,9 +202,9 @@ end;
 $$;
 
 revoke execute on function public.record_practice_session(
-  uuid, uuid, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric
+  uuid, uuid, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, text
 ) from public;
 
 grant execute on function public.record_practice_session(
-  uuid, uuid, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric
+  uuid, uuid, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, text
 ) to authenticated;

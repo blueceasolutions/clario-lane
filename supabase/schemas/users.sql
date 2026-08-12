@@ -7,6 +7,7 @@ create table if not exists users (
     baseline_comprehension numeric default 0,
     current_wpm numeric default 0,
     next_wpm numeric default 0,
+    next_difficulty text check (next_difficulty in ('Easy', 'Medium', 'Hard')), -- recommended passage difficulty for the next session, adjusted by comprehension like next_wpm
     total_sessions numeric default 0,
     total_time_spent numeric default 0, -- in seconds
     goals text[] default '{}', -- onboarding goal selections
