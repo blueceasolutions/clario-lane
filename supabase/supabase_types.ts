@@ -614,6 +614,59 @@ export type Database = {
         };
         Relationships: [];
       };
+      vocabulary_reviews: {
+        Row: {
+          context: string;
+          correct_answer: string;
+          correct_streak: number;
+          created_at: string | null;
+          id: string;
+          interval_days: number;
+          last_reviewed_at: string | null;
+          next_review_at: string;
+          passage_id: string | null;
+          updated_at: string | null;
+          user_id: string;
+          word: string;
+        };
+        Insert: {
+          context: string;
+          correct_answer: string;
+          correct_streak?: number;
+          created_at?: string | null;
+          id?: string;
+          interval_days?: number;
+          last_reviewed_at?: string | null;
+          next_review_at?: string;
+          passage_id?: string | null;
+          updated_at?: string | null;
+          user_id: string;
+          word: string;
+        };
+        Update: {
+          context?: string;
+          correct_answer?: string;
+          correct_streak?: number;
+          created_at?: string | null;
+          id?: string;
+          interval_days?: number;
+          last_reviewed_at?: string | null;
+          next_review_at?: string;
+          passage_id?: string | null;
+          updated_at?: string | null;
+          user_id?: string;
+          word?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "vocabulary_reviews_passage_id_fkey";
+            columns: ["passage_id"];
+            isOneToOne: false;
+            referencedRelation: "passages";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;

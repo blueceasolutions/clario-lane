@@ -16,3 +16,4 @@ export * from "./fetchQuests";
 export * from "./fetchAchievements";
 export * from "./fetchSession";
 export * from "./fetchNotifications";
+export * from "./fetchVocabularyReviews";

@@ -83,6 +83,10 @@ export type Question = {
   question: string;
   options: string[];
   correctIndex: number;
+  // Optional vocabulary word this question tests. When set and the user
+  // answers wrong, it gets queued for spaced-repetition review instead of
+  // the miss being discarded once the quiz closes.
+  vocabWord?: string;
 };
 
 export type Passage = {

@@ -6,6 +6,7 @@ import { useGamificationStore } from '@/store/gamification/useGamificationStore'
 import { PracticeStep, calculateNextDifficulty, calculateNextWpm } from '@/lib'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  captureVocabularyMissesMutation,
   fetchPracticeSessionsKey,
   fetchPractices,
   fetchSession,
@@ -14,6 +15,7 @@ import {
   sessionMutation,
 } from '@/integration'
 import type { RecordedSessionResponse } from '@/integration/mutations/sessionMutation'
+import type { MissedVocabularyWord } from '@/integration/mutations/vocabularyReviewMutation'
 import {
   fetchUserStats,
   fetchUserStatsKey,
@@ -63,6 +65,10 @@ export function ComprehensionQuiz() {
 
   const { mutate, status: mutationStatus } = useMutation({
     ...sessionMutation,
+    networkMode: 'offlineFirst',
+  })
+  const { mutate: captureVocabularyMisses } = useMutation({
+    ...captureVocabularyMissesMutation,
     networkMode: 'offlineFirst',
   })
   const { activePractice } = useAppStore()
@@ -126,6 +132,19 @@ export function ComprehensionQuiz() {
       comprehension,
     )
 
+    // Questions are answered in order, so answers[i] lines up with
+    // questions[i] -- a wrong answer on a question with a vocabWord queues
+    // that word for spaced-repetition review instead of the miss being
+    // discarded once the quiz closes.
+    const missedWords: MissedVocabularyWord[] = questions
+      .filter((question, index) => answers[index] === false && question.vocabWord)
+      .map((question) => ({
+        word: question.vocabWord!,
+        context: question.question,
+        correctAnswer: question.options[question.correctIndex],
+        passageId: isCustomPassage ? null : passage?.id || null,
+      }))
+
     const payload = {
       correctAnswers,
       totalQuestions,
@@ -161,6 +180,10 @@ export function ComprehensionQuiz() {
             if (!userId) {
               const session = await queryClient.fetchQuery(fetchSession)
               userId = session?.user?.id
+            }
+
+            if (userId && missedWords.length > 0) {
+              captureVocabularyMisses({ userId, words: missedWords })
             }
 
             if (userId) {

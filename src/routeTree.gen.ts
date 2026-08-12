@@ -24,6 +24,7 @@ import { Route as DashboardChallengesRouteImport } from './routes/dashboard/chal
 import { Route as DashboardPracticeRouteImport } from './routes/dashboard/practice'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard/progress'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
+import { Route as DashboardVocabularyRouteImport } from './routes/dashboard/vocabulary'
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as DashboardPracticeIndexRouteImport } from './routes/dashboard/practice/index'
 import { Route as DashboardPracticeBrowseRouteImport } from './routes/dashboard/practice/browse'
@@ -106,6 +107,11 @@ const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardVocabularyRoute = DashboardVocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/practice': typeof DashboardPracticeRouteWithChildren
   '/dashboard/progress': typeof DashboardProgressRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/vocabulary': typeof DashboardVocabularyRoute
   '/auth/': typeof AuthIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/dashboard/challenges': typeof DashboardChallengesRoute
   '/dashboard/progress': typeof DashboardProgressRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/vocabulary': typeof DashboardVocabularyRoute
   '/auth': typeof AuthIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/onboarding': typeof OnboardingIndexRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/dashboard/practice': typeof DashboardPracticeRouteWithChildren
   '/dashboard/progress': typeof DashboardProgressRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/vocabulary': typeof DashboardVocabularyRoute
   '/auth/': typeof AuthIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/dashboard/practice'
     | '/dashboard/progress'
     | '/dashboard/settings'
+    | '/dashboard/vocabulary'
     | '/auth/'
     | '/dashboard/'
     | '/onboarding/'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/dashboard/challenges'
     | '/dashboard/progress'
     | '/dashboard/settings'
+    | '/dashboard/vocabulary'
     | '/auth'
     | '/dashboard'
     | '/onboarding'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | '/dashboard/practice'
     | '/dashboard/progress'
     | '/dashboard/settings'
+    | '/dashboard/vocabulary'
     | '/auth/'
     | '/dashboard/'
     | '/onboarding/'
@@ -391,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSettingsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/vocabulary': {
+      id: '/dashboard/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/dashboard/vocabulary'
+      preLoaderRoute: typeof DashboardVocabularyRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/onboarding/': {
       id: '/onboarding/'
       path: '/'
@@ -477,6 +496,7 @@ interface DashboardRouteChildren {
   DashboardPracticeRoute: typeof DashboardPracticeRouteWithChildren
   DashboardProgressRoute: typeof DashboardProgressRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardVocabularyRoute: typeof DashboardVocabularyRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
@@ -485,6 +505,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardPracticeRoute: DashboardPracticeRouteWithChildren,
   DashboardProgressRoute: DashboardProgressRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardVocabularyRoute: DashboardVocabularyRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 

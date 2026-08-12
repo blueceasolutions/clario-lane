@@ -3,7 +3,7 @@ import { CustomPassageModal, StartPracticeCard } from '@/components'
 import { Button } from '@/components/ui/button'
 import { fetchPractices } from '@/integration'
 import type { Practice } from '@/lib'
-import { Library, PenLine } from 'lucide-react'
+import { BookMarked, Library, PenLine } from 'lucide-react'
 
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { motion } from 'motion/react'
@@ -56,6 +56,12 @@ function RouteComponent() {
             <Link to='/dashboard/practice/browse'>
               <Library className='w-4 h-4' />
               Browse passages
+            </Link>
+          </Button>
+          <Button variant='outline' className='gap-2' asChild>
+            <Link to='/dashboard/vocabulary'>
+              <BookMarked className='w-4 h-4' />
+              Review vocabulary
             </Link>
           </Button>
         </div>

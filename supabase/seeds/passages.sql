@@ -13,7 +13,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "To replace talent entirely",
         "To provide temporary motivation"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "bridge"
     },
     {
       "question": "What is an example given in the passage of how small repeated actions lead to large outcomes?",
@@ -23,7 +24,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Saving all your money at once leads to financial freedom",
         "Working intensely for one month leads to expertise"
       ],
-      "correctIndex": 0
+      "correctIndex": 0,
+      "vocabWord": "momentum"
     },
     {
       "question": "Why does the passage describe consistency as ''quiet'' and ''patient''?",
@@ -33,7 +35,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Because it relies on external validation",
         "Because it requires no effort"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "overlooked"
     },
     {
       "question": "According to the author, what carries you forward more than motivation?",
@@ -43,7 +46,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Luck",
         "Intense effort"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "reinforce"
     },
     {
       "question": "What does the passage suggest about the most successful people?",
@@ -53,7 +57,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "They rely on bursts of inspiration",
         "They avoid consistent daily habits"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "resilience"
     }
   ]'::jsonb
 ),
@@ -71,7 +76,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Discipline requires excitement to begin",
         "Motivation and discipline mean the same thing"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "fickle"
     },
     {
       "question": "What does ''showing up'' primarily mean in the passage?",
@@ -81,7 +87,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Only working when you feel inspired",
         "Focusing on results rather than effort"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "compounds"
     },
     {
       "question": "What does the author suggest happens over time through persistence?",
@@ -91,7 +98,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Success becomes automatic",
         "Discipline becomes unnecessary"
       ],
-      "correctIndex": 0
+      "correctIndex": 0,
+      "vocabWord": "instinct"
     },
     {
       "question": "What does the author identify as the true gap between average and exceptional people?",
@@ -101,7 +109,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Endurance",
         "Resources"
       ],
-      "correctIndex": 2
+      "correctIndex": 2,
+      "vocabWord": "endurance"
     },
     {
       "question": "What is described as ''the real victory'' in the passage?",
@@ -111,7 +120,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Showing up and staying consistent",
         "Gaining recognition from others"
       ],
-      "correctIndex": 2
+      "correctIndex": 2,
+      "vocabWord": "willpower"
     }
   ]'::jsonb
 ),
@@ -129,7 +139,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "To meet someone arriving from the city",
         "To escape the rain"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "clutching"
     },
     {
       "question": "What significant event caused Verran Station to become deserted?",
@@ -139,7 +150,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "The townspeople moved to the city",
         "A fire burned down the nearby village"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "abandoned"
     },
     {
       "question": "What was inside Eli’s leather satchel?",
@@ -149,7 +161,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "A letter addressed to Clara",
         "A journal of his memories"
       ],
-      "correctIndex": 2
+      "correctIndex": 2,
+      "vocabWord": "satchel"
     },
     {
       "question": "What unusual thing happened when the train whistle sounded?",
@@ -159,7 +172,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "The lights in the station went out",
         "Eli woke up from a dream"
       ],
-      "correctIndex": 1
+      "correctIndex": 1,
+      "vocabWord": "trembled"
     },
     {
       "question": "What was found on the bench after the train departed?",
@@ -169,7 +183,8 @@ insert into passages (tags, text, title, difficulty, questions) values
         "Eli’s empty satchel with a note",
         "A rusted train ticket"
       ],
-      "correctIndex": 2
+      "correctIndex": 2,
+      "vocabWord": "creased"
     }
   ]'::jsonb
 );
