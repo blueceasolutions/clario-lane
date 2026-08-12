@@ -93,3 +93,46 @@ export const getSubscriptionCreatedEmail = (name: string, planName?: string) =>
   <p class="p">You now have full access to all premium features.</p>
   <a href="https://clariolane.com/dashboard" class="button">Start Learning</a>
 `);
+
+export const getDailyReminderEmail = (name: string, streak: number) =>
+  baseLayout(`
+  <h1 class="h1">Time to practice, ${name}!</h1>
+  <p class="p">${
+    streak > 0
+      ? `You're on a ${streak}-day streak. Keep it going with a quick session today.`
+      : `A few minutes of practice today keeps your reading skills sharp.`
+  }</p>
+  <a href="https://clariolane.com/dashboard/practice" class="button">Start Practicing</a>
+`);
+
+export type WeeklySummaryStats = {
+  sessionsCompleted: number;
+  wordsRead: number;
+  avgWpm: number;
+  streak: number;
+};
+
+export const getWeeklySummaryEmail = (name: string, stats: WeeklySummaryStats) =>
+  baseLayout(`
+  <h1 class="h1">Your week in reading, ${name}</h1>
+  <p class="p">Here's how you did over the past 7 days:</p>
+  <table style="width:100%; border-collapse: collapse; margin: 16px 0;">
+    <tr>
+      <td class="p" style="padding:8px 0;">Sessions completed</td>
+      <td class="p" style="text-align:right; font-weight:600;">${stats.sessionsCompleted}</td>
+    </tr>
+    <tr>
+      <td class="p" style="padding:8px 0;">Words read</td>
+      <td class="p" style="text-align:right; font-weight:600;">${stats.wordsRead.toLocaleString()}</td>
+    </tr>
+    <tr>
+      <td class="p" style="padding:8px 0;">Average speed</td>
+      <td class="p" style="text-align:right; font-weight:600;">${stats.avgWpm} WPM</td>
+    </tr>
+    <tr>
+      <td class="p" style="padding:8px 0;">Current streak</td>
+      <td class="p" style="text-align:right; font-weight:600;">${stats.streak} days</td>
+    </tr>
+  </table>
+  <a href="https://clariolane.com/dashboard/progress" class="button">View Full Progress</a>
+`);

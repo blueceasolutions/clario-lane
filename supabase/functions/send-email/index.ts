@@ -3,11 +3,14 @@ import { Hono } from 'hono'
 import { corsMiddleware } from '../_shared/cors-middleware.ts'
 import { logError } from '../_shared/log-error.ts'
 import {
+  getDailyReminderEmail,
   getFeedbackSubmittedEmail,
   getPasswordChangedEmail,
   getSubscriptionCancelledEmail,
   getSubscriptionCreatedEmail,
+  getWeeklySummaryEmail,
   getWelcomeEmail,
+  type WeeklySummaryStats,
 } from './templates.ts'
 
 const app = new Hono()
@@ -24,6 +27,8 @@ interface EmailRequest {
     | 'SUBSCRIPTION_CANCELLED'
     | 'SUBSCRIPTION_CREATED'
     | 'FEEDBACK_SUBMITTED'
+    | 'DAILY_REMINDER'
+    | 'WEEKLY_SUMMARY'
   email: string
   data?: any
 }
@@ -68,6 +73,19 @@ app.post('/send-email', async (c) => {
           data?.category,
         )
         toEmail = 'admin@clariolane.com' // Override recipient
+        break
+      case 'DAILY_REMINDER':
+        subject = 'Your daily reading reminder'
+        html = getDailyReminderEmail(data?.name || 'there', data?.streak || 0)
+        break
+      case 'WEEKLY_SUMMARY':
+        subject = 'Your weekly reading summary'
+        html = getWeeklySummaryEmail(data?.name || 'there', {
+          sessionsCompleted: data?.sessionsCompleted || 0,
+          wordsRead: data?.wordsRead || 0,
+          avgWpm: data?.avgWpm || 0,
+          streak: data?.streak || 0,
+        } satisfies WeeklySummaryStats)
         break
       default:
         return c.json({ success: false, message: 'Invalid email type' }, 400)
