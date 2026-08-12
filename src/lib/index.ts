@@ -12,3 +12,4 @@ export * from "./bionicReading";
 export * from "./vocabularyReview";
 export * from "./comprehensionBreakdown";
 export * from "./bestTimeOfDay";
+export * from "./exportReport";

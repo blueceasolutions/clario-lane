@@ -24,6 +24,7 @@ import { Route as DashboardChallengesRouteImport } from './routes/dashboard/chal
 import { Route as DashboardLeaderboardRouteImport } from './routes/dashboard/leaderboard'
 import { Route as DashboardPracticeRouteImport } from './routes/dashboard/practice'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard/progress'
+import { Route as DashboardProgressReportRouteImport } from './routes/dashboard/progress-report'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardVocabularyRouteImport } from './routes/dashboard/vocabulary'
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
@@ -110,6 +111,11 @@ const DashboardProgressRoute = DashboardProgressRouteImport.update({
   path: '/progress',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardProgressReportRoute = DashboardProgressReportRouteImport.update({
+  id: '/progress-report',
+  path: '/progress-report',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -178,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/leaderboard': typeof DashboardLeaderboardRoute
   '/dashboard/practice': typeof DashboardPracticeRouteWithChildren
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/dashboard/progress-report': typeof DashboardProgressReportRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vocabulary': typeof DashboardVocabularyRoute
   '/auth/': typeof AuthIndexRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/dashboard/challenges': typeof DashboardChallengesRoute
   '/dashboard/leaderboard': typeof DashboardLeaderboardRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/dashboard/progress-report': typeof DashboardProgressReportRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vocabulary': typeof DashboardVocabularyRoute
   '/auth': typeof AuthIndexRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/dashboard/leaderboard': typeof DashboardLeaderboardRoute
   '/dashboard/practice': typeof DashboardPracticeRouteWithChildren
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/dashboard/progress-report': typeof DashboardProgressReportRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vocabulary': typeof DashboardVocabularyRoute
   '/auth/': typeof AuthIndexRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/dashboard/leaderboard'
     | '/dashboard/practice'
     | '/dashboard/progress'
+    | '/dashboard/progress-report'
     | '/dashboard/settings'
     | '/dashboard/vocabulary'
     | '/auth/'
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | '/dashboard/challenges'
     | '/dashboard/leaderboard'
     | '/dashboard/progress'
+    | '/dashboard/progress-report'
     | '/dashboard/settings'
     | '/dashboard/vocabulary'
     | '/auth'
@@ -308,6 +319,7 @@ export interface FileRouteTypes {
     | '/dashboard/leaderboard'
     | '/dashboard/practice'
     | '/dashboard/progress'
+    | '/dashboard/progress-report'
     | '/dashboard/settings'
     | '/dashboard/vocabulary'
     | '/auth/'
@@ -439,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardProgressRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/progress-report': {
+      id: '/dashboard/progress-report'
+      path: '/progress-report'
+      fullPath: '/dashboard/progress-report'
+      preLoaderRoute: typeof DashboardProgressReportRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/settings': {
       id: '/dashboard/settings'
       path: '/settings'
@@ -553,6 +572,7 @@ interface DashboardRouteChildren {
   DashboardLeaderboardRoute: typeof DashboardLeaderboardRoute
   DashboardPracticeRoute: typeof DashboardPracticeRouteWithChildren
   DashboardProgressRoute: typeof DashboardProgressRoute
+  DashboardProgressReportRoute: typeof DashboardProgressReportRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardVocabularyRoute: typeof DashboardVocabularyRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -565,6 +585,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardLeaderboardRoute: DashboardLeaderboardRoute,
   DashboardPracticeRoute: DashboardPracticeRouteWithChildren,
   DashboardProgressRoute: DashboardProgressRoute,
+  DashboardProgressReportRoute: DashboardProgressReportRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardVocabularyRoute: DashboardVocabularyRoute,
   DashboardIndexRoute: DashboardIndexRoute,

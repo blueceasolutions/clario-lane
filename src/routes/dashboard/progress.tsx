@@ -1,12 +1,14 @@
 import { lazy, Suspense } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import {
   StatsOverview,
   MilestonesCard,
 } from '@/components/dashboard/progress'
+import { Button } from '@/components'
 import { SeoHead } from '@/components/shared'
 import { AchievementsGrid } from '@/components/gamification'
 import { useGamification } from '@/hooks'
+import { FileDown } from 'lucide-react'
 
 // recharts pulls a large vendor chunk in; only load it once this route
 // actually renders instead of on every page's initial bundle.
@@ -160,6 +162,16 @@ function RouteComponent() {
         title='Progress & Stats'
         description='Detailed analytics of your reading speed and comprehension improvements.'
       />
+      <div className='flex items-center justify-between gap-3'>
+        <h2 className='text-2xl font-bold tracking-tight'>Progress & Stats</h2>
+        <Button variant='outline' className='gap-2' asChild>
+          <Link to='/dashboard/progress-report'>
+            <FileDown className='w-4 h-4' />
+            Export Report
+          </Link>
+        </Button>
+      </div>
+
       {/* Stats Overview */}
       <StatsOverview userProfile={userProfile} />
 

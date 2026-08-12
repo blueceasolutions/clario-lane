@@ -29,7 +29,7 @@ const Navbar = () => {
       })?.id || 'dashboard'
 
     return (
-      <nav className='w-full bg-background/80 backdrop-blur-md border-b py-3 px-4 sticky top-0 z-50'>
+      <nav className='print:hidden w-full bg-background/80 backdrop-blur-md border-b py-3 px-4 sticky top-0 z-50'>
         <div className='max-w-7xl mx-auto flex items-center justify-between'>
           <AnimateLink
             whileHover={{ scale: 1.05 }}
@@ -49,7 +49,7 @@ const Navbar = () => {
                 return (
                   <Link
                     key={tab.id}
-                    // @ts-ignore
+                    // @ts-expect-error -- `to` is a dynamic template string; the router's literal-union type can't verify it at compile time
                     to={
                       tab.id === 'dashboard'
                         ? '/dashboard'
