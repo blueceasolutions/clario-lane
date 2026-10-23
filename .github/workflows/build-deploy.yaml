@@ -2,9 +2,9 @@ name: Build and Deploy Clariolane
 
 on:
   push:
-    tags: [ 'release-v*.*.*' ]
+    # tags: [ 'release-v*.*.*' ]
     # branches: [ "**" ]  # Uncomment this line to test in your feature branch
-    # branches: ["clario-deployment"]
+    branches: ["clario-deploymentV2"]
 
 jobs:
   # JOB 1: Build the application
@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install dependencies
         run: npm install
@@ -54,6 +54,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }} # e.g., your_server_public_ip
           username: ${{ secrets.SERVER_USER }} # e.g., ubuntu or root
           key: ${{ secrets.SERVER_SSH_KEY }} # The private SSH key of the user
+          port: ${{ secrets.NGROK_PORT }} # When connecting via ngrok tunnel only
           source: "dist/*"
           target: "/var/www/html"
           strip_components: 1 
@@ -64,7 +65,8 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.NGROK_PORT }} # When connecting via ngrok tunnel only
           script: |
             set -e
-            systemctl reload nginx
-            echo "Deployment successful to Digital Ocean"
+            sudo systemctl reload nginx
+            echo "Deployment successful to server"
