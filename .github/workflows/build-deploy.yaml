@@ -4,7 +4,7 @@ on:
   push:
     # tags: [ 'release-v*.*.*' ]
     # branches: [ "**" ]  # Uncomment this line to test in your feature branch
-    branches: ["clario-deploymentV2"] 
+    branches: ["clario-deploymentV2"]
 
 jobs:
   # JOB 1: Build the application
